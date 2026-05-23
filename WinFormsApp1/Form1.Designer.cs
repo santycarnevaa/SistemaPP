@@ -1,0 +1,599 @@
+﻿namespace WinFormsApp1
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            btnAceptar = new Button();
+            cmbRol = new ComboBox();
+            lblRol = new Label();
+            lblFecha = new Label();
+            datFecha = new DateTimePicker();
+            lblCorreo = new Label();
+            txtCorreo = new TextBox();
+            lblApellido = new Label();
+            txtApellido = new TextBox();
+            lblNombre = new Label();
+            txtNombre = new TextBox();
+            lblUsuario = new Label();
+            txtUsuario = new TextBox();
+            ltbClientes = new ListBox();
+            button1 = new Button();
+            label1 = new Label();
+            txtTelefono = new TextBox();
+            lblDni = new Label();
+            txtDni = new TextBox();
+            label2 = new Label();
+            txtCalle = new TextBox();
+            label3 = new Label();
+            txtNumCalle = new TextBox();
+            label4 = new Label();
+            txtCP = new TextBox();
+            label8 = new Label();
+            txtDepto = new TextBox();
+            label7 = new Label();
+            txtPiso = new TextBox();
+            label9 = new Label();
+            label10 = new Label();
+            label11 = new Label();
+            cmbProvincia = new ComboBox();
+            cmbLocalidad = new ComboBox();
+            cmbPartido = new ComboBox();
+            pictureBox2 = new PictureBox();
+            btnModificar = new Button();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
+            // 
+            // btnAceptar
+            // 
+            btnAceptar.BackColor = Color.Green;
+            btnAceptar.FlatStyle = FlatStyle.Flat;
+            btnAceptar.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            btnAceptar.Location = new Point(485, 437);
+            btnAceptar.Name = "btnAceptar";
+            btnAceptar.Size = new Size(146, 35);
+            btnAceptar.TabIndex = 50;
+            btnAceptar.Text = "Aceptar";
+            btnAceptar.UseVisualStyleBackColor = false;
+            btnAceptar.Click += btnAceptar_Click;
+            // 
+            // cmbRol
+            // 
+            cmbRol.BackColor = Color.White;
+            cmbRol.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            cmbRol.ForeColor = Color.Black;
+            cmbRol.FormattingEnabled = true;
+            cmbRol.Items.AddRange(new object[] { "Usuario", "Administrador" });
+            cmbRol.Location = new Point(486, 318);
+            cmbRol.Name = "cmbRol";
+            cmbRol.Size = new Size(141, 27);
+            cmbRol.TabIndex = 49;
+            // 
+            // lblRol
+            // 
+            lblRol.AutoSize = true;
+            lblRol.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblRol.ForeColor = Color.White;
+            lblRol.Location = new Point(535, 296);
+            lblRol.Name = "lblRol";
+            lblRol.Size = new Size(32, 19);
+            lblRol.TabIndex = 48;
+            lblRol.Text = "Rol";
+            // 
+            // lblFecha
+            // 
+            lblFecha.AutoSize = true;
+            lblFecha.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblFecha.ForeColor = Color.White;
+            lblFecha.Location = new Point(458, 363);
+            lblFecha.Name = "lblFecha";
+            lblFecha.Size = new Size(178, 19);
+            lblFecha.TabIndex = 47;
+            lblFecha.Text = "Fecha de Nacimiento";
+            // 
+            // datFecha
+            // 
+            datFecha.CalendarFont = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            datFecha.CalendarForeColor = Color.White;
+            datFecha.CalendarMonthBackground = Color.FromArgb(8, 10, 13);
+            datFecha.CalendarTitleBackColor = Color.FromArgb(64, 64, 64);
+            datFecha.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            datFecha.Location = new Point(417, 385);
+            datFecha.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            datFecha.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
+            datFecha.Name = "datFecha";
+            datFecha.Size = new Size(264, 24);
+            datFecha.TabIndex = 46;
+            // 
+            // lblCorreo
+            // 
+            lblCorreo.AutoSize = true;
+            lblCorreo.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblCorreo.ForeColor = Color.White;
+            lblCorreo.Location = new Point(563, 144);
+            lblCorreo.Name = "lblCorreo";
+            lblCorreo.Size = new Size(61, 19);
+            lblCorreo.TabIndex = 45;
+            lblCorreo.Text = "Correo";
+            // 
+            // txtCorreo
+            // 
+            txtCorreo.BackColor = Color.FromArgb(8, 10, 13);
+            txtCorreo.BorderStyle = BorderStyle.FixedSingle;
+            txtCorreo.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtCorreo.ForeColor = Color.White;
+            txtCorreo.Location = new Point(563, 166);
+            txtCorreo.Name = "txtCorreo";
+            txtCorreo.Size = new Size(147, 27);
+            txtCorreo.TabIndex = 44;
+            // 
+            // lblApellido
+            // 
+            lblApellido.AutoSize = true;
+            lblApellido.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblApellido.ForeColor = Color.White;
+            lblApellido.Location = new Point(561, 10);
+            lblApellido.Name = "lblApellido";
+            lblApellido.Size = new Size(75, 19);
+            lblApellido.TabIndex = 43;
+            lblApellido.Text = "Apellido";
+            // 
+            // txtApellido
+            // 
+            txtApellido.BackColor = Color.FromArgb(8, 10, 13);
+            txtApellido.BorderStyle = BorderStyle.FixedSingle;
+            txtApellido.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtApellido.ForeColor = Color.White;
+            txtApellido.Location = new Point(561, 34);
+            txtApellido.Name = "txtApellido";
+            txtApellido.Size = new Size(147, 27);
+            txtApellido.TabIndex = 42;
+            // 
+            // lblNombre
+            // 
+            lblNombre.AutoSize = true;
+            lblNombre.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblNombre.ForeColor = Color.White;
+            lblNombre.Location = new Point(407, 10);
+            lblNombre.Name = "lblNombre";
+            lblNombre.Size = new Size(73, 19);
+            lblNombre.TabIndex = 41;
+            lblNombre.Text = "Nombre";
+            // 
+            // txtNombre
+            // 
+            txtNombre.BackColor = Color.FromArgb(8, 10, 13);
+            txtNombre.BorderStyle = BorderStyle.FixedSingle;
+            txtNombre.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtNombre.ForeColor = Color.White;
+            txtNombre.Location = new Point(408, 34);
+            txtNombre.Name = "txtNombre";
+            txtNombre.Size = new Size(147, 27);
+            txtNombre.TabIndex = 40;
+            // 
+            // lblUsuario
+            // 
+            lblUsuario.AutoSize = true;
+            lblUsuario.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblUsuario.ForeColor = Color.White;
+            lblUsuario.Location = new Point(408, 144);
+            lblUsuario.Name = "lblUsuario";
+            lblUsuario.Size = new Size(65, 19);
+            lblUsuario.TabIndex = 39;
+            lblUsuario.Text = "Usuario";
+            // 
+            // txtUsuario
+            // 
+            txtUsuario.BackColor = Color.FromArgb(8, 10, 13);
+            txtUsuario.BorderStyle = BorderStyle.FixedSingle;
+            txtUsuario.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtUsuario.ForeColor = Color.White;
+            txtUsuario.Location = new Point(410, 166);
+            txtUsuario.Name = "txtUsuario";
+            txtUsuario.Size = new Size(147, 27);
+            txtUsuario.TabIndex = 38;
+            // 
+            // ltbClientes
+            // 
+            ltbClientes.BackColor = Color.FromArgb(8, 10, 13);
+            ltbClientes.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ltbClientes.ForeColor = Color.White;
+            ltbClientes.FormattingEnabled = true;
+            ltbClientes.Location = new Point(12, 12);
+            ltbClientes.Name = "ltbClientes";
+            ltbClientes.Size = new Size(303, 388);
+            ltbClientes.TabIndex = 52;
+            ltbClientes.SelectedIndexChanged += ltbClientes_SelectedIndexChanged;
+            // 
+            // button1
+            // 
+            button1.BackColor = Color.Red;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.White;
+            button1.Location = new Point(12, 413);
+            button1.Name = "button1";
+            button1.Size = new Size(132, 25);
+            button1.TabIndex = 53;
+            button1.Text = "Borrar";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(561, 76);
+            label1.Name = "label1";
+            label1.Size = new Size(74, 19);
+            label1.TabIndex = 57;
+            label1.Text = "Telefono";
+            // 
+            // txtTelefono
+            // 
+            txtTelefono.BackColor = Color.FromArgb(8, 10, 13);
+            txtTelefono.BorderStyle = BorderStyle.FixedSingle;
+            txtTelefono.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtTelefono.ForeColor = Color.White;
+            txtTelefono.Location = new Point(561, 100);
+            txtTelefono.MaxLength = 10;
+            txtTelefono.Name = "txtTelefono";
+            txtTelefono.Size = new Size(147, 27);
+            txtTelefono.TabIndex = 56;
+            txtTelefono.KeyPress += txtTelefono_KeyPress;
+            // 
+            // lblDni
+            // 
+            lblDni.AutoSize = true;
+            lblDni.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            lblDni.ForeColor = Color.White;
+            lblDni.Location = new Point(407, 76);
+            lblDni.Name = "lblDni";
+            lblDni.Size = new Size(34, 19);
+            lblDni.TabIndex = 55;
+            lblDni.Text = "Dni";
+            // 
+            // txtDni
+            // 
+            txtDni.BackColor = Color.FromArgb(8, 10, 13);
+            txtDni.BorderStyle = BorderStyle.FixedSingle;
+            txtDni.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtDni.ForeColor = Color.White;
+            txtDni.Location = new Point(408, 100);
+            txtDni.MaxLength = 10;
+            txtDni.Name = "txtDni";
+            txtDni.Size = new Size(147, 27);
+            txtDni.TabIndex = 54;
+            txtDni.KeyPress += txtDni_KeyPress;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(330, 196);
+            label2.Name = "label2";
+            label2.Size = new Size(50, 19);
+            label2.TabIndex = 59;
+            label2.Text = "Calle";
+            // 
+            // txtCalle
+            // 
+            txtCalle.BackColor = Color.FromArgb(8, 10, 13);
+            txtCalle.BorderStyle = BorderStyle.FixedSingle;
+            txtCalle.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtCalle.ForeColor = Color.White;
+            txtCalle.Location = new Point(332, 218);
+            txtCalle.Name = "txtCalle";
+            txtCalle.Size = new Size(147, 27);
+            txtCalle.TabIndex = 58;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(485, 196);
+            label3.Name = "label3";
+            label3.Size = new Size(72, 19);
+            label3.TabIndex = 61;
+            label3.Text = "Numero";
+            // 
+            // txtNumCalle
+            // 
+            txtNumCalle.BackColor = Color.FromArgb(8, 10, 13);
+            txtNumCalle.BorderStyle = BorderStyle.FixedSingle;
+            txtNumCalle.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtNumCalle.ForeColor = Color.White;
+            txtNumCalle.Location = new Point(485, 218);
+            txtNumCalle.MaxLength = 5;
+            txtNumCalle.Name = "txtNumCalle";
+            txtNumCalle.Size = new Size(67, 27);
+            txtNumCalle.TabIndex = 60;
+            txtNumCalle.KeyPress += txtNumCalle_KeyPress;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label4.ForeColor = Color.White;
+            label4.Location = new Point(559, 196);
+            label4.Name = "label4";
+            label4.Size = new Size(34, 19);
+            label4.TabIndex = 63;
+            label4.Text = "C.P";
+            // 
+            // txtCP
+            // 
+            txtCP.BackColor = Color.FromArgb(8, 10, 13);
+            txtCP.BorderStyle = BorderStyle.FixedSingle;
+            txtCP.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtCP.ForeColor = Color.White;
+            txtCP.Location = new Point(561, 218);
+            txtCP.MaxLength = 5;
+            txtCP.Name = "txtCP";
+            txtCP.Size = new Size(67, 27);
+            txtCP.TabIndex = 62;
+            txtCP.KeyPress += txtCP_KeyPress;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label8.ForeColor = Color.White;
+            label8.Location = new Point(635, 196);
+            label8.Name = "label8";
+            label8.Size = new Size(62, 19);
+            label8.TabIndex = 69;
+            label8.Text = "Depto*";
+            // 
+            // txtDepto
+            // 
+            txtDepto.BackColor = Color.FromArgb(8, 10, 13);
+            txtDepto.BorderStyle = BorderStyle.FixedSingle;
+            txtDepto.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtDepto.ForeColor = Color.White;
+            txtDepto.Location = new Point(635, 218);
+            txtDepto.Name = "txtDepto";
+            txtDepto.Size = new Size(67, 27);
+            txtDepto.TabIndex = 68;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label7.ForeColor = Color.White;
+            label7.Location = new Point(708, 196);
+            label7.Name = "label7";
+            label7.Size = new Size(45, 19);
+            label7.TabIndex = 71;
+            label7.Text = "Piso*";
+            // 
+            // txtPiso
+            // 
+            txtPiso.BackColor = Color.FromArgb(8, 10, 13);
+            txtPiso.BorderStyle = BorderStyle.FixedSingle;
+            txtPiso.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPiso.ForeColor = Color.White;
+            txtPiso.Location = new Point(710, 218);
+            txtPiso.MaxLength = 2;
+            txtPiso.Name = "txtPiso";
+            txtPiso.Size = new Size(67, 27);
+            txtPiso.TabIndex = 70;
+            txtPiso.KeyPress += txtPiso_KeyPress;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label9.ForeColor = Color.White;
+            label9.Location = new Point(354, 248);
+            label9.Name = "label9";
+            label9.Size = new Size(81, 19);
+            label9.TabIndex = 73;
+            label9.Text = "Provincia";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label10.ForeColor = Color.White;
+            label10.Location = new Point(609, 248);
+            label10.Name = "label10";
+            label10.Size = new Size(88, 19);
+            label10.TabIndex = 75;
+            label10.Text = "Localidad";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            label11.ForeColor = Color.White;
+            label11.Location = new Point(482, 248);
+            label11.Name = "label11";
+            label11.Size = new Size(63, 19);
+            label11.TabIndex = 77;
+            label11.Text = "Partido";
+            // 
+            // cmbProvincia
+            // 
+            cmbProvincia.Location = new Point(355, 270);
+            cmbProvincia.Name = "cmbProvincia";
+            cmbProvincia.Size = new Size(121, 23);
+            cmbProvincia.TabIndex = 85;
+            // 
+            // cmbLocalidad
+            // 
+            cmbLocalidad.Location = new Point(609, 270);
+            cmbLocalidad.Name = "cmbLocalidad";
+            cmbLocalidad.Size = new Size(121, 23);
+            cmbLocalidad.TabIndex = 84;
+            // 
+            // cmbPartido
+            // 
+            cmbPartido.BackColor = Color.White;
+            cmbPartido.Location = new Point(482, 270);
+            cmbPartido.Name = "cmbPartido";
+            cmbPartido.Size = new Size(121, 23);
+            cmbPartido.TabIndex = 83;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(754, 6);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 81;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
+            // 
+            // btnModificar
+            // 
+            btnModificar.BackColor = Color.Green;
+            btnModificar.FlatStyle = FlatStyle.Flat;
+            btnModificar.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            btnModificar.Location = new Point(304, 437);
+            btnModificar.Name = "btnModificar";
+            btnModificar.Size = new Size(146, 35);
+            btnModificar.TabIndex = 82;
+            btnModificar.Text = "Modificar";
+            btnModificar.UseVisualStyleBackColor = false;
+            btnModificar.Visible = false;
+            btnModificar.Click += btnModificar_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.ImageLocation = "";
+            pictureBox1.Location = new Point(725, 6);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(23, 23);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 86;
+            pictureBox1.TabStop = false;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(8, 10, 13);
+            ClientSize = new Size(789, 484);
+            Controls.Add(pictureBox1);
+            Controls.Add(btnModificar);
+            Controls.Add(pictureBox2);
+            Controls.Add(cmbPartido);
+            Controls.Add(cmbLocalidad);
+            Controls.Add(cmbProvincia);
+            Controls.Add(label11);
+            Controls.Add(label10);
+            Controls.Add(label9);
+            Controls.Add(label7);
+            Controls.Add(txtPiso);
+            Controls.Add(label8);
+            Controls.Add(txtDepto);
+            Controls.Add(label4);
+            Controls.Add(txtCP);
+            Controls.Add(label3);
+            Controls.Add(txtNumCalle);
+            Controls.Add(label2);
+            Controls.Add(txtCalle);
+            Controls.Add(label1);
+            Controls.Add(txtTelefono);
+            Controls.Add(lblDni);
+            Controls.Add(txtDni);
+            Controls.Add(button1);
+            Controls.Add(ltbClientes);
+            Controls.Add(btnAceptar);
+            Controls.Add(cmbRol);
+            Controls.Add(lblRol);
+            Controls.Add(lblFecha);
+            Controls.Add(datFecha);
+            Controls.Add(lblCorreo);
+            Controls.Add(txtCorreo);
+            Controls.Add(lblApellido);
+            Controls.Add(txtApellido);
+            Controls.Add(lblNombre);
+            Controls.Add(txtNombre);
+            Controls.Add(lblUsuario);
+            Controls.Add(txtUsuario);
+            ForeColor = Color.White;
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "Form1";
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+        private Button btnAceptar;
+        private ComboBox cmbRol;
+        private Label lblRol;
+        private Label lblFecha;
+        private DateTimePicker datFecha;
+        private Label lblCorreo;
+        private TextBox txtCorreo;
+        private Label lblApellido;
+        private TextBox txtApellido;
+        private Label lblNombre;
+        private TextBox txtNombre;
+        private Label lblUsuario;
+        private TextBox txtUsuario;
+        private ListBox ltbClientes;
+        private Button button1;
+        private Label label1;
+        private TextBox txtTelefono;
+        private Label lblDni;
+        private TextBox txtDni;
+        private Label label2;
+        private TextBox txtCalle;
+        private Label label3;
+        private TextBox txtNumCalle;
+        private Label label4;
+        private TextBox txtCP;
+        private Label label8;
+        private TextBox txtDepto;
+        private Label label7;
+        private TextBox txtPiso;
+        private Label label9;
+        private Label label10;
+        private Label label11;
+        private ComboBox cmbProvincia;
+        private ComboBox cmbLocalidad;
+        private ComboBox cmbPartido;
+        private PictureBox pictureBox2;
+        private Button btnModificar;
+        private PictureBox pictureBox1;
+    }
+}
