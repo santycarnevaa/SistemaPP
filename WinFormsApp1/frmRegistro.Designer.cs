@@ -1,6 +1,6 @@
-﻿namespace WinFormsApp1
+﻿namespace CapaVista
 {
-    partial class Form1
+    partial class frmRegistro
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRegistro));
             btnAceptar = new Button();
             cmbRol = new ComboBox();
             lblRol = new Label();
@@ -79,7 +79,7 @@
             btnAceptar.Location = new Point(485, 437);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(146, 35);
-            btnAceptar.TabIndex = 50;
+            btnAceptar.TabIndex = 17;
             btnAceptar.Text = "Aceptar";
             btnAceptar.UseVisualStyleBackColor = false;
             btnAceptar.Click += btnAceptar_Click;
@@ -94,7 +94,7 @@
             cmbRol.Location = new Point(486, 318);
             cmbRol.Name = "cmbRol";
             cmbRol.Size = new Size(141, 27);
-            cmbRol.TabIndex = 49;
+            cmbRol.TabIndex = 15;
             // 
             // lblRol
             // 
@@ -103,9 +103,9 @@
             lblRol.ForeColor = Color.White;
             lblRol.Location = new Point(535, 296);
             lblRol.Name = "lblRol";
-            lblRol.Size = new Size(32, 19);
+            lblRol.Size = new Size(39, 19);
             lblRol.TabIndex = 48;
-            lblRol.Text = "Rol";
+            lblRol.Text = "Rol*";
             // 
             // lblFecha
             // 
@@ -114,9 +114,9 @@
             lblFecha.ForeColor = Color.White;
             lblFecha.Location = new Point(458, 363);
             lblFecha.Name = "lblFecha";
-            lblFecha.Size = new Size(178, 19);
+            lblFecha.Size = new Size(185, 19);
             lblFecha.TabIndex = 47;
-            lblFecha.Text = "Fecha de Nacimiento";
+            lblFecha.Text = "Fecha de Nacimiento*";
             // 
             // datFecha
             // 
@@ -130,7 +130,7 @@
             datFecha.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             datFecha.Name = "datFecha";
             datFecha.Size = new Size(264, 24);
-            datFecha.TabIndex = 46;
+            datFecha.TabIndex = 16;
             // 
             // lblCorreo
             // 
@@ -139,9 +139,9 @@
             lblCorreo.ForeColor = Color.White;
             lblCorreo.Location = new Point(563, 144);
             lblCorreo.Name = "lblCorreo";
-            lblCorreo.Size = new Size(61, 19);
+            lblCorreo.Size = new Size(68, 19);
             lblCorreo.TabIndex = 45;
-            lblCorreo.Text = "Correo";
+            lblCorreo.Text = "Correo*";
             // 
             // txtCorreo
             // 
@@ -152,7 +152,7 @@
             txtCorreo.Location = new Point(563, 166);
             txtCorreo.Name = "txtCorreo";
             txtCorreo.Size = new Size(147, 27);
-            txtCorreo.TabIndex = 44;
+            txtCorreo.TabIndex = 6;
             // 
             // lblApellido
             // 
@@ -161,9 +161,9 @@
             lblApellido.ForeColor = Color.White;
             lblApellido.Location = new Point(561, 10);
             lblApellido.Name = "lblApellido";
-            lblApellido.Size = new Size(75, 19);
+            lblApellido.Size = new Size(82, 19);
             lblApellido.TabIndex = 43;
-            lblApellido.Text = "Apellido";
+            lblApellido.Text = "Apellido*";
             // 
             // txtApellido
             // 
@@ -174,7 +174,7 @@
             txtApellido.Location = new Point(561, 34);
             txtApellido.Name = "txtApellido";
             txtApellido.Size = new Size(147, 27);
-            txtApellido.TabIndex = 42;
+            txtApellido.TabIndex = 2;
             // 
             // lblNombre
             // 
@@ -183,9 +183,9 @@
             lblNombre.ForeColor = Color.White;
             lblNombre.Location = new Point(407, 10);
             lblNombre.Name = "lblNombre";
-            lblNombre.Size = new Size(73, 19);
+            lblNombre.Size = new Size(80, 19);
             lblNombre.TabIndex = 41;
-            lblNombre.Text = "Nombre";
+            lblNombre.Text = "Nombre*";
             // 
             // txtNombre
             // 
@@ -196,7 +196,7 @@
             txtNombre.Location = new Point(408, 34);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(147, 27);
-            txtNombre.TabIndex = 40;
+            txtNombre.TabIndex = 1;
             // 
             // lblUsuario
             // 
@@ -205,9 +205,9 @@
             lblUsuario.ForeColor = Color.White;
             lblUsuario.Location = new Point(408, 144);
             lblUsuario.Name = "lblUsuario";
-            lblUsuario.Size = new Size(65, 19);
+            lblUsuario.Size = new Size(72, 19);
             lblUsuario.TabIndex = 39;
-            lblUsuario.Text = "Usuario";
+            lblUsuario.Text = "Usuario*";
             // 
             // txtUsuario
             // 
@@ -218,7 +218,7 @@
             txtUsuario.Location = new Point(410, 166);
             txtUsuario.Name = "txtUsuario";
             txtUsuario.Size = new Size(147, 27);
-            txtUsuario.TabIndex = 38;
+            txtUsuario.TabIndex = 5;
             // 
             // ltbClientes
             // 
@@ -229,7 +229,7 @@
             ltbClientes.Location = new Point(12, 12);
             ltbClientes.Name = "ltbClientes";
             ltbClientes.Size = new Size(303, 388);
-            ltbClientes.TabIndex = 52;
+            ltbClientes.TabIndex = 18;
             ltbClientes.SelectedIndexChanged += ltbClientes_SelectedIndexChanged;
             // 
             // button1
@@ -241,7 +241,7 @@
             button1.Location = new Point(12, 413);
             button1.Name = "button1";
             button1.Size = new Size(132, 25);
-            button1.TabIndex = 53;
+            button1.TabIndex = 20;
             button1.Text = "Borrar";
             button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
@@ -253,9 +253,9 @@
             label1.ForeColor = Color.White;
             label1.Location = new Point(561, 76);
             label1.Name = "label1";
-            label1.Size = new Size(74, 19);
+            label1.Size = new Size(81, 19);
             label1.TabIndex = 57;
-            label1.Text = "Telefono";
+            label1.Text = "Telefono*";
             // 
             // txtTelefono
             // 
@@ -267,7 +267,7 @@
             txtTelefono.MaxLength = 10;
             txtTelefono.Name = "txtTelefono";
             txtTelefono.Size = new Size(147, 27);
-            txtTelefono.TabIndex = 56;
+            txtTelefono.TabIndex = 4;
             txtTelefono.KeyPress += txtTelefono_KeyPress;
             // 
             // lblDni
@@ -277,9 +277,9 @@
             lblDni.ForeColor = Color.White;
             lblDni.Location = new Point(407, 76);
             lblDni.Name = "lblDni";
-            lblDni.Size = new Size(34, 19);
+            lblDni.Size = new Size(41, 19);
             lblDni.TabIndex = 55;
-            lblDni.Text = "Dni";
+            lblDni.Text = "Dni*";
             // 
             // txtDni
             // 
@@ -291,7 +291,7 @@
             txtDni.MaxLength = 10;
             txtDni.Name = "txtDni";
             txtDni.Size = new Size(147, 27);
-            txtDni.TabIndex = 54;
+            txtDni.TabIndex = 3;
             txtDni.KeyPress += txtDni_KeyPress;
             // 
             // label2
@@ -301,9 +301,9 @@
             label2.ForeColor = Color.White;
             label2.Location = new Point(330, 196);
             label2.Name = "label2";
-            label2.Size = new Size(50, 19);
+            label2.Size = new Size(57, 19);
             label2.TabIndex = 59;
-            label2.Text = "Calle";
+            label2.Text = "Calle*";
             // 
             // txtCalle
             // 
@@ -314,18 +314,18 @@
             txtCalle.Location = new Point(332, 218);
             txtCalle.Name = "txtCalle";
             txtCalle.Size = new Size(147, 27);
-            txtCalle.TabIndex = 58;
+            txtCalle.TabIndex = 7;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(485, 196);
+            label3.Location = new Point(473, 196);
             label3.Name = "label3";
-            label3.Size = new Size(72, 19);
+            label3.Size = new Size(79, 19);
             label3.TabIndex = 61;
-            label3.Text = "Numero";
+            label3.Text = "Numero*";
             // 
             // txtNumCalle
             // 
@@ -337,7 +337,7 @@
             txtNumCalle.MaxLength = 5;
             txtNumCalle.Name = "txtNumCalle";
             txtNumCalle.Size = new Size(67, 27);
-            txtNumCalle.TabIndex = 60;
+            txtNumCalle.TabIndex = 8;
             txtNumCalle.KeyPress += txtNumCalle_KeyPress;
             // 
             // label4
@@ -361,7 +361,7 @@
             txtCP.MaxLength = 5;
             txtCP.Name = "txtCP";
             txtCP.Size = new Size(67, 27);
-            txtCP.TabIndex = 62;
+            txtCP.TabIndex = 9;
             txtCP.KeyPress += txtCP_KeyPress;
             // 
             // label8
@@ -371,9 +371,9 @@
             label8.ForeColor = Color.White;
             label8.Location = new Point(635, 196);
             label8.Name = "label8";
-            label8.Size = new Size(62, 19);
+            label8.Size = new Size(55, 19);
             label8.TabIndex = 69;
-            label8.Text = "Depto*";
+            label8.Text = "Depto";
             // 
             // txtDepto
             // 
@@ -384,7 +384,7 @@
             txtDepto.Location = new Point(635, 218);
             txtDepto.Name = "txtDepto";
             txtDepto.Size = new Size(67, 27);
-            txtDepto.TabIndex = 68;
+            txtDepto.TabIndex = 10;
             // 
             // label7
             // 
@@ -393,9 +393,9 @@
             label7.ForeColor = Color.White;
             label7.Location = new Point(708, 196);
             label7.Name = "label7";
-            label7.Size = new Size(45, 19);
+            label7.Size = new Size(38, 19);
             label7.TabIndex = 71;
-            label7.Text = "Piso*";
+            label7.Text = "Piso";
             // 
             // txtPiso
             // 
@@ -407,7 +407,7 @@
             txtPiso.MaxLength = 2;
             txtPiso.Name = "txtPiso";
             txtPiso.Size = new Size(67, 27);
-            txtPiso.TabIndex = 70;
+            txtPiso.TabIndex = 11;
             txtPiso.KeyPress += txtPiso_KeyPress;
             // 
             // label9
@@ -417,9 +417,9 @@
             label9.ForeColor = Color.White;
             label9.Location = new Point(354, 248);
             label9.Name = "label9";
-            label9.Size = new Size(81, 19);
+            label9.Size = new Size(88, 19);
             label9.TabIndex = 73;
-            label9.Text = "Provincia";
+            label9.Text = "Provincia*";
             // 
             // label10
             // 
@@ -428,9 +428,9 @@
             label10.ForeColor = Color.White;
             label10.Location = new Point(609, 248);
             label10.Name = "label10";
-            label10.Size = new Size(88, 19);
+            label10.Size = new Size(95, 19);
             label10.TabIndex = 75;
-            label10.Text = "Localidad";
+            label10.Text = "Localidad*";
             // 
             // label11
             // 
@@ -439,23 +439,23 @@
             label11.ForeColor = Color.White;
             label11.Location = new Point(482, 248);
             label11.Name = "label11";
-            label11.Size = new Size(63, 19);
+            label11.Size = new Size(70, 19);
             label11.TabIndex = 77;
-            label11.Text = "Partido";
+            label11.Text = "Partido*";
             // 
             // cmbProvincia
             // 
             cmbProvincia.Location = new Point(355, 270);
             cmbProvincia.Name = "cmbProvincia";
             cmbProvincia.Size = new Size(121, 23);
-            cmbProvincia.TabIndex = 85;
+            cmbProvincia.TabIndex = 12;
             // 
             // cmbLocalidad
             // 
             cmbLocalidad.Location = new Point(609, 270);
             cmbLocalidad.Name = "cmbLocalidad";
             cmbLocalidad.Size = new Size(121, 23);
-            cmbLocalidad.TabIndex = 84;
+            cmbLocalidad.TabIndex = 14;
             // 
             // cmbPartido
             // 
@@ -463,7 +463,7 @@
             cmbPartido.Location = new Point(482, 270);
             cmbPartido.Name = "cmbPartido";
             cmbPartido.Size = new Size(121, 23);
-            cmbPartido.TabIndex = 83;
+            cmbPartido.TabIndex = 13;
             // 
             // pictureBox2
             // 
@@ -485,7 +485,7 @@
             btnModificar.Location = new Point(304, 437);
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(146, 35);
-            btnModificar.TabIndex = 82;
+            btnModificar.TabIndex = 19;
             btnModificar.Text = "Modificar";
             btnModificar.UseVisualStyleBackColor = false;
             btnModificar.Visible = false;
@@ -502,7 +502,7 @@
             pictureBox1.TabIndex = 86;
             pictureBox1.TabStop = false;
             // 
-            // Form1
+            // frmRegistro
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -548,7 +548,7 @@
             Controls.Add(txtUsuario);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.None;
-            Name = "Form1";
+            Name = "frmRegistro";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

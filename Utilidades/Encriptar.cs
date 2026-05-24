@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Utilidades
 {
-    public class Encriptar
+    public class encriptar
     {
         public string HashMetodo(string contra)
         {
@@ -15,6 +15,7 @@ namespace Utilidades
         }
         public string hashUsuarioContra(string usuario, string contra)
         {
+            encriptar enc = new encriptar();
             return HashMetodo(usuario + contra);
         }
     }

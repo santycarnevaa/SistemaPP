@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapaVista", "WinFormsApp1\CapaVista.csproj", "{CB27B1D5-F937-4B82-B552-F9C8E4E18042}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapaDatos", "CapaDatos\CapaDatos.csproj", "{682F55DA-15AB-42BA-89EC-F29C2242DDD6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7603CD4-0008-4D75-9453-A01C93723046} = {B7603CD4-0008-4D75-9453-A01C93723046}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapaLogica", "CapaLogica\CapaLogica.csproj", "{6637C4CE-5D05-45A0-86EB-A2D2FDD5857A}"
 EndProject

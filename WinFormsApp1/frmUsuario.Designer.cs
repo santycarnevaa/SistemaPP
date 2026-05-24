@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp1
+﻿namespace CapaVista
 {
     partial class frmUsuario
     {
@@ -71,6 +71,7 @@
             Name = "frmUsuario";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Usuario";
+            Load += frmUsuario_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);

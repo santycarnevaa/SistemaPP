@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CapaLogica;
 
-namespace WinFormsApp1
+namespace CapaVista
 {
     public partial class frmContraseña : Form
     {
@@ -19,10 +20,8 @@ namespace WinFormsApp1
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
-            frmlogin.contraseña = txtnueva2.Text;
+
             MessageBox.Show("Su contraseña ha sido cambiada", "Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //contraseñaVieja = contraseña; cambias la contraseña que te dan al principio (contraseña vieja o cambiale el nombre) 
-            //contraseña seria la nueva que vos elejiste para el login
             this.Close();
         }
 

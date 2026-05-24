@@ -1,54 +1,134 @@
-﻿using System;
-using System.Linq;
+﻿using CapaDatos;
 using Utilidades;
 
-namespace CapaLogica;
-
-    public class CL_servicioLogin
+namespace CapaLogica
+{
+    public class CL_ServicioLogin
     {
-        private LeerDatos datos = new LeerDatos();
-        private Encriptar encriptar = new Encriptar();
+        private CD_usuariosDatos usuarioDatos = new CD_usuariosDatos();
+        private CD_contraDatos passwordDatos = new CD_contraDatos();
+        private encriptar encriptar = new encriptar();
 
-        public bool Login(string usuario, string contraseña)
+        public resultadoLogin Login(string usuario, string password)
         {
-            bool existeUsuario = datos.validarUsuarios(usuario);
+            if (string.IsNullOrWhiteSpace(usuario))
+                return resultadoLogin.UsuarioVacio;
+
+            if (string.IsNullOrWhiteSpace(password))
+                return resultadoLogin.PasswordVacia;
+
+            bool existeUsuario = usuarioDatos.existeUsuario(usuario);
+
             if (!existeUsuario)
-                return false;
-            string contraHasheada = encriptar.hashUsuarioContra(usuario, contraseña);
-            bool existeContra = datos.validarContra(contraHasheada, usuario);
+                return resultadoLogin.UsuarioNoExiste;
 
-            return existeContra;
+            bool usuarioActivo = usuarioDatos.usuarioActivo(usuario);
+
+            if (!usuarioActivo)
+                return resultadoLogin.UsuarioInactivo;
+
+            string passwordHash = encriptar.hashUsuarioContra(usuario, password);
+
+            bool loginCorrecto = passwordDatos.verificarLogin(usuario, passwordHash);
+
+            if (!loginCorrecto)
+                return resultadoLogin.PasswordIncorrecta;
+
+            bool primerLogin = usuarioDatos.esPrimerLogin(usuario);
+
+            if (primerLogin)
+                return resultadoLogin.PrimerLogin;
+
+            return resultadoLogin.Ok;
         }
-        public bool PrimerLogin(string usuario)
+
+        public bool LoginCorrecto(string usuario, string password)
         {
-            bool primerLogin = datos.primerlogin(true, usuario);
-            return primerLogin;
+            resultadoLogin resultado = Login(usuario, password);
+
+            return resultado == resultadoLogin.Ok || resultado == resultadoLogin.PrimerLogin;
         }
-        public bool PasswordNoRepetida(int idUser, string nuevoHash)
+
+        public bool EsPrimerLogin(string usuario)
         {
-            LeerDatos datos = new LeerDatos();
-
-            var passwordsViejas = datos.ObtenerPasswordsAnteriores(idUser);
-
-            return !passwordsViejas.Contains(nuevoHash);
-        }
-        public bool CambiarPassword(string usuario, string nuevaPassword)
-        {
-            CD_escribirDatos escribir = new CD_escribirDatos();
-            LeerDatos datos = new LeerDatos();
-            Encriptar enc = new Encriptar();
-
-            int idUser = datos.ObtenerIdUsuario(usuario);
-
-            if (idUser == -1)
-                return false;
-
-            string hash = enc.hashUsuarioContra(usuario, nuevaPassword);
-
-            bool noRepetida = PasswordNoRepetida(idUser, hash);
-            if (!noRepetida)
+            if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            return escribir.ActualizarPassword(idUser, hash);
+            return usuarioDatos.esPrimerLogin(usuario);
         }
+
+        public bool UsuarioActivo(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return false;
+
+            return usuarioDatos.usuarioActivo(usuario);
+        }
+
+        public bool ExisteUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return false;
+
+            return usuarioDatos.existeUsuario(usuario);
+        }
+
+        public int ObtenerIdUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return -1;
+
+            return usuarioDatos.obtenerIdUsuario(usuario);
+        }
+
+        public int ObtenerRolUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return -1;
+
+            return usuarioDatos.obtenerRolUsuario(usuario);
+        }
+
+        public bool EsAdministrador(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return false;
+
+            int idRol = usuarioDatos.obtenerRolUsuario(usuario);
+
+            // Ajustalo según tu tabla Roles.
+            // Ejemplo: 1 = Usuario, 2 = Administrador
+            return idRol == 2;
+        }
+
+        public string ObtenerMensajeResultado(resultadoLogin resultado)
+        {
+            switch (resultado)
+            {
+                case resultadoLogin.Ok:
+                    return "Bienvenido al sistema.";
+
+                case resultadoLogin.PrimerLogin:
+                    return "Es tu primer login. Debés cambiar tu contraseña.";
+
+                case resultadoLogin.UsuarioVacio:
+                    return "Ingrese el nombre de usuario.";
+
+                case resultadoLogin.PasswordVacia:
+                    return "Ingrese la contraseña.";
+
+                case resultadoLogin.UsuarioNoExiste:
+                    return "El usuario no existe.";
+
+                case resultadoLogin.UsuarioInactivo:
+                    return "El usuario está inactivo. No puede iniciar sesión.";
+
+                case resultadoLogin.PasswordIncorrecta:
+                    return "La contraseña es incorrecta.";
+
+                default:
+                    return "Ocurrió un error al iniciar sesión.";
+            }
+        }
+    }
 }
