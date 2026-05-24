@@ -550,6 +550,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmRegistro";
             Text = "Form1";
+            Load += frmRegistro_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CapaLogica;
+using Entidades;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,16 +10,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Text.RegularExpressions;
-using CapaLogica;
 namespace CapaVista
 {
     public partial class frmRegistro : Form
     {
+        CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
         CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
         List<persona> list = new List<persona>();
         public frmRegistro()
@@ -30,13 +32,13 @@ namespace CapaVista
 
             int idRol = 0;
             string rolSeleccionado = cmbRol.SelectedItem?.ToString();
-            switch(rolSeleccionado)
+            switch (rolSeleccionado)
             {
                 case "Administrador":
                     idRol = 2;
                     break;
                 case "Usuario":
-                    idRol = 1 ;
+                    idRol = 1;
                     break;
                 default:
                     MessageBox.Show("Seleccione un rol válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -172,6 +174,65 @@ namespace CapaVista
         private void txtPiso_KeyPress(object sender, KeyPressEventArgs e)
         {
             TeclaNum(e);
+        }
+
+        private async void frmRegistro_Load(object sender, EventArgs e)
+        {
+            bool cargado = await servicioGeoref.cargarGeorefEnBase();
+
+            if (!cargado)
+            {
+                MessageBox.Show("No se pudieron cargar los datos de provincias, partidos y localidades.");
+                return;
+            }
+
+            cargarProvincias();
+        }
+        private void cargarProvincias()
+        {
+            cmbProvincia.DataSource = null;
+
+            cmbProvincia.DataSource = servicioGeoref.ObtenerProvincias();
+            cmbProvincia.DisplayMember = "Nombre";
+            cmbProvincia.ValueMember = "IdProvincia";
+            cmbProvincia.SelectedIndex = -1;
+
+            cmbPartido.DataSource = null;
+            cmbLocalidad.DataSource = null;
+        }
+        private void cmbProvincia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbProvincia.SelectedValue == null)
+                return;
+
+            if (cmbProvincia.SelectedValue is Provincia)
+                return;
+
+            string idProvincia = cmbProvincia.SelectedValue.ToString();
+
+            cmbPartido.DataSource = null;
+            cmbPartido.DataSource = servicioGeoref.ObtenerPartidosPorProvincia(idProvincia);
+            cmbPartido.DisplayMember = "Nombre";
+            cmbPartido.ValueMember = "IdPartido";
+            cmbPartido.SelectedIndex = -1;
+
+            cmbLocalidad.DataSource = null;
+        }
+        private void cmbPartido_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbPartido.SelectedValue == null)
+                return;
+
+            if (cmbPartido.SelectedValue is Partido)
+                return;
+
+            string idPartido = cmbPartido.SelectedValue.ToString();
+
+            cmbLocalidad.DataSource = null;
+            cmbLocalidad.DataSource = servicioGeoref.ObtenerLocalidadesPorPartido(idPartido);
+            cmbLocalidad.DisplayMember = "Nombre";
+            cmbLocalidad.ValueMember = "IdLocalidad";
+            cmbLocalidad.SelectedIndex = -1;
         }
     }
 }
