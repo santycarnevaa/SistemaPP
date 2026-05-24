@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 using Entidades;
 
 namespace CapaDatos
@@ -11,23 +12,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT TOP 1
-                            IdConfiguracion,
-                            MinCaracteres,
-                            CantPreguntas,
-                            RequiereMayusculas,
-                            RequiereMinusculas,
-                            RequiereNumeros,
-                            RequiereEspeciales,
-                            Requiere2FA,
-                            NoRepetirPasswords,
-                            ValidarDatosPersonales
-                        FROM dbo.ConfiguracionSistema
-                        ORDER BY IdConfiguracion;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("SP_ObtenerPoliticasSeguridad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -35,7 +21,7 @@ namespace CapaDatos
                     {
                         configuracionSistema config = new configuracionSistema
                         {
-                            idConfiguracion = Convert.ToInt32(reader["IdConfiguracion"]),
+                            idConfiguracion = Convert.ToInt32(reader["IdPolitica"]),
                             minCaracteres = Convert.ToInt32(reader["MinCaracteres"]),
                             cantPreguntas = Convert.ToInt32(reader["CantPreguntas"]),
                             requiereMayusculas = Convert.ToBoolean(reader["RequiereMayusculas"]),
@@ -67,24 +53,9 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        UPDATE dbo.ConfiguracionSistema
-                        SET
-                            MinCaracteres = @MinCaracteres,
-                            CantPreguntas = @CantPreguntas,
-                            RequiereMayusculas = @RequiereMayusculas,
-                            RequiereMinusculas = @RequiereMinusculas,
-                            RequiereNumeros = @RequiereNumeros,
-                            RequiereEspeciales = @RequiereEspeciales,
-                            Requiere2FA = @Requiere2FA,
-                            NoRepetirPasswords = @NoRepetirPasswords,
-                            ValidarDatosPersonales = @ValidarDatosPersonales
-                        WHERE IdConfiguracion = @IdConfiguracion;
-                    ";
+                    SqlCommand cmd = new SqlCommand("SP_ActualizarPoliticasSeguridad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    SqlCommand cmd = new SqlCommand(query, conexion);
-
-                    cmd.Parameters.AddWithValue("@IdConfiguracion", config.idConfiguracion);
                     cmd.Parameters.AddWithValue("@MinCaracteres", config.minCaracteres);
                     cmd.Parameters.AddWithValue("@CantPreguntas", config.cantPreguntas);
                     cmd.Parameters.AddWithValue("@RequiereMayusculas", config.requiereMayusculas);
@@ -95,9 +66,8 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@NoRepetirPasswords", config.noRepetirPasswords);
                     cmd.Parameters.AddWithValue("@ValidarDatosPersonales", config.validarDatosPersonales);
 
-                    int filas = cmd.ExecuteNonQuery();
-
-                    return filas > 0;
+                    cmd.ExecuteNonQuery();
+                    return true;
                 }
             }
             catch
@@ -110,20 +80,12 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    string query = @"
-                        SELECT TOP 1 MinCaracteres
-                        FROM dbo.ConfiguracionSistema
-                        ORDER BY IdConfiguracion;
-                    ";
+                configuracionSistema config = obtenerConfiguracion();
 
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                if (config != null)
+                    return config.minCaracteres;
 
-                    object result = cmd.ExecuteScalar();
-
-                    return result != null ? Convert.ToInt32(result) : 8;
-                }
+                return 8;
             }
             catch
             {
@@ -135,20 +97,12 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    string query = @"
-                        SELECT TOP 1 CantPreguntas
-                        FROM dbo.ConfiguracionSistema
-                        ORDER BY IdConfiguracion;
-                    ";
+                configuracionSistema config = obtenerConfiguracion();
 
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                if (config != null)
+                    return config.cantPreguntas;
 
-                    object result = cmd.ExecuteScalar();
-
-                    return result != null ? Convert.ToInt32(result) : 3;
-                }
+                return 3;
             }
             catch
             {

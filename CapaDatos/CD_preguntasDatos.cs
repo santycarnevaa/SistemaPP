@@ -1,11 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 using Entidades;
 
 namespace CapaDatos
 {
     public class CD_preguntasDatos : CD_conexion
     {
-        public List<PreguntaSeguridad> obtenerPreguntasDisponibles()
+        public List<PreguntaSeguridad> ObtenerPreguntasDisponibles()
         {
             List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
 
@@ -13,13 +14,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT IdPregunta, Pregunta
-                        FROM dbo.PreguntasSeguridad
-                        ORDER BY IdPregunta;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("SP_ListarPreguntasSeguridad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -44,7 +40,7 @@ namespace CapaDatos
             return preguntas;
         }
 
-        public List<PreguntaSeguridad> obtenerPreguntasUsuario(int idUsuario)
+        public List<PreguntaSeguridad> ObtenerPreguntasUsuario(int idUsuario)
         {
             List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
 
@@ -52,19 +48,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT 
-                            P.IdPregunta,
-                            P.Pregunta,
-                            R.RespuestaHash
-                        FROM dbo.RespuestasSeguridad R
-                        INNER JOIN dbo.PreguntasSeguridad P
-                            ON R.IdPregunta = P.IdPregunta
-                        WHERE R.IdUsuario = @IdUsuario
-                        ORDER BY P.IdPregunta;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("SP_ObtenerPreguntasUsuario", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -75,7 +60,7 @@ namespace CapaDatos
                         {
                             IdPregunta = Convert.ToInt32(reader["IdPregunta"]),
                             Pregunta = reader["Pregunta"].ToString(),
-                            RespuestaHash = reader["RespuestaHash"].ToString()
+                            RespuestaHash = string.Empty
                         });
                     }
 
@@ -90,51 +75,22 @@ namespace CapaDatos
             return preguntas;
         }
 
-        public bool insertarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
+        public bool InsertarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
             try
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        IF EXISTS (
-                            SELECT 1
-                            FROM dbo.RespuestasSeguridad
-                            WHERE IdUsuario = @IdUsuario
-                              AND IdPregunta = @IdPregunta
-                        )
-                        BEGIN
-                            UPDATE dbo.RespuestasSeguridad
-                            SET RespuestaHash = @RespuestaHash
-                            WHERE IdUsuario = @IdUsuario
-                              AND IdPregunta = @IdPregunta;
-                        END
-                        ELSE
-                        BEGIN
-                            INSERT INTO dbo.RespuestasSeguridad
-                            (
-                                IdUsuario,
-                                IdPregunta,
-                                RespuestaHash
-                            )
-                            VALUES
-                            (
-                                @IdUsuario,
-                                @IdPregunta,
-                                @RespuestaHash
-                            );
-                        END;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("SP_GuardarRespuestasSeguridad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                     cmd.Parameters.AddWithValue("@IdPregunta", idPregunta);
                     cmd.Parameters.AddWithValue("@RespuestaHash", respuestaHash);
 
-                    int filas = cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
 
-                    return filas > 0;
+                    return true;
                 }
             }
             catch
@@ -143,25 +99,36 @@ namespace CapaDatos
             }
         }
 
-        public bool usuarioTienePreguntas(int idUsuario)
+        public bool VerificarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
             try
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT COUNT(*)
-                        FROM dbo.RespuestasSeguridad
-                        WHERE IdUsuario = @IdUsuario;
-                    ";
+                    SqlCommand cmd = new SqlCommand("SP_VerificarRespuestaSeguridad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    SqlCommand cmd = new SqlCommand(query, conexion);
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@IdPregunta", idPregunta);
+                    cmd.Parameters.AddWithValue("@RespuestaHash", respuestaHash);
 
-                    int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
+                    object resultado = cmd.ExecuteScalar();
 
-                    return cantidad > 0;
+                    return resultado != null && Convert.ToBoolean(resultado);
                 }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UsuarioTienePreguntas(int idUsuario)
+        {
+            try
+            {
+                List<PreguntaSeguridad> preguntas = ObtenerPreguntasUsuario(idUsuario);
+                return preguntas.Count > 0;
             }
             catch
             {
