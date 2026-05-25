@@ -19,6 +19,23 @@ namespace CapaLogica
         {
             configuracionSistema config = configDatos.obtenerConfiguracion();
 
+            if (config == null)
+            {
+                // Valores por defecto si no hay configuración cargada
+                config = new configuracionSistema
+                {
+                    minCaracteres = 8,
+                    cantPreguntas = 3,
+                    requiereMayusculas = true,
+                    requiereMinusculas = true,
+                    requiereNumeros = true,
+                    requiereEspeciales = true,
+                    requiere2FA = false,
+                    noRepetirPasswords = true,
+                    validarDatosPersonales = true
+                };
+            }
+
             if (string.IsNullOrWhiteSpace(contra))
                 return false;
 
@@ -42,6 +59,7 @@ namespace CapaLogica
                 if (contra.ToLower().Contains(usuario.ToLower()))
                     return false;
             }
+
             return true;
         }
         public bool registrarContraTemporal(int idUsuario, string contraTemporal)

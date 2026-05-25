@@ -45,9 +45,7 @@ namespace CapaVista
             if (ok)
             {
                 MessageBox.Show("Respuestas guardadas correctamente.");
-                frmUsuario frm = new frmUsuario(usuario);
                 this.Hide();
-                frm.ShowDialog();
                 this.Close();
             }
             else
