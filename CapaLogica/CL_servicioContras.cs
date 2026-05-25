@@ -9,7 +9,7 @@ using Entidades;
 
 namespace CapaLogica
 {
-    internal class CL_servicioContras
+    public class CL_servicioContras
     {
         private CD_contraDatos contraDatos = new CD_contraDatos();
         private CD_usuariosDatos usuarioDatos = new CD_usuariosDatos();
@@ -69,20 +69,7 @@ namespace CapaLogica
 
             string hash = encriptar.hashUsuarioContra(usuario, nuevaContra);
 
-            List<string> passwordsAnteriores = contraDatos.obtenerContrasAnteriores(idUsuario);
-
-            if (passwordsAnteriores.Contains(hash))
-                return false;
-
-            bool guardado = contraDatos.insertarPassword(
-                idUsuario,
-                hash
-            );
-
-            if (!guardado)
-                return false;
-
-            return usuarioDatos.ActualizarPrimerLogin(idUsuario, false);
+            return contraDatos.CambiarContra(idUsuario, hash);
         }
     }
 }

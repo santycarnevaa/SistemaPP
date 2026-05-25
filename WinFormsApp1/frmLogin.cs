@@ -51,13 +51,13 @@ namespace CapaVista
                         MessageBox.Show("La contraseña es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     case resultadoLogin.PrimerLogin:
-                        frmPregUsuario frmPreg = new frmPregUsuario();
+                        frmPregUsuario frmPreg = new frmPregUsuario(txtUsuario.Text.Trim());
                         this.Hide();
                         frmPreg.ShowDialog();
                         this.Show();
                         break;
                     case resultadoLogin.Ok:
-                        frmUsuario frm = new frmUsuario();
+                        frmUsuario frm = new frmUsuario(txtUsuario.Text.Trim());
                         this.Hide();
                         frm.ShowDialog();
                         this.Show();

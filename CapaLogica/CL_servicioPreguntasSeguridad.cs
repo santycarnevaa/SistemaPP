@@ -9,6 +9,7 @@ namespace CapaLogica
         private CD_preguntasDatos preguntasDatos = new CD_preguntasDatos();
         private CD_usuariosDatos usuarioDatos = new CD_usuariosDatos();
         private encriptar encriptar = new encriptar();
+        private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
 
         public List<PreguntaSeguridad> obtenerPreguntasUsuario(string usuario)
         {
@@ -89,9 +90,24 @@ namespace CapaLogica
             return true;
         }
 
-        public List<PreguntaSeguridad> ObtenerPreguntasDisponibles()
+        public List<PreguntaSeguridad> ObtenerPreguntasAleatoriasSegunConfiguracion()
         {
-            return preguntasDatos.ObtenerPreguntasDisponibles();
+            List<PreguntaSeguridad> preguntas = preguntasDatos.ObtenerPreguntasDisponibles();
+
+            int cantidadPreguntas = servicioConfiguracion.obtenerCantidadPreguntasSeguridad();
+
+            if (cantidadPreguntas <= 0)
+                cantidadPreguntas = 3;
+
+            if (preguntas.Count < cantidadPreguntas)
+                return new List<PreguntaSeguridad>();
+
+            Random random = new Random();
+
+            return preguntas
+                .OrderBy(x => random.Next())
+                .Take(cantidadPreguntas)
+                .ToList();
         }
     }
 }

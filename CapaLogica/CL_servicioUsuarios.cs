@@ -262,6 +262,14 @@ namespace CapaLogica
                 default:
                     return "Ocurrió un error desconocido.";
             }
+
+        }
+        public bool esPrimerLogin(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return false;
+
+            return usuarioDatos.EsPrimerLogin(usuario);
         }
     }
 }

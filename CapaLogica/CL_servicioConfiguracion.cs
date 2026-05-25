@@ -41,7 +41,7 @@ namespace CapaLogica
             configuracionSistema config = configDatos.obtenerConfiguracion();
 
             if (config == null)
-                return 3;
+                return 5;
 
             return config.cantPreguntas;
         }

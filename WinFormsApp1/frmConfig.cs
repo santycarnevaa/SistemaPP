@@ -12,14 +12,15 @@ namespace CapaVista
 {
     public partial class frmConfig : Form
     {
-        public frmConfig()
+        private string usuario;
+        public frmConfig(string usuario)
         {
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            frmPregUsuario frm = new frmPregUsuario();
+            frmPregUsuario frm = new frmPregUsuario(usuario);
             frm.ShowDialog();
             this.Close();
         }

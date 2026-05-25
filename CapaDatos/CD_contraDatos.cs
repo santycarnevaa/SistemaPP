@@ -1,9 +1,37 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace CapaDatos
 {
     public class CD_contraDatos : CD_conexion
     {
+        public bool CambiarContra(int idUsuario, string nuevoPasswordHash)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_CambiarPassword", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@NuevaPasswordHash", nuevoPasswordHash);
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    if (resultado == null)
+                        return false;
+
+                    string mensaje = resultado.ToString();
+
+                    return mensaje.Contains("correctamente");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error SQL al cambiar la contraseña: " + ex.Message, ex);
+            }
+        }
         public bool insertarPassword(int idUsuario, string passwordHash)
         {
             try

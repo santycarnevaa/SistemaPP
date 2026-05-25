@@ -413,7 +413,7 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("SP_VerificarPrimerLogin", conexion);
+                    SqlCommand cmd = new SqlCommand("SP_EsPrimerLogin", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
 

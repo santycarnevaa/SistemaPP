@@ -29,141 +29,136 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPregUsuario));
-            Resp1 = new TextBox();
-            Resp2 = new TextBox();
-            Resp3 = new TextBox();
-            Resp4 = new TextBox();
-            Resp5 = new TextBox();
-            label4 = new Label();
-            label5 = new Label();
-            label6 = new Label();
-            label7 = new Label();
-            label8 = new Label();
+            txtRespuesta1 = new TextBox();
+            txtRespuesta2 = new TextBox();
+            txtRespuesta3 = new TextBox();
+            txtRespuesta4 = new TextBox();
+            txtRespuesta5 = new TextBox();
+            lblPregunta1 = new Label();
+            lblPregunta2 = new Label();
+            lblPregunta3 = new Label();
+            lblPregunta4 = new Label();
+            lblPregunta5 = new Label();
             label9 = new Label();
             btnEnviar = new Button();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
-            // Resp1
+            // txtRespuesta1
             // 
-            Resp1.BackColor = Color.FromArgb(8, 10, 13);
-            Resp1.BorderStyle = BorderStyle.FixedSingle;
-            Resp1.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Resp1.ForeColor = Color.White;
-            Resp1.Location = new Point(36, 63);
-            Resp1.Multiline = true;
-            Resp1.Name = "Resp1";
-            Resp1.Size = new Size(495, 32);
-            Resp1.TabIndex = 0;
-            Resp1.Text = "1";
+            txtRespuesta1.BackColor = Color.FromArgb(8, 10, 13);
+            txtRespuesta1.BorderStyle = BorderStyle.FixedSingle;
+            txtRespuesta1.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta1.ForeColor = Color.White;
+            txtRespuesta1.Location = new Point(36, 63);
+            txtRespuesta1.Multiline = true;
+            txtRespuesta1.Name = "txtRespuesta1";
+            txtRespuesta1.Size = new Size(495, 32);
+            txtRespuesta1.TabIndex = 0;
             // 
-            // Resp2
+            // txtRespuesta2
             // 
-            Resp2.BackColor = Color.FromArgb(8, 10, 13);
-            Resp2.BorderStyle = BorderStyle.FixedSingle;
-            Resp2.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Resp2.ForeColor = Color.White;
-            Resp2.Location = new Point(36, 149);
-            Resp2.Multiline = true;
-            Resp2.Name = "Resp2";
-            Resp2.Size = new Size(495, 32);
-            Resp2.TabIndex = 8;
-            Resp2.Text = "2";
+            txtRespuesta2.BackColor = Color.FromArgb(8, 10, 13);
+            txtRespuesta2.BorderStyle = BorderStyle.FixedSingle;
+            txtRespuesta2.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta2.ForeColor = Color.White;
+            txtRespuesta2.Location = new Point(36, 149);
+            txtRespuesta2.Multiline = true;
+            txtRespuesta2.Name = "txtRespuesta2";
+            txtRespuesta2.Size = new Size(495, 32);
+            txtRespuesta2.TabIndex = 8;
             // 
-            // Resp3
+            // txtRespuesta3
             // 
-            Resp3.BackColor = Color.FromArgb(8, 10, 13);
-            Resp3.BorderStyle = BorderStyle.FixedSingle;
-            Resp3.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Resp3.ForeColor = Color.White;
-            Resp3.Location = new Point(36, 236);
-            Resp3.Multiline = true;
-            Resp3.Name = "Resp3";
-            Resp3.Size = new Size(495, 32);
-            Resp3.TabIndex = 9;
-            Resp3.Text = "3";
+            txtRespuesta3.BackColor = Color.FromArgb(8, 10, 13);
+            txtRespuesta3.BorderStyle = BorderStyle.FixedSingle;
+            txtRespuesta3.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta3.ForeColor = Color.White;
+            txtRespuesta3.Location = new Point(36, 236);
+            txtRespuesta3.Multiline = true;
+            txtRespuesta3.Name = "txtRespuesta3";
+            txtRespuesta3.Size = new Size(495, 32);
+            txtRespuesta3.TabIndex = 9;
             // 
-            // Resp4
+            // txtRespuesta4
             // 
-            Resp4.BackColor = Color.FromArgb(8, 10, 13);
-            Resp4.BorderStyle = BorderStyle.FixedSingle;
-            Resp4.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Resp4.ForeColor = Color.White;
-            Resp4.Location = new Point(36, 324);
-            Resp4.Multiline = true;
-            Resp4.Name = "Resp4";
-            Resp4.Size = new Size(495, 32);
-            Resp4.TabIndex = 10;
-            Resp4.Text = "4";
+            txtRespuesta4.BackColor = Color.FromArgb(8, 10, 13);
+            txtRespuesta4.BorderStyle = BorderStyle.FixedSingle;
+            txtRespuesta4.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta4.ForeColor = Color.White;
+            txtRespuesta4.Location = new Point(36, 324);
+            txtRespuesta4.Multiline = true;
+            txtRespuesta4.Name = "txtRespuesta4";
+            txtRespuesta4.Size = new Size(495, 32);
+            txtRespuesta4.TabIndex = 10;
             // 
-            // Resp5
+            // txtRespuesta5
             // 
-            Resp5.BackColor = Color.FromArgb(8, 10, 13);
-            Resp5.BorderStyle = BorderStyle.FixedSingle;
-            Resp5.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Resp5.ForeColor = Color.White;
-            Resp5.Location = new Point(36, 420);
-            Resp5.Multiline = true;
-            Resp5.Name = "Resp5";
-            Resp5.Size = new Size(495, 32);
-            Resp5.TabIndex = 11;
-            Resp5.Text = "5";
+            txtRespuesta5.BackColor = Color.FromArgb(8, 10, 13);
+            txtRespuesta5.BorderStyle = BorderStyle.FixedSingle;
+            txtRespuesta5.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta5.ForeColor = Color.White;
+            txtRespuesta5.Location = new Point(36, 420);
+            txtRespuesta5.Multiline = true;
+            txtRespuesta5.Name = "txtRespuesta5";
+            txtRespuesta5.Size = new Size(495, 32);
+            txtRespuesta5.TabIndex = 11;
             // 
-            // label4
+            // lblPregunta1
             // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
-            label4.ForeColor = Color.White;
-            label4.Location = new Point(29, 43);
-            label4.Name = "label4";
-            label4.Size = new Size(48, 17);
-            label4.TabIndex = 12;
-            label4.Text = "¿111?";
+            lblPregunta1.AutoSize = true;
+            lblPregunta1.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta1.ForeColor = Color.White;
+            lblPregunta1.Location = new Point(29, 43);
+            lblPregunta1.Name = "lblPregunta1";
+            lblPregunta1.Size = new Size(48, 17);
+            lblPregunta1.TabIndex = 12;
+            lblPregunta1.Text = "¿111?";
             // 
-            // label5
+            // lblPregunta2
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
-            label5.ForeColor = Color.White;
-            label5.Location = new Point(29, 129);
-            label5.Name = "label5";
-            label5.Size = new Size(48, 17);
-            label5.TabIndex = 13;
-            label5.Text = "¿222?";
+            lblPregunta2.AutoSize = true;
+            lblPregunta2.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta2.ForeColor = Color.White;
+            lblPregunta2.Location = new Point(29, 129);
+            lblPregunta2.Name = "lblPregunta2";
+            lblPregunta2.Size = new Size(48, 17);
+            lblPregunta2.TabIndex = 13;
+            lblPregunta2.Text = "¿222?";
             // 
-            // label6
+            // lblPregunta3
             // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
-            label6.ForeColor = Color.White;
-            label6.Location = new Point(29, 216);
-            label6.Name = "label6";
-            label6.Size = new Size(48, 17);
-            label6.TabIndex = 14;
-            label6.Text = "¿333?";
+            lblPregunta3.AutoSize = true;
+            lblPregunta3.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta3.ForeColor = Color.White;
+            lblPregunta3.Location = new Point(29, 216);
+            lblPregunta3.Name = "lblPregunta3";
+            lblPregunta3.Size = new Size(48, 17);
+            lblPregunta3.TabIndex = 14;
+            lblPregunta3.Text = "¿333?";
             // 
-            // label7
+            // lblPregunta4
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
-            label7.ForeColor = Color.White;
-            label7.Location = new Point(29, 304);
-            label7.Name = "label7";
-            label7.Size = new Size(48, 17);
-            label7.TabIndex = 15;
-            label7.Text = "¿444?";
+            lblPregunta4.AutoSize = true;
+            lblPregunta4.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta4.ForeColor = Color.White;
+            lblPregunta4.Location = new Point(29, 304);
+            lblPregunta4.Name = "lblPregunta4";
+            lblPregunta4.Size = new Size(48, 17);
+            lblPregunta4.TabIndex = 15;
+            lblPregunta4.Text = "¿444?";
             // 
-            // label8
+            // lblPregunta5
             // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
-            label8.ForeColor = Color.White;
-            label8.Location = new Point(29, 400);
-            label8.Name = "label8";
-            label8.Size = new Size(48, 17);
-            label8.TabIndex = 16;
-            label8.Text = "¿555?";
+            lblPregunta5.AutoSize = true;
+            lblPregunta5.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta5.ForeColor = Color.White;
+            lblPregunta5.Location = new Point(29, 400);
+            lblPregunta5.Name = "lblPregunta5";
+            lblPregunta5.Size = new Size(48, 17);
+            lblPregunta5.TabIndex = 16;
+            lblPregunta5.Text = "¿555?";
             // 
             // label9
             // 
@@ -211,16 +206,16 @@
             Controls.Add(pictureBox2);
             Controls.Add(btnEnviar);
             Controls.Add(label9);
-            Controls.Add(label8);
-            Controls.Add(label7);
-            Controls.Add(label6);
-            Controls.Add(label5);
-            Controls.Add(label4);
-            Controls.Add(Resp5);
-            Controls.Add(Resp4);
-            Controls.Add(Resp3);
-            Controls.Add(Resp2);
-            Controls.Add(Resp1);
+            Controls.Add(lblPregunta5);
+            Controls.Add(lblPregunta4);
+            Controls.Add(lblPregunta3);
+            Controls.Add(lblPregunta2);
+            Controls.Add(lblPregunta1);
+            Controls.Add(txtRespuesta5);
+            Controls.Add(txtRespuesta4);
+            Controls.Add(txtRespuesta3);
+            Controls.Add(txtRespuesta2);
+            Controls.Add(txtRespuesta1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmPregUsuario";
             StartPosition = FormStartPosition.CenterScreen;
@@ -232,16 +227,16 @@
 
         #endregion
 
-        private TextBox Resp1;
-        private TextBox Resp2;
-        private TextBox Resp3;
-        private TextBox Resp4;
-        private TextBox Resp5;
-        private Label label4;
-        private Label label5;
-        private Label label6;
-        private Label label7;
-        private Label label8;
+        private TextBox txtRespuesta1;
+        private TextBox txtRespuesta2;
+        private TextBox txtRespuesta3;
+        private TextBox txtRespuesta4;
+        private TextBox txtRespuesta5;
+        private Label lblPregunta1;
+        private Label lblPregunta2;
+        private Label lblPregunta3;
+        private Label lblPregunta4;
+        private Label lblPregunta5;
         private Label label9;
         private Button btnEnviar;
         private PictureBox pictureBox2;

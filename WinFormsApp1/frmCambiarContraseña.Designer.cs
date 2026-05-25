@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmContraseña));
             btnSiguiente = new Button();
-            txtnueva = new TextBox();
+            txtNuevaContra = new TextBox();
             label1 = new Label();
-            txtnueva2 = new TextBox();
+            txtConfirmarContra = new TextBox();
             label2 = new Label();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -53,19 +53,19 @@
             btnSiguiente.UseVisualStyleBackColor = false;
             btnSiguiente.Click += btnSiguiente_Click;
             // 
-            // txtnueva
+            // txtNuevaContra
             // 
-            txtnueva.BackColor = Color.FromArgb(8, 10, 13);
-            txtnueva.BorderStyle = BorderStyle.FixedSingle;
-            txtnueva.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            txtnueva.ForeColor = Color.White;
-            txtnueva.Location = new Point(166, 76);
-            txtnueva.Multiline = true;
-            txtnueva.Name = "txtnueva";
-            txtnueva.Size = new Size(221, 33);
-            txtnueva.TabIndex = 14;
-            txtnueva.TextAlign = HorizontalAlignment.Center;
-            txtnueva.TextChanged += txtnueva_TextChanged;
+            txtNuevaContra.BackColor = Color.FromArgb(8, 10, 13);
+            txtNuevaContra.BorderStyle = BorderStyle.FixedSingle;
+            txtNuevaContra.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtNuevaContra.ForeColor = Color.White;
+            txtNuevaContra.Location = new Point(166, 76);
+            txtNuevaContra.Multiline = true;
+            txtNuevaContra.Name = "txtNuevaContra";
+            txtNuevaContra.Size = new Size(221, 33);
+            txtNuevaContra.TabIndex = 14;
+            txtNuevaContra.TextAlign = HorizontalAlignment.Center;
+            txtNuevaContra.TextChanged += txtnueva_TextChanged;
             // 
             // label1
             // 
@@ -78,19 +78,19 @@
             label1.TabIndex = 15;
             label1.Text = "Nueva contraseña:";
             // 
-            // txtnueva2
+            // txtConfirmarContra
             // 
-            txtnueva2.BackColor = Color.FromArgb(8, 10, 13);
-            txtnueva2.BorderStyle = BorderStyle.FixedSingle;
-            txtnueva2.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
-            txtnueva2.ForeColor = Color.White;
-            txtnueva2.Location = new Point(167, 141);
-            txtnueva2.Multiline = true;
-            txtnueva2.Name = "txtnueva2";
-            txtnueva2.Size = new Size(221, 33);
-            txtnueva2.TabIndex = 16;
-            txtnueva2.TextAlign = HorizontalAlignment.Center;
-            txtnueva2.TextChanged += txtnueva2_TextChanged;
+            txtConfirmarContra.BackColor = Color.FromArgb(8, 10, 13);
+            txtConfirmarContra.BorderStyle = BorderStyle.FixedSingle;
+            txtConfirmarContra.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtConfirmarContra.ForeColor = Color.White;
+            txtConfirmarContra.Location = new Point(167, 141);
+            txtConfirmarContra.Multiline = true;
+            txtConfirmarContra.Name = "txtConfirmarContra";
+            txtConfirmarContra.Size = new Size(221, 33);
+            txtConfirmarContra.TabIndex = 16;
+            txtConfirmarContra.TextAlign = HorizontalAlignment.Center;
+            txtConfirmarContra.TextChanged += txtnueva2_TextChanged;
             // 
             // label2
             // 
@@ -123,9 +123,9 @@
             ClientSize = new Size(556, 286);
             Controls.Add(pictureBox2);
             Controls.Add(label2);
-            Controls.Add(txtnueva2);
+            Controls.Add(txtConfirmarContra);
             Controls.Add(label1);
-            Controls.Add(txtnueva);
+            Controls.Add(txtNuevaContra);
             Controls.Add(btnSiguiente);
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmContraseña";
@@ -138,9 +138,9 @@
         #endregion
 
         private Button btnSiguiente;
-        private TextBox txtnueva;
+        private TextBox txtNuevaContra;
         private Label label1;
-        private TextBox txtnueva2;
+        private TextBox txtConfirmarContra;
         private Label label2;
         private PictureBox pictureBox2;
     }

@@ -14,6 +14,7 @@ namespace CapaVista
 {
     public partial class frmrecuperar : Form
     {
+        string usuario;
         public frmrecuperar()
         {
             InitializeComponent();
@@ -175,7 +176,7 @@ namespace CapaVista
             if (txtPreg1.Text == Preg1 && txtPreg2.Text == Preg2 && txtPreg3.Text == Preg3)
             //cambia las variables preg1,2... por las respuestas correctas
             {
-                frmContraseña frm = new frmContraseña();
+                frmContraseña frm = new frmContraseña(usuario);
                 this.Hide();
                 frm.ShowDialog();
                 this.Close();
