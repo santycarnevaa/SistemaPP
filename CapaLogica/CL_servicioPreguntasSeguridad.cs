@@ -15,12 +15,12 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return new List<PreguntaSeguridad>();
 
-            int idUsuario = usuarioDatos.obtenerIdUsuario(usuario);
+            int idUsuario = usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
 
             if (idUsuario == -1)
                 return new List<PreguntaSeguridad>();
 
-            return preguntasDatos.obtenerPreguntasUsuario(idUsuario);
+            return preguntasDatos.ObtenerPreguntasUsuario(idUsuario);
         }
 
         public bool validarRespuestas(string usuario, List<string> respuestas)
@@ -31,13 +31,13 @@ namespace CapaLogica
             if (respuestas == null || respuestas.Count == 0)
                 return false;
 
-            int idUsuario = usuarioDatos.obtenerIdUsuario(usuario);
+            int idUsuario = usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
 
             if (idUsuario == -1)
                 return false;
 
             List<PreguntaSeguridad> preguntasUsuario =
-                preguntasDatos.obtenerPreguntasUsuario(idUsuario);
+                preguntasDatos.ObtenerPreguntasUsuario(idUsuario);
 
             if (preguntasUsuario.Count != respuestas.Count)
                 return false;
@@ -76,7 +76,7 @@ namespace CapaLogica
 
                 string respuestaHash = encriptar.HashMetodo(respuesta);
 
-                bool guardado = preguntasDatos.insertarRespuestaUsuario(
+                bool guardado = preguntasDatos.InsertarRespuestaUsuario(
                     idUsuario,
                     idPregunta,
                     respuestaHash
@@ -91,7 +91,7 @@ namespace CapaLogica
 
         public List<PreguntaSeguridad> ObtenerPreguntasDisponibles()
         {
-            return preguntasDatos.obtenerPreguntasDisponibles();
+            return preguntasDatos.ObtenerPreguntasDisponibles();
         }
     }
 }

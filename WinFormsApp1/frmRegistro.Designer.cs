@@ -230,7 +230,6 @@
             ltbClientes.Name = "ltbClientes";
             ltbClientes.Size = new Size(303, 388);
             ltbClientes.TabIndex = 18;
-            ltbClientes.SelectedIndexChanged += ltbClientes_SelectedIndexChanged;
             // 
             // button1
             // 

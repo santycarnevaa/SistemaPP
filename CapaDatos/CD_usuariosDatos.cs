@@ -68,9 +68,9 @@ namespace CapaDatos
                     return resultado != null ? Convert.ToInt32(resultado) : -1;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return -1;
+                throw new Exception("Error SQL al registrar usuario: " + ex.Message, ex);
             }
         }
 
@@ -446,7 +446,7 @@ namespace CapaDatos
                 return 0;
             }
         }
-       
+
         public int RegistrarPersonaUsuarioConDireccion(
             string nombre,
             string apellido,
@@ -467,48 +467,96 @@ namespace CapaDatos
             string correo,
             string passwordHash,
             int idRol)
+        {
+            try
             {
-                try
+                using (SqlConnection conexion = conectar())
                 {
-                    using (SqlConnection conexion = conectar())
-                    {
-                        SqlCommand cmd = new SqlCommand("SP_RegistrarUsuarioCompleto", conexion);
-                        cmd.CommandType = CommandType.StoredProcedure;
+                    SqlCommand cmd = new SqlCommand("SP_RegistrarUsuarioCompleto", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                        cmd.Parameters.AddWithValue("@Nombre", nombre);
-                        cmd.Parameters.AddWithValue("@Apellido", apellido);
-                        cmd.Parameters.AddWithValue("@DNI", dni);
-                        cmd.Parameters.AddWithValue("@Telefono", telefono);
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
+                    cmd.Parameters.AddWithValue("@Nombre", nombre);
+                    cmd.Parameters.AddWithValue("@Apellido", apellido);
+                    cmd.Parameters.AddWithValue("@DNI", dni);
+                    cmd.Parameters.AddWithValue("@Telefono", telefono);
+                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
 
-                        cmd.Parameters.AddWithValue("@Calle", calle);
-                        cmd.Parameters.AddWithValue("@Numero", numero);
-                        cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
-                        cmd.Parameters.AddWithValue("@Depto", depto);
-                        cmd.Parameters.AddWithValue("@Piso", piso);
-                        cmd.Parameters.AddWithValue("@Provincia", provincia);
-                        cmd.Parameters.AddWithValue("@Partido", partido);
-                        cmd.Parameters.AddWithValue("@Localidad", localidad);
-                        cmd.Parameters.AddWithValue("@Latitud", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Longitud", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
-                        cmd.Parameters.AddWithValue("@DireccionNormalizada", direccionNormalizada);
+                    cmd.Parameters.AddWithValue("@Calle", calle);
+                    cmd.Parameters.AddWithValue("@Numero", numero);
+                    cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
+                    cmd.Parameters.AddWithValue("@Depto", depto);
+                    cmd.Parameters.AddWithValue("@Piso", piso);
+                    cmd.Parameters.AddWithValue("@Provincia", provincia);
+                    cmd.Parameters.AddWithValue("@Partido", partido);
+                    cmd.Parameters.AddWithValue("@Localidad", localidad);
+                    cmd.Parameters.AddWithValue("@Latitud", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Longitud", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
+                    cmd.Parameters.AddWithValue("@DireccionNormalizada", direccionNormalizada);
 
-                        cmd.Parameters.AddWithValue("@Usuario", usuario);
-                        cmd.Parameters.AddWithValue("@Correo", correo);
-                        cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                        cmd.Parameters.AddWithValue("@IdRol", idRol);
-                        cmd.Parameters.AddWithValue("@Usa2FA", false);
+                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+                    cmd.Parameters.AddWithValue("@Correo", correo);
+                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+                    cmd.Parameters.AddWithValue("@IdRol", idRol);
+                    cmd.Parameters.AddWithValue("@Usa2FA", false);
 
-                        object resultado = cmd.ExecuteScalar();
+                    object resultado = cmd.ExecuteScalar();
 
-                        return resultado != null ? Convert.ToInt32(resultado) : 0;
-                    }
-                    }
-                catch
-                {
-                    return 0;
+                    return resultado != null ? Convert.ToInt32(resultado) : 0;
                 }
             }
-    } 
-}
+            catch
+            {
+                return 0;
+            }
+        }
+            public bool ActualizarEstadoUsuario(int idUsuario, bool activo)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarEstadoUsuario", conexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@Activo", activo);
+
+                    int filas = cmd.ExecuteNonQuery();
+
+                    return filas > 0;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool ActualizarDatosUsuario(int idUsuario,string nombre,string apellido,string correo,DateTime fechaNacimiento,int idRol)
+                {
+                    try
+                    {
+                        using (SqlConnection conexion = conectar())
+                        {
+                            SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarDatosUsuario", conexion);
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                            cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                            cmd.Parameters.AddWithValue("@Nombre", nombre);
+                            cmd.Parameters.AddWithValue("@Apellido", apellido);
+                            cmd.Parameters.AddWithValue("@Correo", correo);
+                            cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
+                            cmd.Parameters.AddWithValue("@IdRol", idRol);
+
+                            int filas = cmd.ExecuteNonQuery();
+
+                            return filas > 0;
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+        }
+    }
+} 

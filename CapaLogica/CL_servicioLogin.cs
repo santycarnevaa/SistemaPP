@@ -17,12 +17,12 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(password))
                 return resultadoLogin.PasswordVacia;
 
-            bool existeUsuario = usuarioDatos.existeUsuario(usuario);
+            bool existeUsuario = usuarioDatos.ExisteUsuario(usuario);
 
             if (!existeUsuario)
                 return resultadoLogin.UsuarioNoExiste;
 
-            bool usuarioActivo = usuarioDatos.usuarioActivo(usuario);
+            bool usuarioActivo = usuarioDatos.UsuarioActivo(usuario);
 
             if (!usuarioActivo)
                 return resultadoLogin.UsuarioInactivo;
@@ -34,7 +34,7 @@ namespace CapaLogica
             if (!loginCorrecto)
                 return resultadoLogin.PasswordIncorrecta;
 
-            bool primerLogin = usuarioDatos.esPrimerLogin(usuario);
+            bool primerLogin = usuarioDatos.EsPrimerLogin(usuario);
 
             if (primerLogin)
                 return resultadoLogin.PrimerLogin;
@@ -54,7 +54,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            return usuarioDatos.esPrimerLogin(usuario);
+            return usuarioDatos.EsPrimerLogin(usuario);
         }
 
         public bool UsuarioActivo(string usuario)
@@ -62,7 +62,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            return usuarioDatos.usuarioActivo(usuario);
+            return usuarioDatos.UsuarioActivo(usuario);
         }
 
         public bool ExisteUsuario(string usuario)
@@ -70,7 +70,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            return usuarioDatos.existeUsuario(usuario);
+            return usuarioDatos.ExisteUsuario(usuario);
         }
 
         public int ObtenerIdUsuario(string usuario)
@@ -78,7 +78,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return -1;
 
-            return usuarioDatos.obtenerIdUsuario(usuario);
+            return usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
         }
 
         public int ObtenerRolUsuario(string usuario)
@@ -86,7 +86,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return -1;
 
-            return usuarioDatos.obtenerRolUsuario(usuario);
+            return usuarioDatos.ObtenerRolUsuario(usuario);
         }
 
         public bool EsAdministrador(string usuario)
@@ -94,7 +94,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            int idRol = usuarioDatos.obtenerRolUsuario(usuario);
+            int idRol = usuarioDatos.ObtenerRolUsuario(usuario);
 
             // Ajustalo según tu tabla Roles.
             // Ejemplo: 1 = Usuario, 2 = Administrador

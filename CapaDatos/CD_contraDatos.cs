@@ -4,7 +4,7 @@ namespace CapaDatos
 {
     public class CD_contraDatos : CD_conexion
     {
-        public bool insertarPassword(int idUsuario, string passwordHash, bool esTemporal)
+        public bool insertarPassword(int idUsuario, string passwordHash)
         {
             try
             {
@@ -15,15 +15,13 @@ namespace CapaDatos
                         (
                             IdUsuario,
                             PasswordHash,
-                            FechaCreacion,
-                            EsTemporal
+                            FechaCreacion
                         )
                         VALUES
                         (
                             @IdUsuario,
                             @PasswordHash,
-                            GETDATE(),
-                            @EsTemporal
+                            GETDATE()
                         );
                     ";
 
@@ -31,16 +29,15 @@ namespace CapaDatos
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                     cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                    cmd.Parameters.AddWithValue("@EsTemporal", esTemporal);
 
                     int filas = cmd.ExecuteNonQuery();
 
                     return filas > 0;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception("Error SQL al registrar contraseña temporal: " + ex.Message, ex);
             }
         }
 

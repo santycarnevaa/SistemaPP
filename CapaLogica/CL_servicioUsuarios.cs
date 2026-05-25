@@ -14,6 +14,7 @@ namespace CapaLogica
         private CL_servicioContras servicioContras = new CL_servicioContras();
         private CL_servicioMail servicioMail = new CL_servicioMail();
         private generarContra generarContra = new generarContra();
+        private encriptar encriptar = new encriptar();
         public resultadoRegistroUsuario RegistrarUsuario(
         string calle,
         string numero,
@@ -73,16 +74,25 @@ namespace CapaLogica
                 if (idRol <= 0)
                     return resultadoRegistroUsuario.RolInvalido;
 
-                if (usuarioDatos.existeUsuario(usuario))
+                if (usuarioDatos.ExisteUsuario(usuario))
                     return resultadoRegistroUsuario.UsuarioYaExiste;
 
-                if (usuarioDatos.existeCorreo(correo))
+                if (usuarioDatos.ExisteCorreo(correo))
                     return resultadoRegistroUsuario.CorreoYaExiste;
 
                 string direccionOriginal = calle + " " + numero + ", " + localidad + ", " + partido + ", " + provincia;
                 string direccionNormalizada = direccionOriginal.ToUpper().Trim();
 
-                int idUsuario = usuarioDatos.RegistrarPersonaUsuarioConDireccion(
+                string passwordTemporal = generarContra.autogenerarContra();
+                string passwordHash = encriptar.hashUsuarioContra(usuario, passwordTemporal);
+
+                int idUsuario = usuarioDatos.RegistrarUsuarioCompleto(
+                    nombre,
+                    apellido,
+                    dni,
+                    telefono,
+                    fechaNacimiento,
+
                     calle,
                     numero,
                     codigoPostal,
@@ -91,24 +101,20 @@ namespace CapaLogica
                     provincia,
                     partido,
                     localidad,
+                    null,
+                    null,
                     direccionOriginal,
                     direccionNormalizada,
 
-                    nombre,
-                    apellido,
-                    dni,
-                    telefono,
-                    fechaNacimiento,
-
                     usuario,
                     correo,
-                    idRol
+                    passwordHash,
+                    idRol,
+                    false
                 );
 
-                if (idUsuario == -1)
+            if (idUsuario == -1)
                     return resultadoRegistroUsuario.ErrorBaseDatos;
-
-                string passwordTemporal = generarContra.autogenerarContra();
 
                 bool passwordOk = servicioContras.registrarContraTemporal(idUsuario, passwordTemporal);
 
@@ -128,7 +134,7 @@ namespace CapaLogica
             if (idUsuario <= 0)
                 return false;
 
-            return usuarioDatos.actualizarEstadoUsuario(idUsuario, false);
+            return usuarioDatos.ActualizarEstadoUsuario(idUsuario, false);
         }
 
         public bool ActivarUsuario(int idUsuario)
@@ -136,7 +142,7 @@ namespace CapaLogica
             if (idUsuario <= 0)
                 return false;
 
-            return usuarioDatos.actualizarEstadoUsuario(idUsuario, true);
+            return usuarioDatos.ActualizarEstadoUsuario(idUsuario, true);
         }
 
         public bool ActualizarDatosUsuario(
@@ -159,7 +165,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
 
-            return usuarioDatos.actualizarDatosUsuario(
+            return usuarioDatos.ActualizarDatosUsuario(
                 idUsuario,
                 nombre,
                 apellido,
@@ -174,7 +180,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return -1;
 
-            return usuarioDatos.obtenerIdUsuario(usuario);
+            return usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
         }
 
         public bool ExisteUsuario(string usuario)
@@ -182,7 +188,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            return usuarioDatos.existeUsuario(usuario);
+            return usuarioDatos.ExisteUsuario(usuario);
         }
 
         public bool ExisteCorreo(string correo)
@@ -190,7 +196,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
 
-            return usuarioDatos.existeCorreo(correo);
+            return usuarioDatos.ExisteCorreo(correo);
         }
         public string ObtenerMensajeRegistro(resultadoRegistroUsuario resultado)
         {

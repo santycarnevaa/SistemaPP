@@ -46,7 +46,7 @@ namespace CapaLogica
         }
         public bool registrarContraTemporal(int idUsuario, string contraTemporal)
         {
-            string usuario = usuarioDatos.obtenerUsuarioPorId(idUsuario);
+            string usuario = usuarioDatos.BuscarUsuarioPorId(idUsuario);
 
             if (string.IsNullOrEmpty(usuario))
                 return false;
@@ -54,13 +54,12 @@ namespace CapaLogica
 
             return contraDatos.insertarPassword(
                 idUsuario,
-                hash,
-                esTemporal: true
+                hash
             );
         }
         public bool cambiarContra(string usuario, string nuevaContra)
         {
-            int idUsuario = usuarioDatos.obtenerIdUsuario(usuario);
+            int idUsuario = usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
 
             if (idUsuario == -1)
                 return false;
@@ -77,14 +76,13 @@ namespace CapaLogica
 
             bool guardado = contraDatos.insertarPassword(
                 idUsuario,
-                hash,
-                esTemporal: false
+                hash
             );
 
             if (!guardado)
                 return false;
 
-            return usuarioDatos.actualizarPrimerLogin(idUsuario, false);
+            return usuarioDatos.ActualizarPrimerLogin(idUsuario, false);
         }
     }
 }

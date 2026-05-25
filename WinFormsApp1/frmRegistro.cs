@@ -1,134 +1,232 @@
 ﻿using CapaLogica;
-using Entidades;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
+
 namespace CapaVista
 {
     public partial class frmRegistro : Form
     {
-        CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
-        CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
-        List<persona> list = new List<persona>();
+        private CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
+        private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
+
         public frmRegistro()
         {
             InitializeComponent();
+
+            // Evita que se dupliquen eventos si ya estaban conectados desde el diseñador
+            this.Load -= frmRegistro_Load;
+            this.Load += frmRegistro_Load;
+
+            cmbProvincia.SelectedIndexChanged -= cmbProvincia_SelectedIndexChanged;
+            cmbProvincia.SelectedIndexChanged += cmbProvincia_SelectedIndexChanged;
+
+            cmbPartido.SelectedIndexChanged -= cmbPartido_SelectedIndexChanged;
+            cmbPartido.SelectedIndexChanged += cmbPartido_SelectedIndexChanged;
+        }
+
+        private void frmRegistro_Load(object sender, EventArgs e)
+        {
+            cargarRoles();
+            cargarProvincias();
+
+            btnModificar.Visible = false;
+            btnAceptar.Visible = true;
+        }
+
+        private void cargarRoles()
+        {
+            cmbRol.Items.Clear();
+
+            cmbRol.Items.Add("Usuario");
+            cmbRol.Items.Add("Administrador");
+
+            cmbRol.SelectedIndex = -1;
+        }
+
+        private void cargarProvincias()
+        {
+            try
+            {
+                var provincias = servicioGeoref.ObtenerProvincias();
+
+                cmbProvincia.DataSource = null;
+                cmbProvincia.DisplayMember = "Nombre";
+                cmbProvincia.ValueMember = "IdProvincia";
+                cmbProvincia.DataSource = provincias;
+                cmbProvincia.SelectedIndex = -1;
+
+                cmbPartido.DataSource = null;
+                cmbLocalidad.DataSource = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error al cargar provincias: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private void cmbProvincia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbProvincia.SelectedValue == null)
+                    return;
+
+                string idProvincia = cmbProvincia.SelectedValue.ToString();
+
+                if (string.IsNullOrWhiteSpace(idProvincia))
+                    return;
+
+                var partidos = servicioGeoref.ObtenerPartidosPorProvincia(idProvincia);
+
+                cmbPartido.DataSource = null;
+                cmbPartido.DisplayMember = "Nombre";
+                cmbPartido.ValueMember = "IdPartido";
+                cmbPartido.DataSource = partidos;
+                cmbPartido.SelectedIndex = -1;
+
+                cmbLocalidad.DataSource = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error al cargar partidos: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private void cmbPartido_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbPartido.SelectedValue == null)
+                    return;
+
+                string idPartido = cmbPartido.SelectedValue.ToString();
+
+                if (string.IsNullOrWhiteSpace(idPartido))
+                    return;
+
+                var localidades = servicioGeoref.ObtenerLocalidadesPorPartido(idPartido);
+
+                cmbLocalidad.DataSource = null;
+                cmbLocalidad.DisplayMember = "Nombre";
+                cmbLocalidad.ValueMember = "IdLocalidad";
+                cmbLocalidad.DataSource = localidades;
+                cmbLocalidad.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error al cargar localidades: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
+            int idRol = obtenerIdRol();
 
-            int idRol = 0;
+            if (idRol == 0)
+            {
+                MessageBox.Show(
+                    "Seleccione un rol válido.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                return;
+            }
+
+            try
+            {
+                resultadoRegistroUsuario resultado = servicioUsuarios.RegistrarUsuario(
+                    txtCalle.Text,
+                    txtNumCalle.Text,
+                    txtCP.Text,
+                    txtDepto.Text,
+                    txtPiso.Text,
+                    cmbProvincia.Text,
+                    cmbPartido.Text,
+                    cmbLocalidad.Text,
+
+                    txtNombre.Text,
+                    txtApellido.Text,
+                    txtDni.Text,
+                    txtTelefono.Text,
+                    datFecha.Value,
+
+                    txtUsuario.Text,
+                    txtCorreo.Text,
+                    idRol
+                );
+
+                MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado));
+
+                if (resultado == resultadoRegistroUsuario.Ok)
+                {
+                    Limpiar();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error real: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private int obtenerIdRol()
+        {
             string rolSeleccionado = cmbRol.SelectedItem?.ToString();
+
             switch (rolSeleccionado)
             {
-                case "Administrador":
-                    idRol = 2;
-                    break;
                 case "Usuario":
-                    idRol = 1;
-                    break;
+                    return 1;
+
+                case "Administrador":
+                    return 2;
+
                 default:
-                    MessageBox.Show("Seleccione un rol válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-            }
-
-            resultadoRegistroUsuario resultado = servicioUsuarios.RegistrarUsuario(
-                txtCalle.Text,
-                txtNumCalle.Text,
-                txtCP.Text,
-                txtDepto.Text,
-                txtPiso.Text,
-                cmbProvincia.Text,
-                cmbPartido.Text,
-                cmbLocalidad.Text,
-
-                txtNombre.Text,
-                txtApellido.Text,
-                txtDni.Text,
-                txtTelefono.Text,
-                datFecha.Value,
-
-                txtUsuario.Text,
-                txtCorreo.Text,
-                idRol
-            );
-
-            MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado));
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (ltbClientes.SelectedIndex != -1)
-            {
-                list.RemoveAt(ltbClientes.SelectedIndex);
-                datos();
-                btnModificar.Visible = false;
-                btnAceptar.Visible = true;
-                Limpiar();
-            }
-
-        }
-        private void datos()
-        {
-            ltbClientes.Items.Clear();
-            foreach (persona pers in list)
-            {
-                string fila = $"{pers.name} {pers.apellido} {pers.dni}"
-                ;
-                ltbClientes.Items.Add(fila);
+                    return 0;
             }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             frmlogin frm = new frmlogin();
+            frm.Show();
             this.Close();
-        }
-
-        private void ltbClientes_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ltbClientes.SelectedIndex >= 0)
-            {
-                btnModificar.Visible = true;
-                btnAceptar.Visible = false;
-                txtNombre.Text = list[ltbClientes.SelectedIndex].name;
-                txtApellido.Text = list[ltbClientes.SelectedIndex].apellido;
-                txtDni.Text = list[ltbClientes.SelectedIndex].dni;
-                txtUsuario.Text = list[ltbClientes.SelectedIndex].usuario;
-                txtTelefono.Text = list[ltbClientes.SelectedIndex].telefono;
-                txtCorreo.Text = list[ltbClientes.SelectedIndex].correo;
-                datFecha.Text = list[ltbClientes.SelectedIndex].fecha;
-                txtCalle.Text = list[ltbClientes.SelectedIndex].calle;
-                txtNumCalle.Text = list[ltbClientes.SelectedIndex].numero;
-                txtCP.Text = list[ltbClientes.SelectedIndex].codPos;
-                txtDepto.Text = list[ltbClientes.SelectedIndex].depto;
-                txtPiso.Text = list[ltbClientes.SelectedIndex].piso;
-            }
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-
-            if (txtNombre.Text == "" || txtApellido.Text == "" || txtDni.Text == "" || txtCorreo.Text == "" || txtTelefono.Text == "" || txtUsuario.Text == "")
-            {
-                MessageBox.Show("Hay un campo vacio", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
+            // Por ahora queda vacío.
+            // Si después usás modificación de usuario, la lógica iría acá.
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Limpiar();
+
+            btnModificar.Visible = false;
+            btnAceptar.Visible = true;
+        }
+
         private void Limpiar()
         {
             txtNombre.Text = "";
@@ -137,23 +235,24 @@ namespace CapaVista
             txtTelefono.Text = "";
             txtUsuario.Text = "";
             txtDni.Text = "";
+
             txtCalle.Text = "";
             txtNumCalle.Text = "";
             txtCP.Text = "";
             txtDepto.Text = "";
             txtPiso.Text = "";
+
+            cmbProvincia.SelectedIndex = -1;
+            cmbPartido.DataSource = null;
+            cmbLocalidad.DataSource = null;
+            cmbRol.SelectedIndex = -1;
+
+            datFecha.Value = DateTime.Today;
         }
 
         private void txtDni_KeyPress(object sender, KeyPressEventArgs e)
         {
             TeclaNum(e);
-        }
-        private void TeclaNum(KeyPressEventArgs e)
-        {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
-            {
-                e.Handled = true;
-            }
         }
 
         private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
@@ -176,72 +275,42 @@ namespace CapaVista
             TeclaNum(e);
         }
 
-        private async void frmRegistro_Load(object sender, EventArgs e)
+        private void TeclaNum(KeyPressEventArgs e)
         {
-            bool cargado = await servicioGeoref.cargarGeorefEnBase();
-
-            if (!cargado)
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
             {
-                MessageBox.Show("No se pudieron cargar los datos de provincias, partidos y localidades.");
-                return;
+                e.Handled = true;
             }
-
-            cargarProvincias();
         }
-        private void cargarProvincias()
-        {
-            cmbProvincia.DataSource = null;
 
-            cmbProvincia.DataSource = servicioGeoref.ObtenerProvincias();
-            cmbProvincia.DisplayMember = "Nombre";
-            cmbProvincia.ValueMember = "IdProvincia";
-            cmbProvincia.SelectedIndex = -1;
+        //    try
+        //    {
+        //        var resultado = servicioUsuarios.RegistrarUsuario(
+        //    txtCalle.Text,
+        //    txtNumCalle.Text,
+        //    txtCP.Text,
+        //    txtDepto.Text,
+        //    txtPiso.Text,
+        //    cmbProvincia.Text,
+        //    cmbPartido.Text,
+        //    cmbLocalidad.Text,
 
-            cmbPartido.DataSource = null;
-            cmbLocalidad.DataSource = null;
-        }
-        private void cmbProvincia_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbProvincia.SelectedValue == null)
-                return;
+        //    txtNombre.Text,
+        //    txtApellido.Text,
+        //    txtDni.Text,
+        //    txtTelefono.Text,
+        //    datFecha.Value,
 
-            if (cmbProvincia.SelectedValue is Provincia)
-                return;
+        //    txtUsuario.Text,
+        //    txtCorreo.Text,
+        //    idRol
+        //    );
 
-            string idProvincia = cmbProvincia.SelectedValue.ToString();
-
-            cmbPartido.DataSource = null;
-            cmbPartido.DataSource = servicioGeoref.ObtenerPartidosPorProvincia(idProvincia);
-            cmbPartido.DisplayMember = "Nombre";
-            cmbPartido.ValueMember = "IdPartido";
-            cmbPartido.SelectedIndex = -1;
-
-            cmbLocalidad.DataSource = null;
-        }
-        private void cmbPartido_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbPartido.SelectedValue == null)
-                return;
-
-            if (cmbPartido.SelectedValue is Partido)
-                return;
-
-            string idPartido = cmbPartido.SelectedValue.ToString();
-
-            cmbLocalidad.DataSource = null;
-            cmbLocalidad.DataSource = servicioGeoref.ObtenerLocalidadesPorPartido(idPartido);
-            cmbLocalidad.DisplayMember = "Nombre";
-            cmbLocalidad.ValueMember = "IdLocalidad";
-            cmbLocalidad.SelectedIndex = -1;
-        }
+        //        MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Error real: " + ex.Message);
+        //    }
     }
 }
-
-
-
-
-
-
-
-
-
