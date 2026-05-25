@@ -116,10 +116,10 @@ namespace CapaLogica
             if (idUsuario == -1)
                     return resultadoRegistroUsuario.ErrorBaseDatos;
 
-                bool passwordOk = servicioContras.registrarContraTemporal(idUsuario, passwordTemporal);
+                //bool passwordOk = servicioContras.registrarContraTemporal(idUsuario, passwordTemporal);
 
-                if (!passwordOk)
-                    return resultadoRegistroUsuario.ErrorPasswordTemporal;
+                //if (!passwordOk)
+                //    return resultadoRegistroUsuario.ErrorPasswordTemporal;
 
                 bool mailOk = servicioMail.enviarContraTemporal(correo, passwordTemporal);
 
