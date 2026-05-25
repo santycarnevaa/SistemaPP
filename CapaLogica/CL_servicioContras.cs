@@ -15,13 +15,13 @@ namespace CapaLogica
         private CD_usuariosDatos usuarioDatos = new CD_usuariosDatos();
         private CD_configuracionDatos configDatos = new CD_configuracionDatos();
         private encriptar encriptar = new encriptar();
+        string caracteresEspeciales = "!@#$%^&*()_+-=[]{};':\"\\|,.<>/?";
         public bool cumplePoliticasContra(string contra, string usuario)
         {
             configuracionSistema config = configDatos.obtenerConfiguracion();
 
             if (config == null)
             {
-                // Valores por defecto si no hay configuración cargada
                 config = new configuracionSistema
                 {
                     minCaracteres = 8,
@@ -51,7 +51,7 @@ namespace CapaLogica
             if (config.requiereNumeros && !contra.Any(char.IsDigit))
                 return false;
 
-            if (config.requiereEspeciales && !contra.Any(c => !char.IsLetterOrDigit(c)))
+            if (config.requiereEspeciales && !contra.Any(c => caracteresEspeciales.Contains(c)))
                 return false;
 
             if (config.validarDatosPersonales)
