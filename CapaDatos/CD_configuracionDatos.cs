@@ -12,7 +12,7 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerPoliticasSeguridad", conexion);
+                    SqlCommand cmd = new SqlCommand("SP_ObtenerConfiguracion", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -25,7 +25,6 @@ namespace CapaDatos
                             minCaracteres = Convert.ToInt32(reader["MinCaracteres"]),
                             cantPreguntas = Convert.ToInt32(reader["CantPreguntas"]),
                             requiereMayusculas = Convert.ToBoolean(reader["RequiereMayusculas"]),
-                            requiereMinusculas = Convert.ToBoolean(reader["RequiereMinusculas"]),
                             requiereNumeros = Convert.ToBoolean(reader["RequiereNumeros"]),
                             requiereEspeciales = Convert.ToBoolean(reader["RequiereEspeciales"]),
                             requiere2FA = Convert.ToBoolean(reader["Requiere2FA"]),

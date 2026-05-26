@@ -23,14 +23,14 @@ namespace CapaVista
     public partial class frmUsuario : Form
     {
         private string usuario;
-        public frmUsuario()
+        public frmUsuario(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
         }
         private void frmUsuario_Load(object sender, EventArgs e)
         {
-            lblBienvenido.Text = "Bienvenido, " + frmlogin.user;
+            lblBienvenido.Text = "Bienvenido, " + usuario;
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

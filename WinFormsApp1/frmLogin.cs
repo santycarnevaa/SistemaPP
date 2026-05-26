@@ -8,7 +8,8 @@ namespace CapaVista
 {
     public partial class frmlogin : Form
     {
-        public static string user = "";
+        CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
+        public string usuario;
         public frmlogin()
         {
             InitializeComponent();
@@ -22,18 +23,45 @@ namespace CapaVista
 
         private void lblRecuperar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            user = txtUsuario.Text.Trim();
-
-            if (frmConfigAdmin.requiere2FA == 1)
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                frmCodigo frmCod = new frmCodigo();
+                MessageBox.Show(
+                    "Por favor, ingrese su nombre de usuario para recuperar su cuenta.",
+                    "Información",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+                return;
+            }
+
+            string usuario = txtUsuario.Text.Trim();
+
+            CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
+            CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
+
+            bool existeUsuario = servicioUsuarios.ExisteUsuario(usuario);
+
+            if (!existeUsuario)
+            {
+                MessageBox.Show(
+                    "El usuario ingresado no existe.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            if (servicioConfiguracion.requiere2FA())
+            {
+                frmCodigo frmCod = new frmCodigo(usuario);
                 this.Hide();
                 frmCod.ShowDialog();
                 this.Show();
             }
             else
             {
-                frmrecuperar frmPreg = new frmrecuperar();
+                frmrecuperar frmPreg = new frmrecuperar(usuario);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Show();
@@ -42,7 +70,6 @@ namespace CapaVista
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
-            user = txtUsuario.Text;
                 CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
                 resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
     
@@ -70,7 +97,7 @@ namespace CapaVista
                         this.Show();
                         break;
                     case resultadoLogin.Ok:
-                        frmUsuario frm = new frmUsuario();
+                        frmUsuario frm = new frmUsuario(usuario);
                         this.Hide();
                         frm.ShowDialog();
                         this.Show();

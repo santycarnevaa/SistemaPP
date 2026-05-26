@@ -1,52 +1,144 @@
-﻿using Microsoft.VisualBasic;
+﻿using CapaLogica;
+using Entidades;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CapaVista
 {
     public partial class frmrecuperar : Form
     {
-        string usuario;
-        string Preg1 = "asd";
-        string Preg2 = "asd";
-        string Preg3 = "asd";
-        string Preg4 = "asd";
-        string Preg5 = "asd";
+        private string usuario;
 
-        public frmrecuperar()
+        private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
+        private CL_ServicioPreguntasSeguridad servicioPreguntas = new CL_ServicioPreguntasSeguridad();
+
+        private List<PreguntaSeguridad> preguntasUsuario = new List<PreguntaSeguridad>();
+
+        public frmrecuperar(string usuario)
         {
             InitializeComponent();
+            this.usuario = usuario;
+
+            this.Load += frmrecuperar_Load;
         }
 
+        private void frmrecuperar_Load(object sender, EventArgs e)
+        {
+            CargarPreguntasSegunConfiguracion();
+            ingresar();
+        }
+
+        private void CargarPreguntasSegunConfiguracion()
+        {
+            var config = servicioConfiguracion.ObtenerConfiguracion();
+
+            if (config == null)
+            {
+                MessageBox.Show("No se pudo obtener la configuración del sistema.");
+                return;
+            }
+
+            int cantidadPreguntas = config.cantPreguntas;
+
+            preguntasUsuario = servicioPreguntas.obtenerPreguntasUsuario(usuario);
+
+            if (preguntasUsuario.Count < cantidadPreguntas)
+            {
+                MessageBox.Show("El usuario no tiene suficientes preguntas de seguridad registradas.");
+                return;
+            }
+
+            preguntasUsuario = preguntasUsuario.Take(cantidadPreguntas).ToList();
+
+            OcultarTodasLasPreguntas();
+
+            if (cantidadPreguntas >= 1)
+            {
+                lblPreg1.Visible = true;
+                txtPreg1.Visible = true;
+                lblPreg1.Text = preguntasUsuario[0].Pregunta;
+            }
+
+            if (cantidadPreguntas >= 2)
+            {
+                lblPreg2.Visible = true;
+                txtPreg2.Visible = true;
+                lblPreg2.Text = preguntasUsuario[1].Pregunta;
+            }
+
+            if (cantidadPreguntas >= 3)
+            {
+                lblPreg3.Visible = true;
+                txtPreg3.Visible = true;
+                lblPreg3.Text = preguntasUsuario[2].Pregunta;
+            }
+
+            if (cantidadPreguntas >= 4)
+            {
+                lblPreg4.Visible = true;
+                txtPreg4.Visible = true;
+                lblPreg4.Text = preguntasUsuario[3].Pregunta;
+            }
+
+            if (cantidadPreguntas >= 5)
+            {
+                lblPreg5.Visible = true;
+                txtPreg5.Visible = true;
+                lblPreg5.Text = preguntasUsuario[4].Pregunta;
+            }
+        }
+
+        private void OcultarTodasLasPreguntas()
+        {
+            lblPreg1.Visible = false;
+            lblPreg2.Visible = false;
+            lblPreg3.Visible = false;
+            lblPreg4.Visible = false;
+            lblPreg5.Visible = false;
+
+            txtPreg1.Visible = false;
+            txtPreg2.Visible = false;
+            txtPreg3.Visible = false;
+            txtPreg4.Visible = false;
+            txtPreg5.Visible = false;
+
+            txtPreg1.Text = "";
+            txtPreg2.Text = "";
+            txtPreg3.Text = "";
+            txtPreg4.Text = "";
+            txtPreg5.Text = "";
+        }
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            bool todoOk = true;
-
-            if (frmConfigAdmin.cantidadPreguntas >= 1)
+            if (preguntasUsuario.Count == 0)
             {
-                if (txtPreg1.Text != Preg1) todoOk = false;
+                MessageBox.Show("No hay preguntas cargadas para validar.");
+                return;
             }
 
-            if (frmConfigAdmin.cantidadPreguntas == 5)
-            {
-                if (txtPreg2.Text != Preg2 || txtPreg4.Text != Preg4) todoOk = false;
-            }
+            List<string> respuestas = new List<string>();
 
-            if (frmConfigAdmin.cantidadPreguntas >= 3)
-            {
-                if (txtPreg3.Text != Preg3 || txtPreg5.Text != Preg5) todoOk = false;
-            }
+            if (txtPreg1.Visible)
+                respuestas.Add(txtPreg1.Text);
 
-            if (todoOk)
+            if (txtPreg2.Visible)
+                respuestas.Add(txtPreg2.Text);
+
+            if (txtPreg3.Visible)
+                respuestas.Add(txtPreg3.Text);
+
+            if (txtPreg4.Visible)
+                respuestas.Add(txtPreg4.Text);
+
+            if (txtPreg5.Visible)
+                respuestas.Add(txtPreg5.Text);
+
+            bool respuestasCorrectas = servicioPreguntas.validarRespuestas(usuario, respuestas);
+
+            if (respuestasCorrectas)
             {
                 frmContraseña frm = new frmContraseña(usuario);
                 this.Hide();
@@ -55,24 +147,41 @@ namespace CapaVista
             }
             else
             {
-                txtPreg1.Text = txtPreg2.Text = txtPreg3.Text = txtPreg4.Text = txtPreg5.Text = "";
-                MessageBox.Show("Una o más respuestas están incorrectas", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPreg1.Text = "";
+                txtPreg2.Text = "";
+                txtPreg3.Text = "";
+                txtPreg4.Text = "";
+                txtPreg5.Text = "";
+
+                MessageBox.Show(
+                    "Una o más respuestas son incorrectas.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
             }
         }
-        
+
         private void ingresar()
         {
             bool habilitar = true;
 
-            if (frmConfigAdmin.cantidadPreguntas >= 1 && string.IsNullOrWhiteSpace(txtPreg1.Text))
+            if (txtPreg1.Visible && string.IsNullOrWhiteSpace(txtPreg1.Text))
                 habilitar = false;
 
-            if (frmConfigAdmin.cantidadPreguntas >= 3 && (string.IsNullOrWhiteSpace(txtPreg3.Text) || string.IsNullOrWhiteSpace(txtPreg5.Text)))
+            if (txtPreg2.Visible && string.IsNullOrWhiteSpace(txtPreg2.Text))
                 habilitar = false;
 
-            if (frmConfigAdmin.cantidadPreguntas == 5 && (string.IsNullOrWhiteSpace(txtPreg2.Text) || string.IsNullOrWhiteSpace(txtPreg4.Text)))
+            if (txtPreg3.Visible && string.IsNullOrWhiteSpace(txtPreg3.Text))
                 habilitar = false;
-            btnIngresar.Enabled = true;
+
+            if (txtPreg4.Visible && string.IsNullOrWhiteSpace(txtPreg4.Text))
+                habilitar = false;
+
+            if (txtPreg5.Visible && string.IsNullOrWhiteSpace(txtPreg5.Text))
+                habilitar = false;
+
+            btnIngresar.Enabled = habilitar;
         }
 
         private void txtPreg1_TextChanged(object sender, EventArgs e)
@@ -89,10 +198,12 @@ namespace CapaVista
         {
             ingresar();
         }
+
         private void txtPreg4_TextChanged(object sender, EventArgs e)
         {
             ingresar();
         }
+
         private void txtPreg5_TextChanged(object sender, EventArgs e)
         {
             ingresar();
@@ -104,19 +215,6 @@ namespace CapaVista
             this.Hide();
             frm.ShowDialog();
             this.Close();
-        }
-
-        private void frmrecuperar_Load(object sender, EventArgs e)
-        {
-            //si es una sola
-            lblPreg1.Visible = txtPreg1.Visible = (frmConfigAdmin.cantidadPreguntas >= 1);
-            //si son 5 si o si
-            lblPreg2.Visible = txtPreg2.Visible = (frmConfigAdmin.cantidadPreguntas == 5);
-            lblPreg4.Visible = txtPreg4.Visible = (frmConfigAdmin.cantidadPreguntas == 5);
-            //si son 3-5
-            lblPreg3.Visible = txtPreg3.Visible = (frmConfigAdmin.cantidadPreguntas >= 3);
-            lblPreg5.Visible = txtPreg5.Visible = (frmConfigAdmin.cantidadPreguntas >= 3);
-            ingresar();
         }
     }
 }

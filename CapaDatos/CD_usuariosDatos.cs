@@ -558,5 +558,26 @@ namespace CapaDatos
                         return false;
                     }
         }
+        public string ObtenerCorreoPorUsuario(string usuario)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerCorreoPorUsuario", conexion);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    return resultado != null ? resultado.ToString() : "";
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
     }
 } 

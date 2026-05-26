@@ -65,7 +65,7 @@
             lblBienvenido.AutoSize = true;
             lblBienvenido.Font = new Font("Century Gothic", 30F, FontStyle.Bold);
             lblBienvenido.ForeColor = Color.White;
-            lblBienvenido.Location = new Point(207, 176);
+            lblBienvenido.Location = new Point(33, 12);
             lblBienvenido.Name = "lblBienvenido";
             lblBienvenido.Size = new Size(53, 47);
             lblBienvenido.TabIndex = 84;

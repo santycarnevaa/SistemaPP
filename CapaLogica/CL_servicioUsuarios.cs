@@ -271,5 +271,12 @@ namespace CapaLogica
 
             return usuarioDatos.EsPrimerLogin(usuario);
         }
+        public string ObtenerCorreoPorUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return "";
+
+            return usuarioDatos.ObtenerCorreoPorUsuario(usuario);
+        }
     }
 }

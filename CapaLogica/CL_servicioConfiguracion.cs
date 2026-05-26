@@ -45,5 +45,12 @@ namespace CapaLogica
 
             return config.cantPreguntas;
         }
+        public bool requiere2FA()
+        {
+            configuracionSistema config = configDatos.obtenerConfiguracion();
+            if (config == null)
+                return false;
+            return config.requiere2FA;
+        }
     }
 }

@@ -119,6 +119,7 @@
             btnRegistros.TabIndex = 48;
             btnRegistros.Text = "Actualizar API";
             btnRegistros.UseVisualStyleBackColor = false;
+            btnRegistros.Click += btnRegistros_Click;
             // 
             // txtCaracteres
             // 

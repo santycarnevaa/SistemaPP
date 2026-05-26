@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapaLogica;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,10 +13,12 @@ namespace CapaVista
 {
     public partial class frmUserConfig : Form
     {
+        private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         private string usuario;
         public frmUserConfig(string usuario)
         {
             InitializeComponent();
+            this.usuario = usuario;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -27,16 +30,16 @@ namespace CapaVista
 
         private void btnContraseña_Click(object sender, EventArgs e)
         {
-            if (frmConfigAdmin.requiere2FA == 1)
+            if (servicioConfiguracion.requiere2FA())
             {
-                frmCodigo frmCod = new frmCodigo();
+                frmCodigo frmCod = new frmCodigo(usuario);
                 this.Hide();
                 frmCod.ShowDialog();
                 this.Close();
             }
             else
             {
-                frmrecuperar frmPreg = new frmrecuperar();
+                frmrecuperar frmPreg = new frmrecuperar(usuario);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Close();

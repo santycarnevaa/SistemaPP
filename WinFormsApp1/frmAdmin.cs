@@ -12,9 +12,11 @@ namespace CapaVista
 {
     public partial class frmAdmin : Form
     {
-        public frmAdmin()
+        private string usuario;
+        public frmAdmin(string usuario)
         {
             InitializeComponent();
+            this.usuario = usuario;
         }
 
         private void btnRegistros_Click(object sender, EventArgs e)
@@ -27,7 +29,7 @@ namespace CapaVista
 
         private void btnPreg_Click(object sender, EventArgs e)
         {
-            frmConfigAdmin frm = new frmConfigAdmin();
+            frmConfigAdmin frm = new frmConfigAdmin(usuario);
             this.Hide();
             frm.ShowDialog();
             this.Close();
@@ -43,7 +45,7 @@ namespace CapaVista
 
         private void frmAdmin_Load(object sender, EventArgs e)
         {
-            lblBienvenido.Text = "Bienvenido, " + frmlogin.user;
+            lblBienvenido.Text = "Bienvenido, " + usuario;
         }
     }
 }

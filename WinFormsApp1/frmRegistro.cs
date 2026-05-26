@@ -8,7 +8,7 @@ namespace CapaVista
     {
         private CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
         private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
-
+        private string usuario;
         public frmRegistro()
         {
             InitializeComponent();
@@ -16,6 +16,7 @@ namespace CapaVista
             // Evita que se dupliquen eventos si ya estaban conectados desde el diseñador
             this.Load -= frmRegistro_Load;
             this.Load += frmRegistro_Load;
+            this.usuario = usuario;
 
             cmbProvincia.SelectedIndexChanged -= cmbProvincia_SelectedIndexChanged;
             cmbProvincia.SelectedIndexChanged += cmbProvincia_SelectedIndexChanged;
@@ -208,7 +209,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmAdmin frm = new frmAdmin();
+            frmAdmin frm = new frmAdmin(usuario);
             this.Hide();
             frm.ShowDialog();
             this.Close();

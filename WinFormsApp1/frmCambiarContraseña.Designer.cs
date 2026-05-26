@@ -35,7 +35,6 @@
             txtConfirmarContra = new TextBox();
             label2 = new Label();
             pictureBox2 = new PictureBox();
-            lblCaracteres = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
@@ -116,24 +115,12 @@
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             // 
-            // lblCaracteres
-            // 
-            lblCaracteres.AutoSize = true;
-            lblCaracteres.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
-            lblCaracteres.ForeColor = Color.White;
-            lblCaracteres.Location = new Point(218, 261);
-            lblCaracteres.Name = "lblCaracteres";
-            lblCaracteres.Size = new Size(19, 16);
-            lblCaracteres.TabIndex = 19;
-            lblCaracteres.Text = "...";
-            // 
             // frmContraseña
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(556, 286);
-            Controls.Add(lblCaracteres);
             Controls.Add(pictureBox2);
             Controls.Add(label2);
             Controls.Add(txtConfirmarContra);
@@ -143,7 +130,6 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmContraseña";
             StartPosition = FormStartPosition.CenterScreen;
-            Load += frmContraseña_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -157,6 +143,5 @@
         private TextBox txtConfirmarContra;
         private Label label2;
         private PictureBox pictureBox2;
-        private Label lblCaracteres;
     }
 }

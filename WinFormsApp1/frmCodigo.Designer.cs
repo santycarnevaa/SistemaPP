@@ -36,7 +36,6 @@
             txt2 = new TextBox();
             txt1 = new TextBox();
             pictureBox2 = new PictureBox();
-            txtCorreo = new TextBox();
             label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
@@ -47,7 +46,7 @@
             btnSiguiente.Enabled = false;
             btnSiguiente.FlatStyle = FlatStyle.Flat;
             btnSiguiente.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
-            btnSiguiente.Location = new Point(130, 124);
+            btnSiguiente.Location = new Point(130, 118);
             btnSiguiente.Name = "btnSiguiente";
             btnSiguiente.Size = new Size(83, 28);
             btnSiguiente.TabIndex = 18;
@@ -62,7 +61,7 @@
             txt5.Enabled = false;
             txt5.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             txt5.ForeColor = Color.White;
-            txt5.Location = new Point(257, 78);
+            txt5.Location = new Point(257, 72);
             txt5.Margin = new Padding(4);
             txt5.MaxLength = 1;
             txt5.Multiline = true;
@@ -80,7 +79,7 @@
             txt4.Enabled = false;
             txt4.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             txt4.ForeColor = Color.White;
-            txt4.Location = new Point(203, 78);
+            txt4.Location = new Point(203, 72);
             txt4.Margin = new Padding(4);
             txt4.MaxLength = 1;
             txt4.Multiline = true;
@@ -98,7 +97,7 @@
             txt3.Enabled = false;
             txt3.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             txt3.ForeColor = Color.White;
-            txt3.Location = new Point(149, 78);
+            txt3.Location = new Point(149, 72);
             txt3.Margin = new Padding(4);
             txt3.MaxLength = 1;
             txt3.Multiline = true;
@@ -116,7 +115,7 @@
             txt2.Enabled = false;
             txt2.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             txt2.ForeColor = Color.White;
-            txt2.Location = new Point(95, 78);
+            txt2.Location = new Point(95, 72);
             txt2.Margin = new Padding(4);
             txt2.MaxLength = 1;
             txt2.Multiline = true;
@@ -133,7 +132,7 @@
             txt1.BorderStyle = BorderStyle.FixedSingle;
             txt1.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
             txt1.ForeColor = Color.White;
-            txt1.Location = new Point(41, 78);
+            txt1.Location = new Point(41, 72);
             txt1.Margin = new Padding(4);
             txt1.MaxLength = 1;
             txt1.Multiline = true;
@@ -155,30 +154,16 @@
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             // 
-            // txtCorreo
-            // 
-            txtCorreo.BackColor = Color.FromArgb(8, 10, 13);
-            txtCorreo.BorderStyle = BorderStyle.FixedSingle;
-            txtCorreo.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            txtCorreo.ForeColor = Color.White;
-            txtCorreo.Location = new Point(41, 32);
-            txtCorreo.MaxLength = 1;
-            txtCorreo.Multiline = true;
-            txtCorreo.Name = "txtCorreo";
-            txtCorreo.Size = new Size(262, 22);
-            txtCorreo.TabIndex = 50;
-            txtCorreo.TextAlign = HorizontalAlignment.Center;
-            // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(41, 12);
+            label1.Location = new Point(81, 38);
             label1.Name = "label1";
-            label1.Size = new Size(111, 16);
+            label1.Size = new Size(181, 16);
             label1.TabIndex = 51;
-            label1.Text = "Ingresar su Gmail:";
+            label1.Text = "Ingrese el codigo de 5 dígitos";
             // 
             // frmCodigo
             // 
@@ -187,7 +172,6 @@
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(348, 169);
             Controls.Add(label1);
-            Controls.Add(txtCorreo);
             Controls.Add(pictureBox2);
             Controls.Add(btnSiguiente);
             Controls.Add(txt5);
@@ -213,7 +197,6 @@
         private TextBox txt2;
         private TextBox txt1;
         private PictureBox pictureBox2;
-        private TextBox txtCorreo;
         private Label label1;
     }
 }
