@@ -48,7 +48,7 @@
             btnIniciar.FlatStyle = FlatStyle.Flat;
             btnIniciar.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnIniciar.ForeColor = Color.White;
-            btnIniciar.Location = new Point(126, 165);
+            btnIniciar.Location = new Point(125, 165);
             btnIniciar.Name = "btnIniciar";
             btnIniciar.Size = new Size(149, 24);
             btnIniciar.TabIndex = 0;

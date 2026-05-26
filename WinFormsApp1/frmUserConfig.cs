@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    public partial class frmConfig : Form
+    public partial class frmUserConfig : Form
     {
         private string usuario;
-        public frmConfig(string usuario)
+        public frmUserConfig(string usuario)
         {
             InitializeComponent();
         }
@@ -27,9 +27,20 @@ namespace CapaVista
 
         private void btnContraseña_Click(object sender, EventArgs e)
         {
-            frmrecuperar frm = new frmrecuperar();
-            frm.ShowDialog();
-            this.Close();
+            if (frmConfigAdmin.requiere2FA == 1)
+            {
+                frmCodigo frmCod = new frmCodigo();
+                this.Hide();
+                frmCod.ShowDialog();
+                this.Close();
+            }
+            else
+            {
+                frmrecuperar frmPreg = new frmrecuperar();
+                this.Hide();
+                frmPreg.ShowDialog();
+                this.Close();
+            }
         }
     }
 }

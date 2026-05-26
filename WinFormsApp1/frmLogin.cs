@@ -8,6 +8,7 @@ namespace CapaVista
 {
     public partial class frmlogin : Form
     {
+        public static string user = "";
         public frmlogin()
         {
             InitializeComponent();
@@ -21,15 +22,27 @@ namespace CapaVista
 
         private void lblRecuperar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            user = txtUsuario.Text.Trim();
 
-            frmrecuperar frm = new frmrecuperar();
-            this.Hide();
-            frm.ShowDialog();
-            this.Show();
+            if (frmConfigAdmin.requiere2FA == 1)
+            {
+                frmCodigo frmCod = new frmCodigo();
+                this.Hide();
+                frmCod.ShowDialog();
+                this.Show();
+            }
+            else
+            {
+                frmrecuperar frmPreg = new frmrecuperar();
+                this.Hide();
+                frmPreg.ShowDialog();
+                this.Show();
+            }
         }
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
+            user = txtUsuario.Text;
                 CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
                 resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
     
@@ -57,7 +70,7 @@ namespace CapaVista
                         this.Show();
                         break;
                     case resultadoLogin.Ok:
-                        frmUsuario frm = new frmUsuario(txtUsuario.Text.Trim());
+                        frmUsuario frm = new frmUsuario();
                         this.Hide();
                         frm.ShowDialog();
                         this.Show();

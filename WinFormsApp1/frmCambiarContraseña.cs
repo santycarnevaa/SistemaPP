@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using CapaLogica;
+
 
 namespace CapaVista
 {
@@ -38,10 +41,28 @@ namespace CapaVista
                 return;
             }
 
-            if (nuevaContra != confirmarContra)
+            if (nuevaContra.Length < (frmConfigAdmin.caracteres))
             {
-                MessageBox.Show("Las contraseñas no coinciden.");
+                MessageBox.Show("La contraseña es muy corta. El mínimo requerido es de " + frmConfigAdmin.caracteres + " caracteres.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+
+            if (frmConfigAdmin.requiereNumeros == 1)
+            {
+                if (!Regex.IsMatch(nuevaContra, @"[0-9]"))
+                {
+                    MessageBox.Show("La contraseña debe contener al menos un número.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (frmConfigAdmin.requiereEspeciales == 1)
+            {
+                if (!Regex.IsMatch(nuevaContra, @"[^a-zA-Z0-9]"))
+                {
+                    MessageBox.Show("La contraseña debe contener al menos un carácter especial (ej: !, @, #, $, %).", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; 
+                }
             }
 
             try
@@ -52,7 +73,7 @@ namespace CapaVista
                 {
                     MessageBox.Show("Contraseña cambiada correctamente.");
 
-                    frmUsuario frm = new frmUsuario(usuario);
+                    frmlogin frm = new frmlogin();
                     this.Hide();
                     frm.ShowDialog();
                     this.Close();
@@ -89,13 +110,22 @@ namespace CapaVista
 
         private void txtnueva_TextChanged(object sender, EventArgs e)
         {
+
             boton();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             frmlogin frm = new frmlogin();
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
+        }
+
+        private void frmContraseña_Load(object sender, EventArgs e)
+        {
+            lblCaracteres.Text = "La contraseña debe tener al menos " + frmConfigAdmin.caracteres + " caracteres.";
+        
         }
     }
 }

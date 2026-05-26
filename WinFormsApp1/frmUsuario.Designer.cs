@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUsuario));
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
+            lblBienvenido = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -59,12 +60,25 @@
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
             // 
+            // lblBienvenido
+            // 
+            lblBienvenido.AutoSize = true;
+            lblBienvenido.Font = new Font("Century Gothic", 30F, FontStyle.Bold);
+            lblBienvenido.ForeColor = Color.White;
+            lblBienvenido.Location = new Point(207, 176);
+            lblBienvenido.Name = "lblBienvenido";
+            lblBienvenido.Size = new Size(53, 47);
+            lblBienvenido.TabIndex = 84;
+            lblBienvenido.Text = "...";
+            lblBienvenido.Click += lblBienvenido_Click;
+            // 
             // frmUsuario
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(800, 450);
+            Controls.Add(lblBienvenido);
             Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
             FormBorderStyle = FormBorderStyle.None;
@@ -75,11 +89,13 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private PictureBox pictureBox2;
         private PictureBox pictureBox1;
+        private Label lblBienvenido;
     }
 }

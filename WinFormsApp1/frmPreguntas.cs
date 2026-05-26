@@ -15,166 +15,38 @@ namespace CapaVista
     public partial class frmrecuperar : Form
     {
         string usuario;
+        string Preg1 = "asd";
+        string Preg2 = "asd";
+        string Preg3 = "asd";
+        string Preg4 = "asd";
+        string Preg5 = "asd";
+
         public frmrecuperar()
         {
             InitializeComponent();
         }
 
-        private void txt1_TextChanged(object sender, EventArgs e)
-        {
-            Boton();
-            if (txt1.Text == "")
-            {
-                txt1.Focus();
-            }
-            else
-            {
-                txt2.Enabled = true;
-                txt2.Focus();
-            }
-        }
 
-        private void txt2_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)8)
-            {
-                txt1.Focus();
-
-            }
-        }
-        private void txt2_TextChanged(object sender, EventArgs e)
-        {
-            Boton();
-            if (txt2.Text == "")
-            {
-                txt2.Focus();
-            }
-            else
-            {
-                txt3.Enabled = true;
-                txt3.Focus();
-            }
-        }
-        private void txt3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)8)
-            {
-                txt2.Focus();
-
-            }
-        }
-
-        private void txt3_TextChanged(object sender, EventArgs e)
-        {
-            Boton();
-            if (txt3.Text == "")
-            {
-                txt3.Focus();
-            }
-            else
-            {
-                txt4.Enabled = true;
-                txt4.Focus();
-            }
-        }
-
-        private void txt4_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)8)
-            {
-                txt3.Focus();
-
-            }
-        }
-
-        private void txt4_TextChanged(object sender, EventArgs e)
-        {
-            Boton();
-            if (txt4.Text == "")
-            {
-                txt4.Focus();
-            }
-            else
-            {
-                txt5.Enabled = true;
-                txt5.Focus();
-            }
-        }
-        private void txt5_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)8)
-            {
-                txt4.Focus();
-
-            }
-        }
-
-        private void txt5_TextChanged(object sender, EventArgs e)
-        {
-            Boton();
-            if (txt5.Text == "")
-            {
-                txt5.Focus();
-            }
-        }
-
-        private void frmrecuperar_Load(object sender, EventArgs e) => ClientSize = new Size(563, 190);
-        string Codigo = "12345"; //es el codigo que te manda al gmail
-        string Preg1 = "123";
-        string Preg2 = "456";
-        string Preg3 = "789";
-        private void btnSiguiente_Click(object sender, EventArgs e)
-        {
-
-            string contraseña = txt1.Text + txt2.Text + txt3.Text + txt4.Text + txt5.Text;
-
-            if (contraseña != Codigo)
-            {
-                MessageBox.Show("Contraseña equivocada", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txt1.Text = "";
-                txt2.Text = "";
-                txt3.Text = "";
-                txt4.Text = "";
-                txt5.Text = "";
-                txt2.Enabled = false;
-                txt3.Enabled = false;
-                txt4.Enabled = false;
-                txt5.Enabled = false;
-                txt1.Focus();
-                return;
-            }
-            ClientSize = new Size(563, 366);
-            lblPreg1.Visible = true;
-            txtPreg1.Visible = true;
-            lblPreg2.Visible = true;
-            txtPreg2.Visible = true;
-            lblPreg3.Visible = true;
-            txtPreg3.Visible = true;
-            txt1.Visible = false;
-            txt2.Visible = false;
-            txt3.Visible = false;
-            txt4.Visible = false;
-            txt5.Visible = false;
-            btnIngresar.Visible = true;
-            btnSiguiente.Visible = false;
-        }
-        private void Boton()
-        {
-            {
-                if (txt1.Text == "" || txt2.Text == "" || txt3.Text == "" || txt4.Text == "" || txt5.Text == "")
-                {
-                    btnSiguiente.Enabled = false;
-                }
-                else
-                {
-                    btnSiguiente.Enabled = true;
-                }
-            }
-        }
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            if (txtPreg1.Text == Preg1 && txtPreg2.Text == Preg2 && txtPreg3.Text == Preg3)
-            //cambia las variables preg1,2... por las respuestas correctas
+            bool todoOk = true;
+
+            if (frmConfigAdmin.cantidadPreguntas >= 1)
+            {
+                if (txtPreg1.Text != Preg1) todoOk = false;
+            }
+
+            if (frmConfigAdmin.cantidadPreguntas == 5)
+            {
+                if (txtPreg2.Text != Preg2 || txtPreg4.Text != Preg4) todoOk = false;
+            }
+
+            if (frmConfigAdmin.cantidadPreguntas >= 3)
+            {
+                if (txtPreg3.Text != Preg3 || txtPreg5.Text != Preg5) todoOk = false;
+            }
+
+            if (todoOk)
             {
                 frmContraseña frm = new frmContraseña(usuario);
                 this.Hide();
@@ -183,25 +55,24 @@ namespace CapaVista
             }
             else
             {
-                //tenes que hacer que las preguntes se randomisen de nuevo(esta que se borre el txt para testear)
-                txtPreg1.Text = "";
-                txtPreg2.Text = "";
-                txtPreg3.Text = "";
-                MessageBox.Show("Una o mas respuestas estan incorrectas", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPreg1.Text = txtPreg2.Text = txtPreg3.Text = txtPreg4.Text = txtPreg5.Text = "";
+                MessageBox.Show("Una o más respuestas están incorrectas", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        
         private void ingresar()
         {
-            if (txtPreg1.Text == "" || txtPreg2.Text == "" || txtPreg3.Text == "")
-            {
-                btnIngresar.Enabled = false;
-            }
-            else
-            {
-                btnIngresar.Enabled = true;
-            }
+            bool habilitar = true;
 
+            if (frmConfigAdmin.cantidadPreguntas >= 1 && string.IsNullOrWhiteSpace(txtPreg1.Text))
+                habilitar = false;
 
+            if (frmConfigAdmin.cantidadPreguntas >= 3 && (string.IsNullOrWhiteSpace(txtPreg3.Text) || string.IsNullOrWhiteSpace(txtPreg5.Text)))
+                habilitar = false;
+
+            if (frmConfigAdmin.cantidadPreguntas == 5 && (string.IsNullOrWhiteSpace(txtPreg2.Text) || string.IsNullOrWhiteSpace(txtPreg4.Text)))
+                habilitar = false;
+            btnIngresar.Enabled = true;
         }
 
         private void txtPreg1_TextChanged(object sender, EventArgs e)
@@ -218,16 +89,34 @@ namespace CapaVista
         {
             ingresar();
         }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void txtPreg4_TextChanged(object sender, EventArgs e)
         {
-
+            ingresar();
+        }
+        private void txtPreg5_TextChanged(object sender, EventArgs e)
+        {
+            ingresar();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             frmlogin frm = new frmlogin();
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
+        }
+
+        private void frmrecuperar_Load(object sender, EventArgs e)
+        {
+            //si es una sola
+            lblPreg1.Visible = txtPreg1.Visible = (frmConfigAdmin.cantidadPreguntas >= 1);
+            //si son 5 si o si
+            lblPreg2.Visible = txtPreg2.Visible = (frmConfigAdmin.cantidadPreguntas == 5);
+            lblPreg4.Visible = txtPreg4.Visible = (frmConfigAdmin.cantidadPreguntas == 5);
+            //si son 3-5
+            lblPreg3.Visible = txtPreg3.Visible = (frmConfigAdmin.cantidadPreguntas >= 3);
+            lblPreg5.Visible = txtPreg5.Visible = (frmConfigAdmin.cantidadPreguntas >= 3);
+            ingresar();
         }
     }
 }
