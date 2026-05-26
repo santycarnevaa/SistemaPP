@@ -208,8 +208,9 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
-            frm.Show();
+            frmAdmin frm = new frmAdmin();
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
         }
 

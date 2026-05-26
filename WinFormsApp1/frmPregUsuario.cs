@@ -61,7 +61,7 @@ namespace CapaVista
             }
             else
             {
-                frmUsuario frm = new frmUsuario(usuario);
+                frmUsuario frm = new frmUsuario();
                 this.Hide();
                 frm.ShowDialog();
                 this.Close();
@@ -71,7 +71,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmUsuario frm = new frmUsuario(usuario);
+            frmUsuario frm = new frmUsuario();
             this.Hide();
             frm.ShowDialog();
             this.Close();

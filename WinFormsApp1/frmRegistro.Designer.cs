@@ -66,9 +66,7 @@
             cmbPartido = new ComboBox();
             pictureBox2 = new PictureBox();
             btnModificar = new Button();
-            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // btnAceptar
@@ -490,24 +488,12 @@
             btnModificar.Visible = false;
             btnModificar.Click += btnModificar_Click;
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.ImageLocation = "";
-            pictureBox1.Location = new Point(725, 6);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(23, 23);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 86;
-            pictureBox1.TabStop = false;
-            // 
             // frmRegistro
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(789, 484);
-            Controls.Add(pictureBox1);
             Controls.Add(btnModificar);
             Controls.Add(pictureBox2);
             Controls.Add(cmbPartido);
@@ -548,10 +534,10 @@
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmRegistro";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += frmRegistro_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -594,6 +580,5 @@
         private ComboBox cmbPartido;
         private PictureBox pictureBox2;
         private Button btnModificar;
-        private PictureBox pictureBox1;
     }
 }

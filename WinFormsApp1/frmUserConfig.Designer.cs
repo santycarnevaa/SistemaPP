@@ -1,6 +1,6 @@
 ﻿namespace CapaVista
 {
-    partial class frmConfig
+    partial class frmUserConfig
     {
         /// <summary>
         /// Required designer variable.
