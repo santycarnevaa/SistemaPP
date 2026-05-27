@@ -58,7 +58,7 @@
             btnConfig.TabIndex = 4;
             btnConfig.Text = "Configuracion";
             btnConfig.UseVisualStyleBackColor = false;
-            btnConfig.Click += btnConfig_Click;
+            //btnConfig.Click += btnConfig_Click;
             // 
             // btnContraseña
             // 

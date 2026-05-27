@@ -96,8 +96,6 @@ namespace CapaLogica
 
             int idRol = usuarioDatos.ObtenerRolUsuario(usuario);
 
-            // Ajustalo según tu tabla Roles.
-            // Ejemplo: 1 = Usuario, 2 = Administrador
             return idRol == 2;
         }
 
