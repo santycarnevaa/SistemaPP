@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CapaDatos;
+using Entidades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CapaDatos;
 using Utilidades;
 
 namespace CapaLogica
@@ -277,6 +278,17 @@ namespace CapaLogica
                 return "";
 
             return usuarioDatos.ObtenerCorreoPorUsuario(usuario);
+        }
+        public List<UsuarioGrilla> ObtenerUsuariosParaGrilla()
+        {
+            return usuarioDatos.ObtenerUsuariosGrilla();
+        }
+        public int ObtenerRolUsuario(string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario))
+                return 0;
+
+            return usuarioDatos.ObtenerRolUsuario(usuario);
         }
     }
 }

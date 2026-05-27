@@ -27,7 +27,6 @@ namespace CapaLogica
                     minCaracteres = 8,
                     cantPreguntas = 3,
                     requiereMayusculas = true,
-                    requiereMinusculas = true,
                     requiereNumeros = true,
                     requiereEspeciales = true,
                     requiere2FA = false,

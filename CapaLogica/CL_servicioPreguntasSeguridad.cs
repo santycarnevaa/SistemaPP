@@ -21,38 +21,36 @@ namespace CapaLogica
             if (idUsuario == -1)
                 return new List<PreguntaSeguridad>();
 
-            return preguntasDatos.ObtenerPreguntasUsuario(idUsuario);
+            return preguntasDatos.obtenerPreguntasUsuario(idUsuario);
         }
 
-        public bool validarRespuestas(string usuario, List<string> respuestas)
+        public bool validarRespuestas(string usuario, List<string> respuestasIngresadas)
         {
             if (string.IsNullOrWhiteSpace(usuario))
                 return false;
 
-            if (respuestas == null || respuestas.Count == 0)
+            if (respuestasIngresadas == null || respuestasIngresadas.Count == 0)
                 return false;
 
-            int idUsuario = usuarioDatos.BuscarUsuarioPorNombreUser(usuario);
+            List<PreguntaSeguridad> preguntasUsuario = obtenerPreguntasUsuario(usuario);
 
-            if (idUsuario == -1)
+            if (preguntasUsuario.Count < respuestasIngresadas.Count)
                 return false;
 
-            List<PreguntaSeguridad> preguntasUsuario =
-                preguntasDatos.ObtenerPreguntasUsuario(idUsuario);
-
-            if (preguntasUsuario.Count != respuestas.Count)
-                return false;
-
-            for (int i = 0; i < preguntasUsuario.Count; i++)
+            for (int i = 0; i < respuestasIngresadas.Count; i++)
             {
-                string respuestaIngresada = respuestas[i];
+                string respuestaIngresada = respuestasIngresadas[i];
 
                 if (string.IsNullOrWhiteSpace(respuestaIngresada))
                     return false;
 
-                string hashIngresado = encriptar.HashMetodo(respuestaIngresada);
+                string respuestaNormalizada = respuestaIngresada.Trim().ToLower();
 
-                if (hashIngresado != preguntasUsuario[i].RespuestaHash)
+                string hashIngresado = encriptar.HashMetodo(respuestaNormalizada);
+
+                string hashGuardado = preguntasUsuario[i].RespuestaHash;
+
+                if (hashIngresado != hashGuardado)
                     return false;
             }
 

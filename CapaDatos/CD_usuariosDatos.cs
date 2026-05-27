@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Entidades;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace CapaDatos
@@ -433,17 +434,22 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerRolUsuario", conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerRolUsuario", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
+
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
 
                     object resultado = cmd.ExecuteScalar();
-                    return resultado != null ? Convert.ToInt32(resultado) : 0;
+
+                    if (resultado == null || resultado == DBNull.Value)
+                        return 0;
+
+                    return Convert.ToInt32(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return 0;
+                throw new Exception("Error SQL al obtener el rol del usuario: " + ex.Message, ex);
             }
         }
 
@@ -578,6 +584,120 @@ namespace CapaDatos
             {
                 return "";
             }
+        }
+        public List<UsuarioGrilla> ObtenerUsuariosGrilla()
+        {
+            List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
+
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUsuariosGrilla", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        lista.Add(new UsuarioGrilla
+                        {
+                            IdUsuario = Convert.ToInt32(reader["IdUsuario"]),
+                            IdPersona = Convert.ToInt32(reader["IdPersona"]),
+                            IdDireccion = reader["IdDireccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["IdDireccion"]),
+
+                            Nombre = reader["Nombre"].ToString(),
+                            Apellido = reader["Apellido"].ToString(),
+                            DNI = reader["DNI"].ToString(),
+                            Telefono = reader["Telefono"].ToString(),
+
+                            Usuario = reader["Usuario"].ToString(),
+                            Correo = reader["Correo"].ToString(),
+                            IdRol = Convert.ToInt32(reader["IdRol"]),
+                            Rol = reader["Rol"].ToString(),
+
+                            Activo = Convert.ToBoolean(reader["Activo"]),
+                            Estado = reader["Estado"].ToString(),
+
+                            Calle = reader["Calle"].ToString(),
+                            Numero = reader["Numero"].ToString(),
+                            CodigoPostal = reader["CodigoPostal"].ToString(),
+                            Depto = reader["Depto"].ToString(),
+                            Piso = reader["Piso"].ToString(),
+                            Provincia = reader["Provincia"].ToString(),
+                            Partido = reader["Partido"].ToString(),
+                            Localidad = reader["Localidad"].ToString(),
+
+                            FechaNacimiento = Convert.ToDateTime(reader["FechaNacimiento"])
+                        });
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error SQL al obtener usuarios para la grilla: " + ex.Message, ex);
+            }
+
+            return lista;
+        }
+        public List<UsuarioGrilla> obtenerUsuariosGrilla()
+        {
+            List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
+
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUsuariosGrilla", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        lista.Add(new UsuarioGrilla
+                        {
+                            IdUsuario = Convert.ToInt32(reader["IdUsuario"]),
+                            IdPersona = Convert.ToInt32(reader["IdPersona"]),
+                            IdDireccion = reader["IdDireccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["IdDireccion"]),
+
+                            Nombre = reader["Nombre"].ToString(),
+                            Apellido = reader["Apellido"].ToString(),
+                            DNI = reader["DNI"].ToString(),
+                            Telefono = reader["Telefono"].ToString(),
+
+                            Usuario = reader["Usuario"].ToString(),
+                            Correo = reader["Correo"].ToString(),
+                            IdRol = Convert.ToInt32(reader["IdRol"]),
+                            Rol = reader["Rol"].ToString(),
+
+                            Activo = Convert.ToBoolean(reader["Activo"]),
+                            Estado = reader["Estado"].ToString(),
+
+                            Calle = reader["Calle"].ToString(),
+                            Numero = reader["Numero"].ToString(),
+                            CodigoPostal = reader["CodigoPostal"].ToString(),
+                            Depto = reader["Depto"].ToString(),
+                            Piso = reader["Piso"].ToString(),
+                            Provincia = reader["Provincia"].ToString(),
+                            Partido = reader["Partido"].ToString(),
+                            Localidad = reader["Localidad"].ToString(),
+
+                            FechaNacimiento = Convert.ToDateTime(reader["FechaNacimiento"])
+                        });
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error SQL al obtener usuarios para la grilla: " + ex.Message, ex);
+            }
+
+            return lista;
         }
     }
 } 

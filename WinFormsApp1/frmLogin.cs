@@ -97,10 +97,8 @@ namespace CapaVista
                         this.Show();
                         break;
                     case resultadoLogin.Ok:
-                        frmUsuario frm = new frmUsuario(usuario);
+                        AbrirPantallaPrincipal(txtUsuario.Text.Trim());
                         this.Hide();
-                        frm.ShowDialog();
-                        this.Show();
                         break;
             }
             //if (usuario != txtUsuario.Text || contraseña != txtContraseña.Text)
@@ -145,7 +143,31 @@ namespace CapaVista
         {
 
         }
+        private void AbrirPantallaPrincipal(string usuario)
+        {
+            CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
-     
+            int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
+
+            if (idRol == 2)
+            {
+                frmAdmin frm = new frmAdmin(usuario);
+                this.Hide();
+                frm.ShowDialog();
+                this.Close();
+            }
+            else if (idRol == 1)
+            {
+                frmUsuario frm = new frmUsuario(usuario);
+                this.Hide();
+                frm.ShowDialog();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo identificar el rol del usuario.");
+            }
+        }
+
     }
 }

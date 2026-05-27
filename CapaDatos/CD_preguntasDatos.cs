@@ -40,39 +40,40 @@ namespace CapaDatos
             return preguntas;
         }
 
-        public List<PreguntaSeguridad> ObtenerPreguntasUsuario(int idUsuario)
+        public List<PreguntaSeguridad> obtenerPreguntasUsuario(int idUsuario)
         {
-            List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
+            List<PreguntaSeguridad> lista = new List<PreguntaSeguridad>();
 
             try
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerPreguntasUsuario", conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerPreguntasUsuario", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
+
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        preguntas.Add(new PreguntaSeguridad
+                        lista.Add(new PreguntaSeguridad
                         {
                             IdPregunta = Convert.ToInt32(reader["IdPregunta"]),
                             Pregunta = reader["Pregunta"].ToString(),
-                            RespuestaHash = string.Empty
+                            RespuestaHash = reader["RespuestaHash"].ToString()
                         });
                     }
 
                     reader.Close();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return new List<PreguntaSeguridad>();
+                throw new Exception("Error SQL al obtener preguntas del usuario: " + ex.Message, ex);
             }
 
-            return preguntas;
+            return lista;
         }
 
         public bool InsertarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
@@ -127,7 +128,7 @@ namespace CapaDatos
         {
             try
             {
-                List<PreguntaSeguridad> preguntas = ObtenerPreguntasUsuario(idUsuario);
+                List<PreguntaSeguridad> preguntas = obtenerPreguntasUsuario(idUsuario);
                 return preguntas.Count > 0;
             }
             catch

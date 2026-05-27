@@ -58,6 +58,7 @@
             btnConfig.TabIndex = 4;
             btnConfig.Text = "Configuracion";
             btnConfig.UseVisualStyleBackColor = false;
+            btnConfig.Click += btnConfig_Click;
             // 
             // btnContraseña
             // 
@@ -72,7 +73,7 @@
             btnContraseña.UseVisualStyleBackColor = false;
             btnContraseña.Click += btnContraseña_Click;
             // 
-            // frmConfig
+            // frmUserConfig
             // 
             AccessibleName = "z";
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -83,7 +84,7 @@
             Controls.Add(btnConfig);
             Controls.Add(btnPreg);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "frmConfig";
+            Name = "frmUserConfig";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmConfig";
             ResumeLayout(false);
