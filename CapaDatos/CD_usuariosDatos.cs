@@ -538,31 +538,71 @@ namespace CapaDatos
                 return false;
             }
         }
-        public bool ActualizarDatosUsuario(int idUsuario,string nombre,string apellido,string correo,DateTime fechaNacimiento,int idRol)
+        public bool ActualizarDatosUsuario(
+    int idUsuario,
+
+    string nombre,
+    string apellido,
+    string dni,
+    string telefono,
+    DateTime fechaNacimiento,
+
+    string calle,
+    string numero,
+    string codigoPostal,
+    string depto,
+    string piso,
+    string provincia,
+    string partido,
+    string localidad,
+    decimal? latitud,
+    decimal? longitud,
+    string direccionOriginal,
+    string direccionNormalizada,
+
+    string correo,
+    int idRol)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
                 {
-                    try
-                    {
-                        using (SqlConnection conexion = conectar())
-                        {
-                            SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarDatosUsuario", conexion);
-                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarDatosUsuario", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                            cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                            cmd.Parameters.AddWithValue("@Nombre", nombre);
-                            cmd.Parameters.AddWithValue("@Apellido", apellido);
-                            cmd.Parameters.AddWithValue("@Correo", correo);
-                            cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-                            cmd.Parameters.AddWithValue("@IdRol", idRol);
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
-                            int filas = cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@Nombre", nombre);
+                    cmd.Parameters.AddWithValue("@Apellido", apellido);
+                    cmd.Parameters.AddWithValue("@DNI", dni);
+                    cmd.Parameters.AddWithValue("@Telefono", telefono);
+                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
 
-                            return filas > 0;
-                        }
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    cmd.Parameters.AddWithValue("@Calle", calle);
+                    cmd.Parameters.AddWithValue("@Numero", numero);
+                    cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
+                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
+                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
+                    cmd.Parameters.AddWithValue("@Provincia", provincia);
+                    cmd.Parameters.AddWithValue("@Partido", partido);
+                    cmd.Parameters.AddWithValue("@Localidad", localidad);
+                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
+                    cmd.Parameters.AddWithValue("@DireccionNormalizada", direccionNormalizada);
+
+                    cmd.Parameters.AddWithValue("@Correo", correo);
+                    cmd.Parameters.AddWithValue("@IdRol", idRol);
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    return resultado != null && Convert.ToInt32(resultado) == 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error SQL al actualizar usuario: " + ex.Message, ex);
+            }
         }
         public string ObtenerCorreoPorUsuario(string usuario)
         {

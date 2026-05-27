@@ -65,12 +65,10 @@
             cmbLocalidad = new ComboBox();
             cmbPartido = new ComboBox();
             pictureBox2 = new PictureBox();
-            pictureBox1 = new PictureBox();
             DgvPrueba = new DataGridView();
             groupBox1 = new GroupBox();
             btnModificar = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DgvPrueba).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -480,17 +478,6 @@
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.ImageLocation = "";
-            pictureBox1.Location = new Point(896, 6);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(23, 23);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 86;
-            pictureBox1.TabStop = false;
-            // 
             // DgvPrueba
             // 
             DgvPrueba.BackgroundColor = Color.FromArgb(8, 10, 13);
@@ -569,7 +556,6 @@
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(960, 599);
             Controls.Add(DgvPrueba);
-            Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
             Controls.Add(groupBox1);
             ForeColor = Color.White;
@@ -578,7 +564,6 @@
             Text = "Form1";
             Load += frmRegistro_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)DgvPrueba).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -621,7 +606,6 @@
         private ComboBox cmbLocalidad;
         private ComboBox cmbPartido;
         private PictureBox pictureBox2;
-        private PictureBox pictureBox1;
         private DataGridView DgvPrueba;
         private GroupBox groupBox1;
         private Button btnModificar;

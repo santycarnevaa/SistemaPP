@@ -147,12 +147,25 @@ namespace CapaLogica
         }
 
         public bool ActualizarDatosUsuario(
-            int idUsuario,
-            string nombre,
-            string apellido,
-            string correo,
-            DateTime fechaNacimiento,
-            int idRol)
+    int idUsuario,
+
+    string nombre,
+    string apellido,
+    string dni,
+    string telefono,
+    DateTime fechaNacimiento,
+
+    string calle,
+    string numero,
+    string codigoPostal,
+    string depto,
+    string piso,
+    string provincia,
+    string partido,
+    string localidad,
+
+    string correo,
+    int idRol)
         {
             if (idUsuario <= 0)
                 return false;
@@ -163,15 +176,62 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(apellido))
                 return false;
 
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(telefono))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(calle))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(numero))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(codigoPostal))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(provincia))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(partido))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(localidad))
+                return false;
+
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
 
+            if (idRol <= 0)
+                return false;
+
+            string direccionOriginal = calle + " " + numero + ", " + localidad + ", " + partido + ", " + provincia;
+            string direccionNormalizada = direccionOriginal.ToUpper().Trim();
+
             return usuarioDatos.ActualizarDatosUsuario(
                 idUsuario,
+
                 nombre,
                 apellido,
-                correo,
+                dni,
+                telefono,
                 fechaNacimiento,
+
+                calle,
+                numero,
+                codigoPostal,
+                depto,
+                piso,
+                provincia,
+                partido,
+                localidad,
+                null,
+                null,
+                direccionOriginal,
+                direccionNormalizada,
+
+                correo,
                 idRol
             );
         }

@@ -295,10 +295,23 @@ namespace CapaVista
 
                 bool ok = servicioUsuarios.ActualizarDatosUsuario(
                     idUsuario,
+
                     txtNombre.Text,
                     txtApellido.Text,
-                    txtCorreo.Text,
+                    txtDni.Text,
+                    txtTelefono.Text,
                     datFecha.Value,
+
+                    txtCalle.Text,
+                    txtNumCalle.Text,
+                    txtCP.Text,
+                    txtDepto.Text,
+                    txtPiso.Text,
+                    cmbProvincia.Text,
+                    cmbPartido.Text,
+                    cmbLocalidad.Text,
+
+                    txtCorreo.Text,
                     idRol
                 );
 
@@ -312,8 +325,10 @@ namespace CapaVista
 
                     bloqueoControles(groupBox1, true);
                     limpiarcontroles(groupBox1);
+
                     actualizargrilla();
 
+                    DgvPrueba.ClearSelection();
                     DgvPrueba.Focus();
                 }
                 else
