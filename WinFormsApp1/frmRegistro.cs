@@ -266,7 +266,6 @@ namespace CapaVista
 
                 bloqueoControles(groupBox1, false);
 
-                // Normalmente no conviene modificar el nombre de usuario.
                 txtUsuario.Enabled = false;
 
                 txtNombre.Focus();
@@ -349,92 +348,49 @@ namespace CapaVista
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            if (btnEliminar.Text == "Cancelar")
-            {
-                btnAgregar.Text = "Agregar";
-                btnModificar.Text = "Modificar";
-                btnEliminar.Text = "Dar de baja";
-
-                btnAgregar.Visible = true;
-                btnModificar.Visible = true;
-
-                bloqueoControles(groupBox1, true);
-                limpiarcontroles(groupBox1);
-
-                DgvPrueba.Focus();
-                return;
-            }
-
             if (DgvPrueba.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Seleccione un usuario.");
                 return;
             }
 
-            try
-            {
-                int idUsuario = Convert.ToInt32(DgvPrueba.SelectedRows[0].Cells["IdUsuario"].Value);
-                bool activo = Convert.ToBoolean(DgvPrueba.SelectedRows[0].Cells["Activo"].Value);
+            int idUsuario =
+                Convert.ToInt32(DgvPrueba.SelectedRows[0].Cells["IdUsuario"].Value);
 
-                if (!activo)
-                {
-                    DialogResult reactivar = MessageBox.Show(
-                        "Este usuario está inactivo. ¿Desea activarlo nuevamente?",
-                        "Activar usuario",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question
-                    );
+            bool activo =
+                Convert.ToBoolean(DgvPrueba.SelectedRows[0].Cells["Activo"].Value);
 
-                    if (reactivar != DialogResult.Yes)
-                        return;
+            string accion = activo ? "dar de baja" : "activar";
 
-                    bool activado = servicioUsuarios.ActivarUsuario(idUsuario);
+            DialogResult r = MessageBox.Show(
+                $"¿Desea {accion} este usuario?",
+                "Confirmación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
 
-                    if (activado)
-                    {
-                        MessageBox.Show("Usuario activado correctamente.");
-                        actualizargrilla();
-                        limpiarcontroles(groupBox1);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se pudo activar el usuario.");
-                    }
+            if (r != DialogResult.Yes)
+                return;
 
-                    return;
-                }
+            bool ok = servicioUsuarios.CambiarEstadoUsuario(
+                idUsuario,
+                !activo
+            );
 
-                DialogResult respuesta = MessageBox.Show(
-                    "¿Desea dar de baja este usuario? No se eliminará de la base, solo quedará inactivo.",
-                    "Confirmar baja",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (respuesta != DialogResult.Yes)
-                    return;
-
-                bool ok = servicioUsuarios.DarDeBajaUsuario(idUsuario);
-
-                if (ok)
-                {
-                    MessageBox.Show("Usuario dado de baja correctamente.");
-                    actualizargrilla();
-                    limpiarcontroles(groupBox1);
-                }
-                else
-                {
-                    MessageBox.Show("No se pudo dar de baja el usuario.");
-                }
-            }
-            catch (Exception ex)
+            if (ok)
             {
                 MessageBox.Show(
-                    "Error real al cambiar estado del usuario: " + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
+                    activo
+                        ? "Usuario dado de baja correctamente."
+                        : "Usuario activado correctamente."
                 );
+
+                actualizargrilla();
+
+                DgvPrueba.ClearSelection();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo actualizar el estado.");
             }
         }
 
@@ -514,7 +470,7 @@ namespace CapaVista
             dgv.AllowUserToAddRows = false;
             dgv.RowHeadersVisible = false;
 
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 12, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 9, FontStyle.Bold);
             dgv.DefaultCellStyle.Font = new Font("Century Gothic", 11, FontStyle.Bold);
 
             dgv.EnableHeadersVisualStyles = false;
@@ -547,7 +503,6 @@ namespace CapaVista
                 OcultarColumna("IdDireccion");
                 OcultarColumna("IdRol");
 
-                // La dejo oculta porque mostramos Estado como texto.
                 OcultarColumna("Activo");
 
                 OcultarColumna("FechaNacimiento");
@@ -732,7 +687,6 @@ namespace CapaVista
 
         private void DgvPrueba_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // No hace falta usarlo por ahora.
         }
     }
 }

@@ -130,20 +130,12 @@ namespace CapaLogica
                 return resultadoRegistroUsuario.Ok;
 
         }
-        public bool DarDeBajaUsuario(int idUsuario)
+        public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
             if (idUsuario <= 0)
                 return false;
 
-            return usuarioDatos.ActualizarEstadoUsuario(idUsuario, false);
-        }
-
-        public bool ActivarUsuario(int idUsuario)
-        {
-            if (idUsuario <= 0)
-                return false;
-
-            return usuarioDatos.ActualizarEstadoUsuario(idUsuario, true);
+            return usuarioDatos.CambiarEstadoUsuario(idUsuario, activo);
         }
 
         public bool ActualizarDatosUsuario(

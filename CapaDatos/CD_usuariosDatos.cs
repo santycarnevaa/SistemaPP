@@ -516,26 +516,27 @@ namespace CapaDatos
                 return 0;
             }
         }
-            public bool ActualizarEstadoUsuario(int idUsuario, bool activo)
+        public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
             try
             {
                 using (SqlConnection conexion = conectar())
                 {
                     SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarEstadoUsuario", conexion);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                     cmd.Parameters.AddWithValue("@Activo", activo);
 
-                    int filas = cmd.ExecuteNonQuery();
+                    object resultado = cmd.ExecuteScalar();
 
-                    return filas > 0;
+                    return resultado != null &&
+                           Convert.ToInt32(resultado) == 1;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception("Error al cambiar estado del usuario: " + ex.Message);
             }
         }
         public bool ActualizarDatosUsuario(
