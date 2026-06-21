@@ -70,9 +70,8 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
-                throw new Exception("Error SQL al obtener preguntas del usuario: " + ex.Message, ex);
+                throw new Exception("Error SQL al listar preguntas de seguridad: " + ex.Message, ex);
             }
-
             return lista;
         }
 
@@ -94,9 +93,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception("Error SQL al guardar respuesta de seguridad: " + ex.Message, ex);
             }
         }
 

@@ -45,10 +45,11 @@
             btnSiguiente.BackColor = Color.Green;
             btnSiguiente.Enabled = false;
             btnSiguiente.FlatStyle = FlatStyle.Flat;
-            btnSiguiente.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
-            btnSiguiente.Location = new Point(130, 118);
+            btnSiguiente.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            btnSiguiente.ForeColor = Color.White;
+            btnSiguiente.Location = new Point(122, 112);
             btnSiguiente.Name = "btnSiguiente";
-            btnSiguiente.Size = new Size(83, 28);
+            btnSiguiente.Size = new Size(97, 28);
             btnSiguiente.TabIndex = 18;
             btnSiguiente.Text = "SIGUIENTE";
             btnSiguiente.UseVisualStyleBackColor = false;
@@ -59,7 +60,7 @@
             txt5.BackColor = Color.FromArgb(8, 10, 13);
             txt5.BorderStyle = BorderStyle.FixedSingle;
             txt5.Enabled = false;
-            txt5.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txt5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txt5.ForeColor = Color.White;
             txt5.Location = new Point(257, 72);
             txt5.Margin = new Padding(4);
@@ -77,7 +78,7 @@
             txt4.BackColor = Color.FromArgb(8, 10, 13);
             txt4.BorderStyle = BorderStyle.FixedSingle;
             txt4.Enabled = false;
-            txt4.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txt4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txt4.ForeColor = Color.White;
             txt4.Location = new Point(203, 72);
             txt4.Margin = new Padding(4);
@@ -95,7 +96,7 @@
             txt3.BackColor = Color.FromArgb(8, 10, 13);
             txt3.BorderStyle = BorderStyle.FixedSingle;
             txt3.Enabled = false;
-            txt3.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txt3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txt3.ForeColor = Color.White;
             txt3.Location = new Point(149, 72);
             txt3.Margin = new Padding(4);
@@ -113,7 +114,7 @@
             txt2.BackColor = Color.FromArgb(8, 10, 13);
             txt2.BorderStyle = BorderStyle.FixedSingle;
             txt2.Enabled = false;
-            txt2.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txt2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txt2.ForeColor = Color.White;
             txt2.Location = new Point(95, 72);
             txt2.Margin = new Padding(4);
@@ -130,7 +131,7 @@
             // 
             txt1.BackColor = Color.FromArgb(8, 10, 13);
             txt1.BorderStyle = BorderStyle.FixedSingle;
-            txt1.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txt1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txt1.ForeColor = Color.White;
             txt1.Location = new Point(41, 72);
             txt1.Margin = new Padding(4);
@@ -157,11 +158,11 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
+            label1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(81, 38);
+            label1.Location = new Point(69, 37);
             label1.Name = "label1";
-            label1.Size = new Size(181, 16);
+            label1.Size = new Size(197, 15);
             label1.TabIndex = 51;
             label1.Text = "Ingrese el codigo de 5 dígitos";
             // 
@@ -179,10 +180,11 @@
             Controls.Add(txt3);
             Controls.Add(txt2);
             Controls.Add(txt1);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmCodigo";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmCodigo";
+            Load += frmCodigo_Load_1;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();

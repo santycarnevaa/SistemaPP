@@ -46,7 +46,7 @@
             btnIniciar.BackColor = Color.Green;
             btnIniciar.BackgroundImageLayout = ImageLayout.Center;
             btnIniciar.FlatStyle = FlatStyle.Flat;
-            btnIniciar.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnIniciar.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnIniciar.ForeColor = Color.White;
             btnIniciar.Location = new Point(125, 165);
             btnIniciar.Name = "btnIniciar";
@@ -60,11 +60,11 @@
             // 
             txtUsuario.BackColor = Color.FromArgb(8, 10, 13);
             txtUsuario.BorderStyle = BorderStyle.FixedSingle;
-            txtUsuario.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtUsuario.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtUsuario.ForeColor = SystemColors.Menu;
             txtUsuario.Location = new Point(94, 52);
             txtUsuario.Name = "txtUsuario";
-            txtUsuario.Size = new Size(210, 22);
+            txtUsuario.Size = new Size(210, 21);
             txtUsuario.TabIndex = 1;
             txtUsuario.TextChanged += txtUsuario_TextChanged;
             // 
@@ -73,12 +73,12 @@
             txtContraseña.BackColor = Color.FromArgb(8, 10, 13);
             txtContraseña.BorderStyle = BorderStyle.FixedSingle;
             txtContraseña.Cursor = Cursors.IBeam;
-            txtContraseña.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtContraseña.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtContraseña.ForeColor = SystemColors.Menu;
             txtContraseña.Location = new Point(94, 99);
             txtContraseña.Name = "txtContraseña";
             txtContraseña.PasswordChar = '•';
-            txtContraseña.Size = new Size(210, 22);
+            txtContraseña.Size = new Size(210, 21);
             txtContraseña.TabIndex = 2;
             txtContraseña.TextChanged += textBox2_TextChanged;
             // 
@@ -86,11 +86,11 @@
             // 
             lblRecuperar.ActiveLinkColor = Color.FromArgb(77, 15, 138);
             lblRecuperar.AutoSize = true;
-            lblRecuperar.Font = new Font("Century Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRecuperar.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblRecuperar.LinkColor = Color.FromArgb(73, 98, 235);
             lblRecuperar.Location = new Point(150, 124);
             lblRecuperar.Name = "lblRecuperar";
-            lblRecuperar.Size = new Size(158, 16);
+            lblRecuperar.Size = new Size(173, 15);
             lblRecuperar.TabIndex = 3;
             lblRecuperar.TabStop = true;
             lblRecuperar.Text = "¿Olvidaste tu contraseña?";
@@ -100,11 +100,11 @@
             // 
             label2.AutoSize = true;
             label2.BackColor = Color.Transparent;
-            label2.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.White;
             label2.Location = new Point(94, 35);
             label2.Name = "label2";
-            label2.Size = new Size(55, 16);
+            label2.Size = new Size(61, 16);
             label2.TabIndex = 5;
             label2.Text = "Usuario";
             // 
@@ -124,11 +124,11 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
             label1.Location = new Point(94, 82);
             label1.Name = "label1";
-            label1.Size = new Size(82, 16);
+            label1.Size = new Size(86, 16);
             label1.TabIndex = 7;
             label1.Text = "Contraseña";
             // 
@@ -159,10 +159,12 @@
             Controls.Add(txtUsuario);
             Controls.Add(btnIniciar);
             ForeColor = SystemColors.ButtonShadow;
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmlogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "login";
+            Load += frmlogin_Load;
             ((System.ComponentModel.ISupportInitialize)pctOjo).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);

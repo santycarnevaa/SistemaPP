@@ -13,7 +13,7 @@ namespace CapaVista
         public frmlogin()
         {
             InitializeComponent();
-            
+
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -70,36 +70,36 @@ namespace CapaVista
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
-                CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
-                resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
-    
-                switch (resultado)
-                {
-                    case resultadoLogin.UsuarioVacio:
-                        MessageBox.Show("El campo de usuario no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case resultadoLogin.PasswordVacia:
-                        MessageBox.Show("El campo de contraseña no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case resultadoLogin.UsuarioNoExiste:
-                        MessageBox.Show("El usuario no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case resultadoLogin.UsuarioInactivo:
-                        MessageBox.Show("El usuario está inactivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case resultadoLogin.PasswordIncorrecta:
-                        MessageBox.Show("La contraseña es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case resultadoLogin.PrimerLogin:
-                        frmPregUsuario frmPreg = new frmPregUsuario(txtUsuario.Text.Trim());
-                        this.Hide();
-                        frmPreg.ShowDialog();
-                        this.Show();
-                        break;
-                    case resultadoLogin.Ok:
-                        AbrirPantallaPrincipal(txtUsuario.Text.Trim());
-                        this.Hide();
-                        break;
+            CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
+            resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
+
+            switch (resultado)
+            {
+                case resultadoLogin.UsuarioVacio:
+                    MessageBox.Show("El campo de usuario no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case resultadoLogin.PasswordVacia:
+                    MessageBox.Show("El campo de contraseña no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case resultadoLogin.UsuarioNoExiste:
+                    MessageBox.Show("El usuario no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case resultadoLogin.UsuarioInactivo:
+                    MessageBox.Show("El usuario está inactivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case resultadoLogin.PasswordIncorrecta:
+                    MessageBox.Show("La contraseña es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case resultadoLogin.PrimerLogin:
+                    frmPregUsuario frmPreg = new frmPregUsuario(txtUsuario.Text.Trim());
+                    this.Hide();
+                    frmPreg.ShowDialog();
+                    this.Show();
+                    break;
+                case resultadoLogin.Ok:
+                    AbrirPantallaPrincipal(txtUsuario.Text.Trim());
+                    this.Hide();
+                    break;
             }
             //if (usuario != txtUsuario.Text || contraseña != txtContraseña.Text)
             // {
@@ -169,5 +169,9 @@ namespace CapaVista
             }
         }
 
+        private void frmlogin_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

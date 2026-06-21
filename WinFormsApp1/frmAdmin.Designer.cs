@@ -39,7 +39,7 @@
             // btnRegistros
             // 
             btnRegistros.BackColor = Color.FromArgb(8, 10, 13);
-            btnRegistros.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnRegistros.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnRegistros.ForeColor = Color.White;
             btnRegistros.Location = new Point(88, 170);
             btnRegistros.Name = "btnRegistros";
@@ -52,7 +52,7 @@
             // btnPreg
             // 
             btnPreg.BackColor = Color.FromArgb(8, 10, 13);
-            btnPreg.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnPreg.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnPreg.ForeColor = Color.White;
             btnPreg.Location = new Point(88, 127);
             btnPreg.Name = "btnPreg";
@@ -65,11 +65,11 @@
             // lblBienvenido
             // 
             lblBienvenido.AutoSize = true;
-            lblBienvenido.Font = new Font("Century Gothic", 20F, FontStyle.Bold);
+            lblBienvenido.Font = new Font("Microsoft Sans Serif", 20F, FontStyle.Bold);
             lblBienvenido.ForeColor = Color.White;
             lblBienvenido.Location = new Point(88, 20);
             lblBienvenido.Name = "lblBienvenido";
-            lblBienvenido.Size = new Size(38, 32);
+            lblBienvenido.Size = new Size(41, 31);
             lblBienvenido.TabIndex = 44;
             lblBienvenido.Text = "...";
             // 
@@ -95,7 +95,7 @@
             Controls.Add(lblBienvenido);
             Controls.Add(btnRegistros);
             Controls.Add(btnPreg);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmAdmin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConfigAdmin";

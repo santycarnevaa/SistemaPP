@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmContraseña));
             btnSiguiente = new Button();
             txtNuevaContra = new TextBox();
             label1 = new Label();
@@ -43,7 +42,7 @@
             btnSiguiente.BackColor = Color.Green;
             btnSiguiente.Enabled = false;
             btnSiguiente.FlatStyle = FlatStyle.Flat;
-            btnSiguiente.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            btnSiguiente.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnSiguiente.ForeColor = Color.White;
             btnSiguiente.Location = new Point(210, 192);
             btnSiguiente.Name = "btnSiguiente";
@@ -57,7 +56,7 @@
             // 
             txtNuevaContra.BackColor = Color.FromArgb(8, 10, 13);
             txtNuevaContra.BorderStyle = BorderStyle.FixedSingle;
-            txtNuevaContra.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtNuevaContra.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtNuevaContra.ForeColor = Color.White;
             txtNuevaContra.Location = new Point(166, 76);
             txtNuevaContra.Multiline = true;
@@ -70,11 +69,11 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            label1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             label1.ForeColor = Color.White;
             label1.Location = new Point(166, 52);
             label1.Name = "label1";
-            label1.Size = new Size(130, 16);
+            label1.Size = new Size(137, 16);
             label1.TabIndex = 15;
             label1.Text = "Nueva contraseña:";
             // 
@@ -82,7 +81,7 @@
             // 
             txtConfirmarContra.BackColor = Color.FromArgb(8, 10, 13);
             txtConfirmarContra.BorderStyle = BorderStyle.FixedSingle;
-            txtConfirmarContra.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtConfirmarContra.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtConfirmarContra.ForeColor = Color.White;
             txtConfirmarContra.Location = new Point(167, 141);
             txtConfirmarContra.Multiline = true;
@@ -95,17 +94,16 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            label2.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             label2.ForeColor = Color.White;
             label2.Location = new Point(167, 118);
             label2.Name = "label2";
-            label2.Size = new Size(178, 16);
+            label2.Size = new Size(189, 16);
             label2.TabIndex = 17;
             label2.Text = "Repetir nueva contraseña:";
             // 
             // pictureBox2
             // 
-            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
             pictureBox2.ImageLocation = "";
             pictureBox2.Location = new Point(521, 12);
             pictureBox2.Name = "pictureBox2";
@@ -127,9 +125,10 @@
             Controls.Add(label1);
             Controls.Add(txtNuevaContra);
             Controls.Add(btnSiguiente);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmContraseña";
             StartPosition = FormStartPosition.CenterScreen;
+            Load += frmContraseña_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
