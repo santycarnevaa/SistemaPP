@@ -80,7 +80,7 @@ namespace CapaLogica
 
                 if (usuarioDatos.ExisteCorreo(correo))
                     return resultadoRegistroUsuario.CorreoYaExiste;
-
+//k
                 if (!CorreoValido(correo))
                     return resultadoRegistroUsuario.CorreoInvalido;
 
