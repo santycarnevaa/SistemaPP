@@ -128,11 +128,13 @@
             datFecha.CalendarTitleBackColor = Color.FromArgb(64, 64, 64);
             datFecha.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
             datFecha.Location = new Point(420, 169);
-            datFecha.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            datFecha.MaxDate = new DateTime(2026, 12, 31, 0, 0, 0, 0);
             datFecha.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             datFecha.Name = "datFecha";
             datFecha.Size = new Size(264, 24);
             datFecha.TabIndex = 16;
+            datFecha.Value = new DateTime(2002, 12, 31, 0, 0, 0, 0);
+            datFecha.ValueChanged += datFecha_ValueChanged;
             // 
             // lblCorreo
             // 
@@ -345,9 +347,9 @@
             label4.ForeColor = Color.White;
             label4.Location = new Point(420, 88);
             label4.Name = "label4";
-            label4.Size = new Size(34, 19);
+            label4.Size = new Size(41, 19);
             label4.TabIndex = 63;
-            label4.Text = "C.P";
+            label4.Text = "C.P*";
             // 
             // txtCP
             // 
@@ -485,7 +487,7 @@
             DgvPrueba.GridColor = SystemColors.WindowText;
             DgvPrueba.Location = new Point(23, 299);
             DgvPrueba.Name = "DgvPrueba";
-            DgvPrueba.Size = new Size(853, 288);
+            DgvPrueba.Size = new Size(925, 288);
             DgvPrueba.TabIndex = 87;
             DgvPrueba.CellContentClick += DgvPrueba_CellContentClick;
             DgvPrueba.RowEnter += DgvPrueba_RowEnter;
@@ -531,7 +533,7 @@
             groupBox1.ForeColor = Color.Gainsboro;
             groupBox1.Location = new Point(23, 6);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(853, 276);
+            groupBox1.Size = new Size(896, 276);
             groupBox1.TabIndex = 89;
             groupBox1.TabStop = false;
             groupBox1.Text = "Datos Personales";

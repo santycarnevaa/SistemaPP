@@ -48,6 +48,7 @@ namespace Utilidades
             string body = @"<style>
                             h1{color:dodgerblue;}
                             h2{color:darkorange;}
+                            h3{color:darkorange;}
                             </style>
                             <h1> Contraseña de ingreso: </h1></br>
                             <h2> " + NuevaContraseña + "</h2>";

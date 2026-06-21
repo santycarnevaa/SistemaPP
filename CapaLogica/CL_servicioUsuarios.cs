@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilidades;
-
+using System.Text.RegularExpressions;
 namespace CapaLogica
 {
     public class CL_servicioUsuarios
@@ -81,7 +81,10 @@ namespace CapaLogica
                 if (usuarioDatos.ExisteCorreo(correo))
                     return resultadoRegistroUsuario.CorreoYaExiste;
 
-                string direccionOriginal = calle + " " + numero + ", " + localidad + ", " + partido + ", " + provincia;
+                if (!CorreoValido(correo))
+                    return resultadoRegistroUsuario.CorreoInvalido;
+
+            string direccionOriginal = calle + " " + numero + ", " + localidad + ", " + partido + ", " + provincia;
                 string direccionNormalizada = direccionOriginal.ToUpper().Trim();
 
                 string passwordTemporal = generarContra.autogenerarContra();
@@ -194,6 +197,8 @@ namespace CapaLogica
 
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
+            if (!CorreoValido(correo))
+                return false;
 
             if (idRol <= 0)
                 return false;
@@ -250,6 +255,15 @@ namespace CapaLogica
                 return false;
 
             return usuarioDatos.ExisteCorreo(correo);
+        }
+        private bool CorreoValido(string correo)
+        {
+            if (string.IsNullOrWhiteSpace(correo))
+                return false;
+
+            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            return Regex.IsMatch(correo, patron);
         }
         public string ObtenerMensajeRegistro(resultadoRegistroUsuario resultado)
         {
@@ -311,6 +325,8 @@ namespace CapaLogica
 
                 case resultadoRegistroUsuario.ErrorEnvioMail:
                     return "El usuario se creó, pero no se pudo enviar el correo con la contraseña temporal.";
+                case resultadoRegistroUsuario.CorreoInvalido:
+                    return "Debe ingresar un correo electrónico válido.";
 
                 default:
                     return "Ocurrió un error desconocido.";

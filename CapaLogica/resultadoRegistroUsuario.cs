@@ -20,6 +20,7 @@
         CorreoYaExiste,
         ErrorBaseDatos,
         ErrorPasswordTemporal,
-        ErrorEnvioMail
+        ErrorEnvioMail,
+        CorreoInvalido
     }
 }

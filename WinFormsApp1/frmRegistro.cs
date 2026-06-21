@@ -490,6 +490,7 @@ namespace CapaVista
         }
 
         private void actualizargrilla()
+
         {
             try
             {
@@ -512,7 +513,6 @@ namespace CapaVista
                 OcultarColumna("Provincia");
                 OcultarColumna("Partido");
                 OcultarColumna("Localidad");
-
                 CambiarTitulo("IdUsuario", "ID");
                 CambiarTitulo("DNI", "DNI");
                 CambiarTitulo("Telefono", "Teléfono");
@@ -607,6 +607,7 @@ namespace CapaVista
                     btnEliminar.Text = "Dar de baja";
                 else
                     btnEliminar.Text = "Activar";
+                btnEliminar.BackColor = activo ? Color.Red : Color.Green;
             }
         }
 
@@ -687,6 +688,25 @@ namespace CapaVista
 
         private void DgvPrueba_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+        }
+
+        private void datFecha_ValueChanged(object sender, EventArgs e)
+        {
+            datFecha.MaxDate = DateTime.Now;
+            DateTime fechaNacimiento = datFecha.Value;
+            DateTime hoy = DateTime.Today;
+
+            int edad = hoy.Year - fechaNacimiento.Year;
+
+            if(fechaNacimiento.Date > hoy.AddYears(-edad))
+            {
+                edad--;
+            }
+
+            if(edad < 16)
+            {
+                MessageBox.Show("Error: El usuario debe ser mayor de 16 años","Validacion de edad",MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
