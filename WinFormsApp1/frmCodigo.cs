@@ -207,5 +207,10 @@ namespace CapaVista
             frm.ShowDialog();
             this.Close();
         }
+
+        private void frmCodigo_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

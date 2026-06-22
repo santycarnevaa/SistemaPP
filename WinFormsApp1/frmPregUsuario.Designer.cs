@@ -49,7 +49,7 @@
             // 
             txtRespuesta1.BackColor = Color.FromArgb(8, 10, 13);
             txtRespuesta1.BorderStyle = BorderStyle.FixedSingle;
-            txtRespuesta1.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtRespuesta1.ForeColor = Color.White;
             txtRespuesta1.Location = new Point(36, 63);
             txtRespuesta1.Multiline = true;
@@ -61,7 +61,7 @@
             // 
             txtRespuesta2.BackColor = Color.FromArgb(8, 10, 13);
             txtRespuesta2.BorderStyle = BorderStyle.FixedSingle;
-            txtRespuesta2.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtRespuesta2.ForeColor = Color.White;
             txtRespuesta2.Location = new Point(36, 149);
             txtRespuesta2.Multiline = true;
@@ -73,7 +73,7 @@
             // 
             txtRespuesta3.BackColor = Color.FromArgb(8, 10, 13);
             txtRespuesta3.BorderStyle = BorderStyle.FixedSingle;
-            txtRespuesta3.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtRespuesta3.ForeColor = Color.White;
             txtRespuesta3.Location = new Point(36, 236);
             txtRespuesta3.Multiline = true;
@@ -85,7 +85,7 @@
             // 
             txtRespuesta4.BackColor = Color.FromArgb(8, 10, 13);
             txtRespuesta4.BorderStyle = BorderStyle.FixedSingle;
-            txtRespuesta4.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtRespuesta4.ForeColor = Color.White;
             txtRespuesta4.Location = new Point(36, 324);
             txtRespuesta4.Multiline = true;
@@ -97,7 +97,7 @@
             // 
             txtRespuesta5.BackColor = Color.FromArgb(8, 10, 13);
             txtRespuesta5.BorderStyle = BorderStyle.FixedSingle;
-            txtRespuesta5.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtRespuesta5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtRespuesta5.ForeColor = Color.White;
             txtRespuesta5.Location = new Point(36, 420);
             txtRespuesta5.Multiline = true;
@@ -108,74 +108,75 @@
             // lblPregunta1
             // 
             lblPregunta1.AutoSize = true;
-            lblPregunta1.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta1.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
             lblPregunta1.ForeColor = Color.White;
             lblPregunta1.Location = new Point(29, 43);
             lblPregunta1.Name = "lblPregunta1";
-            lblPregunta1.Size = new Size(48, 17);
+            lblPregunta1.Size = new Size(53, 17);
             lblPregunta1.TabIndex = 12;
             lblPregunta1.Text = "¿111?";
             // 
             // lblPregunta2
             // 
             lblPregunta2.AutoSize = true;
-            lblPregunta2.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
             lblPregunta2.ForeColor = Color.White;
             lblPregunta2.Location = new Point(29, 129);
             lblPregunta2.Name = "lblPregunta2";
-            lblPregunta2.Size = new Size(48, 17);
+            lblPregunta2.Size = new Size(53, 17);
             lblPregunta2.TabIndex = 13;
             lblPregunta2.Text = "¿222?";
             // 
             // lblPregunta3
             // 
             lblPregunta3.AutoSize = true;
-            lblPregunta3.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta3.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
             lblPregunta3.ForeColor = Color.White;
             lblPregunta3.Location = new Point(29, 216);
             lblPregunta3.Name = "lblPregunta3";
-            lblPregunta3.Size = new Size(48, 17);
+            lblPregunta3.Size = new Size(53, 17);
             lblPregunta3.TabIndex = 14;
             lblPregunta3.Text = "¿333?";
             // 
             // lblPregunta4
             // 
             lblPregunta4.AutoSize = true;
-            lblPregunta4.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta4.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
             lblPregunta4.ForeColor = Color.White;
             lblPregunta4.Location = new Point(29, 304);
             lblPregunta4.Name = "lblPregunta4";
-            lblPregunta4.Size = new Size(48, 17);
+            lblPregunta4.Size = new Size(53, 17);
             lblPregunta4.TabIndex = 15;
             lblPregunta4.Text = "¿444?";
             // 
             // lblPregunta5
             // 
             lblPregunta5.AutoSize = true;
-            lblPregunta5.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            lblPregunta5.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
             lblPregunta5.ForeColor = Color.White;
             lblPregunta5.Location = new Point(29, 400);
             lblPregunta5.Name = "lblPregunta5";
-            lblPregunta5.Size = new Size(48, 17);
+            lblPregunta5.Size = new Size(53, 17);
             lblPregunta5.TabIndex = 16;
             lblPregunta5.Text = "¿555?";
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Century Gothic", 20F, FontStyle.Bold);
+            label9.Font = new Font("Microsoft Sans Serif", 20F, FontStyle.Bold);
             label9.ForeColor = Color.White;
             label9.Location = new Point(102, 7);
             label9.Name = "label9";
-            label9.Size = new Size(351, 32);
+            label9.Size = new Size(367, 31);
             label9.TabIndex = 17;
             label9.Text = "Personaliza tus respuestas";
+            label9.Click += label9_Click;
             // 
             // btnEnviar
             // 
             btnEnviar.BackColor = Color.Green;
             btnEnviar.FlatStyle = FlatStyle.Flat;
-            btnEnviar.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            btnEnviar.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnEnviar.ForeColor = Color.White;
             btnEnviar.Location = new Point(204, 466);
             btnEnviar.Name = "btnEnviar";

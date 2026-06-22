@@ -181,5 +181,10 @@ namespace CapaVista
                 MessageBox.Show("No se pudo identificar el rol del usuario.");
             }
         }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

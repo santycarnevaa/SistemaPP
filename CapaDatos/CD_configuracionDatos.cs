@@ -54,11 +54,9 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("SP_ActualizarPoliticasSeguridad", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-
                     cmd.Parameters.AddWithValue("@MinCaracteres", config.minCaracteres);
                     cmd.Parameters.AddWithValue("@CantPreguntas", config.cantPreguntas);
                     cmd.Parameters.AddWithValue("@RequiereMayusculas", config.requiereMayusculas);
-                    cmd.Parameters.AddWithValue("@RequiereMinusculas", config.requiereMinusculas);
                     cmd.Parameters.AddWithValue("@RequiereNumeros", config.requiereNumeros);
                     cmd.Parameters.AddWithValue("@RequiereEspeciales", config.requiereEspeciales);
                     cmd.Parameters.AddWithValue("@Requiere2FA", config.requiere2FA);
@@ -69,9 +67,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception("Error SQL al actualizar configuración: " + ex.Message, ex);
             }
         }
 

@@ -121,5 +121,10 @@ namespace CapaVista
                 MessageBox.Show("No se pudo identificar el rol del usuario.");
             }
         }
+
+        private void frmContraseña_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

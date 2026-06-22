@@ -49,7 +49,7 @@
             btnIngresar.BackColor = Color.Green;
             btnIngresar.Enabled = false;
             btnIngresar.FlatStyle = FlatStyle.Flat;
-            btnIngresar.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
+            btnIngresar.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
             btnIngresar.Location = new Point(424, 357);
             btnIngresar.Name = "btnIngresar";
             btnIngresar.Size = new Size(127, 27);
@@ -62,7 +62,7 @@
             // 
             txtPreg1.BackColor = Color.FromArgb(8, 10, 13);
             txtPreg1.BorderStyle = BorderStyle.FixedSingle;
-            txtPreg1.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPreg1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPreg1.ForeColor = Color.White;
             txtPreg1.Location = new Point(12, 50);
             txtPreg1.Multiline = true;
@@ -74,22 +74,22 @@
             // lblPreg1
             // 
             lblPreg1.AutoSize = true;
-            lblPreg1.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            lblPreg1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             lblPreg1.ForeColor = Color.White;
             lblPreg1.Location = new Point(21, 31);
             lblPreg1.Name = "lblPreg1";
-            lblPreg1.Size = new Size(85, 16);
+            lblPreg1.Size = new Size(88, 16);
             lblPreg1.TabIndex = 7;
             lblPreg1.Text = "pregunta 1¿";
             // 
             // lblPreg2
             // 
             lblPreg2.AutoSize = true;
-            lblPreg2.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            lblPreg2.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             lblPreg2.ForeColor = Color.White;
             lblPreg2.Location = new Point(21, 94);
             lblPreg2.Name = "lblPreg2";
-            lblPreg2.Size = new Size(85, 16);
+            lblPreg2.Size = new Size(88, 16);
             lblPreg2.TabIndex = 9;
             lblPreg2.Text = "pregunta 2¿";
             // 
@@ -97,7 +97,7 @@
             // 
             txtPreg2.BackColor = Color.FromArgb(8, 10, 13);
             txtPreg2.BorderStyle = BorderStyle.FixedSingle;
-            txtPreg2.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPreg2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPreg2.ForeColor = Color.White;
             txtPreg2.Location = new Point(12, 113);
             txtPreg2.Multiline = true;
@@ -109,11 +109,11 @@
             // lblPreg3
             // 
             lblPreg3.AutoSize = true;
-            lblPreg3.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            lblPreg3.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             lblPreg3.ForeColor = Color.White;
             lblPreg3.Location = new Point(21, 156);
             lblPreg3.Name = "lblPreg3";
-            lblPreg3.Size = new Size(85, 16);
+            lblPreg3.Size = new Size(88, 16);
             lblPreg3.TabIndex = 11;
             lblPreg3.Text = "pregunta 3¿";
             // 
@@ -121,7 +121,7 @@
             // 
             txtPreg3.BackColor = Color.FromArgb(8, 10, 13);
             txtPreg3.BorderStyle = BorderStyle.FixedSingle;
-            txtPreg3.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPreg3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPreg3.ForeColor = Color.White;
             txtPreg3.Location = new Point(12, 175);
             txtPreg3.Multiline = true;
@@ -145,11 +145,11 @@
             // lblPreg4
             // 
             lblPreg4.AutoSize = true;
-            lblPreg4.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            lblPreg4.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             lblPreg4.ForeColor = Color.White;
             lblPreg4.Location = new Point(21, 220);
             lblPreg4.Name = "lblPreg4";
-            lblPreg4.Size = new Size(85, 16);
+            lblPreg4.Size = new Size(88, 16);
             lblPreg4.TabIndex = 15;
             lblPreg4.Text = "pregunta 4¿";
             // 
@@ -157,7 +157,7 @@
             // 
             txtPreg4.BackColor = Color.FromArgb(8, 10, 13);
             txtPreg4.BorderStyle = BorderStyle.FixedSingle;
-            txtPreg4.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPreg4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPreg4.ForeColor = Color.White;
             txtPreg4.Location = new Point(12, 239);
             txtPreg4.Multiline = true;
@@ -169,11 +169,11 @@
             // lblPreg5
             // 
             lblPreg5.AutoSize = true;
-            lblPreg5.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold);
+            lblPreg5.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             lblPreg5.ForeColor = Color.White;
             lblPreg5.Location = new Point(21, 284);
             lblPreg5.Name = "lblPreg5";
-            lblPreg5.Size = new Size(85, 16);
+            lblPreg5.Size = new Size(88, 16);
             lblPreg5.TabIndex = 17;
             lblPreg5.Text = "pregunta 5¿";
             // 
@@ -181,7 +181,7 @@
             // 
             txtPreg5.BackColor = Color.FromArgb(8, 10, 13);
             txtPreg5.BorderStyle = BorderStyle.FixedSingle;
-            txtPreg5.Font = new Font("Century Gothic", 12F, FontStyle.Bold);
+            txtPreg5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPreg5.ForeColor = Color.White;
             txtPreg5.Location = new Point(12, 303);
             txtPreg5.Multiline = true;
@@ -211,7 +211,7 @@
             Controls.Add(btnIngresar);
             Font = new Font("Segoe UI", 12F);
             ForeColor = Color.White;
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(4);
             Name = "frmrecuperar";
             ShowIcon = false;
