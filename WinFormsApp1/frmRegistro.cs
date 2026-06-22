@@ -24,6 +24,25 @@ namespace CapaVista
         {
             InitializeComponent();
 
+
+            btnbuscar.Click += btnbuscar_Click;
+            btnLimpiar.Click += btnLimpiar_Click;
+            filtroscb.SelectedIndexChanged += filtroscb_SelectedIndexChanged;
+            txtboxbuscar.KeyDown += txtboxbuscar_KeyDown;
+
+            configurargrilla(DgvPrueba);
+
+            this.Load -= frmRegistro_Load;
+            this.Load += frmRegistro_Load;
+
+            cmbProvincia.SelectedIndexChanged -= cmbProvincia_SelectedIndexChanged;
+            cmbProvincia.SelectedIndexChanged += cmbProvincia_SelectedIndexChanged;
+
+            cmbPartido.SelectedIndexChanged -= cmbPartido_SelectedIndexChanged;
+            cmbPartido.SelectedIndexChanged += cmbPartido_SelectedIndexChanged;
+        
+
+
             configurargrilla(DgvPrueba);
 
             this.Load -= frmRegistro_Load;
@@ -58,10 +77,11 @@ namespace CapaVista
             filtroscb.Items.Add("Todos");
             filtroscb.Items.Add("Usuarios Activos");
             filtroscb.Items.Add("Usuarios Inactivos");
+            filtroscb.Items.Add("Rol Usuario");
+            filtroscb.Items.Add("Rol Administrador");
 
             filtroscb.SelectedIndex = 0;
         }
-
         private void PintarBoton(Button boton, Color color, bool habilitado)
         {
             boton.Enabled = habilitado;
@@ -359,18 +379,37 @@ namespace CapaVista
 
         private void btnbuscar_Click(object sender, EventArgs e)
         {
-            string texto = txtbuscar.Text.Trim();
+            string texto = txtboxbuscar.Text.Trim();
+            string filtro = filtroscb.Text;
 
-            bool soloActivos = filtroscb.Text == "Usuarios Activos";
-            bool soloInactivos = filtroscb.Text == "Usuarios Inactivos";
-
-            DgvPrueba.DataSource = servicioUsuarios.buscarusuarios(
-                texto,
-                soloActivos,
-                soloInactivos
-            );
+            DgvPrueba.DataSource = servicioUsuarios.BuscarUsuariosParaGrilla(texto, filtro);
 
             configurargrilla(DgvPrueba);
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtboxbuscar.Clear();
+            filtroscb.SelectedIndex = 0;
+            actualizargrilla();
+        }
+
+        private void txtboxbuscar_KeyDown(object sender, KeyEventArgs e) // es para que se pueda buscar con la tecla enter
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnbuscar.PerformClick(); 
+
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void filtroscb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (filtroscb.SelectedIndex >= 0)
+            {
+                btnbuscar.PerformClick();
+            }
         }
 
         private void btnModifica_Click(object sender, EventArgs e)
@@ -731,7 +770,7 @@ namespace CapaVista
                     limpiarcontroles(item);
             }
 
-            groupBox1.Text = "usuario numero:";
+            groupBox1.Text = "Nuevo Usuario:";
         }
 
         private void bloqueoControles(Control control, bool bloqueado = true)
@@ -792,6 +831,9 @@ namespace CapaVista
         {
         }
 
+        private void lblbuscar_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

@@ -30,9 +30,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRegistro));
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             btnAgregar = new Button();
             cmbRol = new ComboBox();
             lblRol = new Label();
@@ -75,8 +75,8 @@
             txtboxbuscar = new TextBox();
             filtroscb = new ComboBox();
             lblfiltros = new Label();
-            buscar = new Button();
-            btnlimpiar = new Button();
+            btnbuscar = new Button();
+            btnLimpiar = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DgvPrueba).BeginInit();
             groupBox1.SuspendLayout();
@@ -490,34 +490,34 @@
             // DgvPrueba
             // 
             DgvPrueba.BackgroundColor = Color.FromArgb(8, 10, 13);
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Control;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            DgvPrueba.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            DgvPrueba.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             DgvPrueba.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = SystemColors.Window;
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            DgvPrueba.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            DgvPrueba.DefaultCellStyle = dataGridViewCellStyle2;
             DgvPrueba.GridColor = SystemColors.Menu;
             DgvPrueba.Location = new Point(23, 343);
             DgvPrueba.Name = "DgvPrueba";
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Control;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            DgvPrueba.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            DgvPrueba.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             DgvPrueba.Size = new Size(1170, 288);
             DgvPrueba.TabIndex = 87;
             DgvPrueba.RowEnter += DgvPrueba_RowEnter;
@@ -589,6 +589,7 @@
             lblbuscar.Size = new Size(81, 28);
             lblbuscar.TabIndex = 90;
             lblbuscar.Text = "Buscar:";
+            lblbuscar.Click += lblbuscar_Click;
             // 
             // txtboxbuscar
             // 
@@ -603,7 +604,7 @@
             // filtroscb
             // 
             filtroscb.FormattingEnabled = true;
-            filtroscb.Items.AddRange(new object[] { "Todos", "Activos", "Inactivos" });
+            filtroscb.Items.AddRange(new object[] { "Todos", "Activos", "Inactivos", "Administrador", "Usuario" });
             filtroscb.Location = new Point(771, 290);
             filtroscb.Name = "filtroscb";
             filtroscb.Size = new Size(121, 23);
@@ -619,30 +620,30 @@
             lblfiltros.TabIndex = 93;
             lblfiltros.Text = "Filtros:";
             // 
-            // buscar
+            // btnbuscar
             // 
-            buscar.Font = new Font("Segoe UI", 11F);
-            buscar.ForeColor = Color.Black;
-            buscar.Location = new Point(535, 288);
-            buscar.Name = "buscar";
-            buscar.Size = new Size(93, 25);
-            buscar.TabIndex = 94;
-            buscar.Text = "Buscar";
-            buscar.UseVisualStyleBackColor = true;
+            btnbuscar.Font = new Font("Segoe UI", 11F);
+            btnbuscar.ForeColor = Color.Black;
+            btnbuscar.Location = new Point(535, 288);
+            btnbuscar.Name = "btnbuscar";
+            btnbuscar.Size = new Size(93, 25);
+            btnbuscar.TabIndex = 94;
+            btnbuscar.Text = "Buscar";
+            btnbuscar.UseVisualStyleBackColor = true;
             // 
-            // btnlimpiar
+            // btnLimpiar
             // 
-            btnlimpiar.BackColor = Color.White;
-            btnlimpiar.FlatStyle = FlatStyle.System;
-            btnlimpiar.Font = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.World);
-            btnlimpiar.ForeColor = Color.Red;
-            btnlimpiar.Location = new Point(634, 288);
-            btnlimpiar.Name = "btnlimpiar";
-            btnlimpiar.Size = new Size(21, 25);
-            btnlimpiar.TabIndex = 95;
-            btnlimpiar.Text = "x";
-            btnlimpiar.TextAlign = ContentAlignment.BottomCenter;
-            btnlimpiar.UseVisualStyleBackColor = false;
+            btnLimpiar.BackColor = Color.White;
+            btnLimpiar.FlatStyle = FlatStyle.System;
+            btnLimpiar.Font = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.World);
+            btnLimpiar.ForeColor = Color.Red;
+            btnLimpiar.Location = new Point(634, 288);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(21, 25);
+            btnLimpiar.TabIndex = 95;
+            btnLimpiar.Text = "x";
+            btnLimpiar.TextAlign = ContentAlignment.BottomCenter;
+            btnLimpiar.UseVisualStyleBackColor = false;
             // 
             // frmRegistro
             // 
@@ -650,8 +651,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(1234, 697);
-            Controls.Add(btnlimpiar);
-            Controls.Add(buscar);
+            Controls.Add(btnLimpiar);
+            Controls.Add(btnbuscar);
             Controls.Add(lblfiltros);
             Controls.Add(filtroscb);
             Controls.Add(txtboxbuscar);
@@ -716,7 +717,7 @@
         private TextBox txtboxbuscar;
         private ComboBox filtroscb;
         private Label lblfiltros;
-        private Button buscar;
-        private Button btnlimpiar;
+        private Button btnbuscar;
+        private Button btnLimpiar;
     }
 }

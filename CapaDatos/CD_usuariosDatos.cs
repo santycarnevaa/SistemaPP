@@ -239,7 +239,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("SP_BuscarUsuarioPorId", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);   
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     object resultado = cmd.ExecuteScalar();
                     return resultado != null ? resultado.ToString() : string.Empty;
@@ -740,5 +740,47 @@ namespace CapaDatos
 
             return lista;
         }
+
+
+        public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
+        {
+            DataTable tabla = new DataTable();
+
+            using (SqlConnection conexion = conectar())
+            {
+                SqlCommand cmd = new SqlCommand("dbo.SP_BuscarUsuariosGrilla", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                bool? activo = null;
+                int? idRol = null;
+
+                if (filtro == "Usuarios Activos")
+                    activo = true;
+                else if (filtro == "Usuarios Inactivos")
+                    activo = false;
+                else if (filtro == "Rol Usuario")
+                    idRol = 1;
+                else if (filtro == "Rol Administrador")
+                    idRol = 2;
+
+                cmd.Parameters.AddWithValue("@Busqueda", texto);
+
+                if (activo.HasValue)
+                    cmd.Parameters.AddWithValue("@Activo", activo.Value);
+                else
+                    cmd.Parameters.AddWithValue("@Activo", DBNull.Value);
+
+                if (idRol.HasValue)
+                    cmd.Parameters.AddWithValue("@IdRol", idRol.Value);
+                else
+                    cmd.Parameters.AddWithValue("@IdRol", DBNull.Value);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(tabla);
+            }
+
+            return tabla;
+        }
     }
-} 
+}
+
