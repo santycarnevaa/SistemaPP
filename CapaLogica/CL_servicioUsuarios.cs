@@ -1,13 +1,12 @@
-﻿using CapaDatos;
-using Entidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using CapaDatos;
+using Entidades;
 using Utilidades;
+
 namespace CapaLogica
 {
     public class CL_servicioUsuarios
@@ -17,25 +16,26 @@ namespace CapaLogica
         private CL_servicioMail servicioMail = new CL_servicioMail();
         private generarContra generarContra = new generarContra();
         private encriptar encriptar = new encriptar();
+
         public resultadoRegistroUsuario RegistrarUsuario(
-        string calle,
-        string numero,
-        string codigoPostal,
-        string depto,
-        string piso,
-        string provincia,
-        string partido,
-        string localidad,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
 
-        string nombre,
-        string apellido,
-        string dni,
-        string telefono,
-        DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-        string usuario,
-        string correo,
-        int idRol)
+            string usuario,
+            string correo,
+            int idRol)
         {
             if (string.IsNullOrWhiteSpace(usuario))
                 return resultadoRegistroUsuario.UsuarioVacio;
@@ -81,7 +81,7 @@ namespace CapaLogica
 
             if (usuarioDatos.ExisteCorreo(correo))
                 return resultadoRegistroUsuario.CorreoYaExiste;
-            //k
+
             if (!CorreoValido(correo))
                 return resultadoRegistroUsuario.CorreoInvalido;
 
@@ -121,11 +121,6 @@ namespace CapaLogica
             if (idUsuario == -1)
                 return resultadoRegistroUsuario.ErrorBaseDatos;
 
-            //bool passwordOk = servicioContras.registrarContraTemporal(idUsuario, passwordTemporal);
-
-            //if (!passwordOk)
-            //    return resultadoRegistroUsuario.ErrorPasswordTemporal;
-
             bool mailOk = servicioMail.enviarContraTemporal(correo, passwordTemporal);
 
             if (!mailOk)
@@ -134,6 +129,7 @@ namespace CapaLogica
             return resultadoRegistroUsuario.Ok;
 
         }
+
         public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
             if (idUsuario <= 0)
@@ -143,25 +139,25 @@ namespace CapaLogica
         }
 
         public bool ActualizarDatosUsuario(
-    int idUsuario,
+            int idUsuario,
 
-    string nombre,
-    string apellido,
-    string dni,
-    string telefono,
-    DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-    string calle,
-    string numero,
-    string codigoPostal,
-    string depto,
-    string piso,
-    string provincia,
-    string partido,
-    string localidad,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
 
-    string correo,
-    int idRol)
+            string correo,
+            int idRol)
         {
             if (idUsuario <= 0)
                 return false;
@@ -198,6 +194,7 @@ namespace CapaLogica
 
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
+
             if (!CorreoValido(correo))
                 return false;
 
@@ -257,6 +254,7 @@ namespace CapaLogica
 
             return usuarioDatos.ExisteCorreo(correo);
         }
+
         private bool CorreoValido(string correo)
         {
             if (string.IsNullOrWhiteSpace(correo))
@@ -266,6 +264,7 @@ namespace CapaLogica
 
             return Regex.IsMatch(correo, patron);
         }
+
         public string ObtenerMensajeRegistro(resultadoRegistroUsuario resultado)
         {
             switch (resultado)
@@ -367,6 +366,11 @@ namespace CapaLogica
         public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
         {
             return usuarioDatos.BuscarUsuariosParaGrilla(texto, filtro);
+        }
+
+        public List<rol> ListarRoles()
+        {
+            return usuarioDatos.ListarRoles();
         }
     }
 }

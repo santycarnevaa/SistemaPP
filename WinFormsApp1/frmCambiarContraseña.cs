@@ -11,11 +11,12 @@ using CapaLogica;
 
 namespace CapaVista
 {
-    public partial class frmContraseña : Form
+    public partial class frmCambiarContraseña : Form
     {
         private CL_servicioContras servicioContras = new CL_servicioContras();
         private string usuario;
-        public frmContraseña(string usuario)
+
+        public frmCambiarContraseña(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
@@ -46,6 +47,14 @@ namespace CapaVista
 
             try
             {
+                List<string> requisitosIncumplidos = servicioContras.RequisitosIncumplidos(nuevaContra, usuario);
+
+                if (requisitosIncumplidos.Count > 0)
+                {
+                    MessageBox.Show("La contraseña no cumple los requisitos:\n\n- " + string.Join("\n- ", requisitosIncumplidos));
+                    return;
+                }
+
                 bool cambioOk = servicioContras.cambiarContra(usuario, nuevaContra);
 
                 if (cambioOk)
@@ -58,7 +67,7 @@ namespace CapaVista
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo cambiar la contraseña. Verifique que cumpla las políticas y que no haya sido usada antes.");
+                    MessageBox.Show("No se pudo cambiar la contraseña. Puede que ya se haya usado antes.");
                 }
             }
             catch (Exception ex)
@@ -93,9 +102,10 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            frmLogin frm = new frmLogin();
             this.Close();
         }
+
         private void AbrirPantallaPrincipal(string usuario)
         {
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
@@ -122,9 +132,9 @@ namespace CapaVista
             }
         }
 
-        private void frmContraseña_Load(object sender, EventArgs e)
+        private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
-
+            lblRequisitos.Text = servicioContras.DescribirRequisitos();
         }
     }
 }

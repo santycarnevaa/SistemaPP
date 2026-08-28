@@ -41,7 +41,7 @@
             btnRegistros.BackColor = Color.FromArgb(8, 10, 13);
             btnRegistros.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnRegistros.ForeColor = Color.White;
-            btnRegistros.Location = new Point(88, 170);
+            btnRegistros.Location = new Point(88, 149);
             btnRegistros.Name = "btnRegistros";
             btnRegistros.Size = new Size(258, 37);
             btnRegistros.TabIndex = 1;
@@ -54,7 +54,7 @@
             btnPreg.BackColor = Color.FromArgb(8, 10, 13);
             btnPreg.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnPreg.ForeColor = Color.White;
-            btnPreg.Location = new Point(88, 127);
+            btnPreg.Location = new Point(88, 106);
             btnPreg.Name = "btnPreg";
             btnPreg.Size = new Size(258, 37);
             btnPreg.TabIndex = 0;

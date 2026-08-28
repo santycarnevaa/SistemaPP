@@ -1,6 +1,6 @@
-﻿using CapaLogica;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CapaLogica;
 
 namespace CapaVista
 {
@@ -92,7 +92,7 @@ namespace CapaVista
                 return;
             }
 
-            frmrecuperar frm = new frmrecuperar(usuario);
+            frmPreguntas frm = new frmPreguntas(usuario);
             this.Hide();
             frm.ShowDialog();
             this.Close();
@@ -202,7 +202,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            frmLogin frm = new frmLogin();
             this.Hide();
             frm.ShowDialog();
             this.Close();

@@ -4,6 +4,8 @@ namespace CapaLogica
 {
     public class CL_servicioMail
     {
+        private CL_servicioConfiguracionCorreo servicioConfigCorreo = new CL_servicioConfiguracionCorreo();
+
         public bool enviarContraTemporal(string correo, string passwordTemporal)
         {
             if (string.IsNullOrWhiteSpace(correo))
@@ -135,7 +137,8 @@ namespace CapaLogica
 
             try
             {
-                enviarMail.sendMail(correo, asunto, mensaje);
+                var (from, passwordAplicacion) = servicioConfigCorreo.ObtenerCredencialesParaEnvio();
+                enviarMail.sendMail(correo, asunto, mensaje, from, passwordAplicacion);
                 return true;
             }
             catch
@@ -274,7 +277,8 @@ namespace CapaLogica
 
             try
             {
-                enviarMail.sendMail(correo, asunto, mensaje);
+                var (from, passwordAplicacion) = servicioConfigCorreo.ObtenerCredencialesParaEnvio();
+                enviarMail.sendMail(correo, asunto, mensaje, from, passwordAplicacion);
                 return true;
             }
             catch

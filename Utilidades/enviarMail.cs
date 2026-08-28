@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Utilidades
 {
     public static class enviarMail
     {
-        public static void sendMail(string to, string asunto, string body)
+        public static void sendMail(string to, string asunto, string body, string from, string passwordAplicacion, string displayName = "Recuperacion de Cuenta")
         {
-            string from = "carnevalisantino@gmail.com"; //correo de la empresa
-            string displayName = "Recuperacion de Cuenta"; //Lo que se ve al recibir el mail
             try
             {
                 MailMessage mail = new MailMessage
@@ -26,33 +20,17 @@ namespace Utilidades
                 mail.Body = body;
                 mail.IsBodyHtml = true;
 
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587)//Aquí debes sustituir tu servidor SMTP y el puerto
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
                 {
-                    Credentials = new NetworkCredential(from, "xjmjhgrgtuianpvk"), //correo , contraseña de la cuenta de la empresa
-                    EnableSsl = true//En caso de que tu servidor de correo no utilice cifrado SSL,poner en false
+                    Credentials = new NetworkCredential(from, passwordAplicacion),
+                    EnableSsl = true
                 };
                 client.Send(mail);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("ERROR AL ENVIAR EL MENSAJE. \n \n " +
-                    "Por favor verifica tu conexión a internet y que tus datos sean correctos e intenta nuevamente.");
+                throw new Exception("ERROR AL ENVIAR EL MENSAJE: " + ex.Message, ex);
             }
-        }
-        public static string DireccionCorreo { get; set; }
-        public static string Asunto { get; set; }
-        public static string NuevaContraseña { get; set; }
-
-        public static void Preparar()
-        {
-            string body = @"<style>
-                            h1{color:dodgerblue;}
-                            h2{color:darkorange;}
-                            h3{color:darkorange;}
-                            </style>
-                            <h1> Contraseña de ingreso: </h1></br>
-                            <h2> " + NuevaContraseña + "</h2>";
-            enviarMail.sendMail(DireccionCorreo, Asunto, body);
         }
     }
 }

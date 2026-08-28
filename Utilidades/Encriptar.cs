@@ -13,9 +13,9 @@ namespace Utilidades
 
             return Convert.ToBase64String(hash);
         }
+
         public string hashUsuarioContra(string usuario, string contra)
         {
-            encriptar enc = new encriptar();
             return HashMetodo(usuario + contra);
         }
     }

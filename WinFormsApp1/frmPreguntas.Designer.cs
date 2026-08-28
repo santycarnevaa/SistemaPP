@@ -1,6 +1,6 @@
 ﻿namespace CapaVista
 {
-    partial class frmrecuperar
+    partial class frmPreguntas
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmrecuperar));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPreguntas));
             btnIngresar = new Button();
             txtPreg1 = new TextBox();
             lblPreg1 = new Label();
@@ -190,7 +190,7 @@
             txtPreg5.TabIndex = 16;
             txtPreg5.TextChanged += txtPreg5_TextChanged;
             // 
-            // frmrecuperar
+            // frmPreguntas
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -213,12 +213,12 @@
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(4);
-            Name = "frmrecuperar";
+            Name = "frmPreguntas";
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Recuperar Contraseña";
-            Load += frmrecuperar_Load;
+            Load += frmPreguntas_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -1,36 +1,36 @@
-﻿using Entidades;
+﻿using System.Data;
+using Entidades;
 using Microsoft.Data.SqlClient;
-using System.Data;
 
 namespace CapaDatos
 {
     public class CD_usuariosDatos : CD_conexion
     {
         public int RegistrarUsuarioCompleto(
-    string nombre,
-    string apellido,
-    string dni,
-    string telefono,
-    DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-    string calle,
-    string numero,
-    string codigoPostal,
-    string depto,
-    string piso,
-    string provincia,
-    string partido,
-    string localidad,
-    decimal? latitud,
-    decimal? longitud,
-    string direccionOriginal,
-    string direccionNormalizada,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
+            decimal? latitud,
+            decimal? longitud,
+            string direccionOriginal,
+            string direccionNormalizada,
 
-    string usuario,
-    string correo,
-    string passwordHash,
-    int idRol,
-    bool usa2FA)
+            string usuario,
+            string correo,
+            string passwordHash,
+            int idRol,
+            bool usa2FA)
         {
             try
             {
@@ -75,99 +75,6 @@ namespace CapaDatos
             }
         }
 
-        public bool ActualizarUsuarioCompleto(
-            int idUsuario,
-
-            string usuario,
-            string correo,
-            int idRol,
-            bool usa2FA,
-
-            string nombre,
-            string apellido,
-            string dni,
-            string telefono,
-            DateTime fechaNacimiento,
-
-            string calle,
-            string numero,
-            string codigoPostal,
-            string depto,
-            string piso,
-            string provincia,
-            string partido,
-            string localidad,
-            decimal? latitud,
-            decimal? longitud,
-            string direccionOriginal,
-            string direccionNormalizada)
-        {
-            try
-            {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ActualizarUsuarioCompleto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-                    cmd.Parameters.AddWithValue("@Usa2FA", usa2FA);
-
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@Apellido", apellido);
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-                    cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrWhiteSpace(telefono) ? DBNull.Value : telefono);
-                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", string.IsNullOrWhiteSpace(numero) ? DBNull.Value : numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
-                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", string.IsNullOrWhiteSpace(partido) ? DBNull.Value : partido);
-                    cmd.Parameters.AddWithValue("@Localidad", string.IsNullOrWhiteSpace(localidad) ? DBNull.Value : localidad);
-                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", string.IsNullOrWhiteSpace(direccionNormalizada) ? DBNull.Value : direccionNormalizada);
-
-                    cmd.ExecuteNonQuery();
-
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool ActualizarPrimerLogin(int idUsuario, bool primerLogin)
-        {
-            try
-            {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ActualizarPrimerLogin", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@PrimerLogin", primerLogin);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public bool AsignarRolUsuario(int idUsuario, int idRol)
         {
             try
@@ -185,6 +92,32 @@ namespace CapaDatos
                 }
             }
             catch { return false; }
+        }
+
+        public List<rol> ListarRoles()
+        {
+            List<rol> roles = new List<rol>();
+
+            using (SqlConnection conexion = conectar())
+            {
+                SqlCommand cmd = new SqlCommand("SP_ListarRoles", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    roles.Add(new rol
+                    {
+                        IdRol = Convert.ToInt32(reader["IdRol"]),
+                        NombreRol = reader["NombreRol"].ToString()
+                    });
+                }
+
+                reader.Close();
+            }
+
+            return roles;
         }
 
         public int BuscarUsuarioPorNombreUser(string usuario)
@@ -362,6 +295,7 @@ namespace CapaDatos
                 return false;
             }
         }
+
         public bool ExisteDNI(string dni)
         {
             try
@@ -516,6 +450,7 @@ namespace CapaDatos
                 return 0;
             }
         }
+
         public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
             try
@@ -539,30 +474,31 @@ namespace CapaDatos
                 throw new Exception("Error al cambiar estado del usuario: " + ex.Message);
             }
         }
+
         public bool ActualizarDatosUsuario(
-    int idUsuario,
+            int idUsuario,
 
-    string nombre,
-    string apellido,
-    string dni,
-    string telefono,
-    DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-    string calle,
-    string numero,
-    string codigoPostal,
-    string depto,
-    string piso,
-    string provincia,
-    string partido,
-    string localidad,
-    decimal? latitud,
-    decimal? longitud,
-    string direccionOriginal,
-    string direccionNormalizada,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
+            decimal? latitud,
+            decimal? longitud,
+            string direccionOriginal,
+            string direccionNormalizada,
 
-    string correo,
-    int idRol)
+            string correo,
+            int idRol)
         {
             try
             {
@@ -605,6 +541,7 @@ namespace CapaDatos
                 throw new Exception("Error SQL al actualizar usuario: " + ex.Message, ex);
             }
         }
+
         public string ObtenerCorreoPorUsuario(string usuario)
         {
             try
@@ -626,6 +563,7 @@ namespace CapaDatos
                 return "";
             }
         }
+
         public List<UsuarioGrilla> ObtenerUsuariosGrilla()
         {
             List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
@@ -683,64 +621,6 @@ namespace CapaDatos
 
             return lista;
         }
-        public List<UsuarioGrilla> obtenerUsuariosGrilla()
-        {
-            List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
-
-            try
-            {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUsuariosGrilla", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        lista.Add(new UsuarioGrilla
-                        {
-                            IdUsuario = Convert.ToInt32(reader["IdUsuario"]),
-                            IdPersona = Convert.ToInt32(reader["IdPersona"]),
-                            IdDireccion = reader["IdDireccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["IdDireccion"]),
-
-                            Nombre = reader["Nombre"].ToString(),
-                            Apellido = reader["Apellido"].ToString(),
-                            DNI = reader["DNI"].ToString(),
-                            Telefono = reader["Telefono"].ToString(),
-
-                            Usuario = reader["Usuario"].ToString(),
-                            Correo = reader["Correo"].ToString(),
-                            IdRol = Convert.ToInt32(reader["IdRol"]),
-                            Rol = reader["Rol"].ToString(),
-
-                            Activo = Convert.ToBoolean(reader["Activo"]),
-                            Estado = reader["Estado"].ToString(),
-
-                            Calle = reader["Calle"].ToString(),
-                            Numero = reader["Numero"].ToString(),
-                            CodigoPostal = reader["CodigoPostal"].ToString(),
-                            Depto = reader["Depto"].ToString(),
-                            Piso = reader["Piso"].ToString(),
-                            Provincia = reader["Provincia"].ToString(),
-                            Partido = reader["Partido"].ToString(),
-                            Localidad = reader["Localidad"].ToString(),
-
-                            FechaNacimiento = Convert.ToDateTime(reader["FechaNacimiento"])
-                        });
-                    }
-
-                    reader.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error SQL al obtener usuarios para la grilla: " + ex.Message, ex);
-            }
-
-            return lista;
-        }
-
 
         public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
         {
@@ -783,4 +663,3 @@ namespace CapaDatos
         }
     }
 }
-

@@ -15,6 +15,7 @@ namespace CapaVista
     {
         private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         private string usuario;
+
         public frmUserConfig(string usuario)
         {
             InitializeComponent();
@@ -39,7 +40,7 @@ namespace CapaVista
             }
             else
             {
-                frmrecuperar frmPreg = new frmrecuperar(usuario);
+                frmPreguntas frmPreg = new frmPreguntas(usuario);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Close();

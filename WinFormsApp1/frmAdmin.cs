@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CapaLogica;
 
 namespace CapaVista
 {
     public partial class frmAdmin : Form
     {
         private string usuario;
+        private CL_servicioConfiguracionCorreo servicioConfigCorreo = new CL_servicioConfiguracionCorreo();
+
         public frmAdmin(string usuario)
         {
             InitializeComponent();
@@ -21,7 +24,7 @@ namespace CapaVista
 
         private void btnRegistros_Click(object sender, EventArgs e)
         {
-            frmRegistro frm = new frmRegistro();
+            frmRegistro frm = new frmRegistro(usuario);
             this.Hide();
             frm.ShowDialog();
             this.Close();
@@ -37,7 +40,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            frmLogin frm = new frmLogin();
             this.Hide();
             frm.ShowDialog();
             this.Close();
@@ -46,6 +49,16 @@ namespace CapaVista
         private void frmAdmin_Load(object sender, EventArgs e)
         {
             lblBienvenido.Text = "Bienvenido, " + usuario;
+
+            if (servicioConfigCorreo.CorrespondeRotar())
+            {
+                MessageBox.Show(
+                    "Corresponde rotar la contraseña de aplicación de correo. Podés hacerlo desde Configuración.",
+                    "Rotación de credenciales",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+            }
         }
     }
 }

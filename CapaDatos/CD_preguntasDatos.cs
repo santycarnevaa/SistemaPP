@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
 using Entidades;
+using Microsoft.Data.SqlClient;
 
 namespace CapaDatos
 {
@@ -57,6 +57,7 @@ namespace CapaDatos
 
                     while (reader.Read())
                     {
+                        //NUNCA se ingresa ID Usuario
                         lista.Add(new PreguntaSeguridad
                         {
                             IdPregunta = Convert.ToInt32(reader["IdPregunta"]),

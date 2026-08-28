@@ -1,6 +1,4 @@
-﻿using CapaLogica;
-using Entidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CapaLogica;
+using Entidades;
 
 namespace CapaVista
 {
@@ -17,22 +16,27 @@ namespace CapaVista
     {
         private CL_ServicioPreguntasSeguridad servicioPreguntas = new CL_ServicioPreguntasSeguridad();
         private List<PreguntaSeguridad> preguntasSeleccionadas = new List<PreguntaSeguridad>();
+        private List<TextBox> controlesRespuesta = new List<TextBox>();
         private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
         private string usuario;
         private bool esPrimerLogin;
+
         public frmPregUsuario(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
             this.Load += frmPregUsuario_Load;
         }
+
         private void frmPregUsuario_Load(object sender, EventArgs e)
         {
             esPrimerLogin = servicioUsuarios.esPrimerLogin(usuario);
             CargarPreguntasAleatorias();
         }
+
         private void btnEnviar_Click(object sender, EventArgs e)
         {
+            //Mover mensajes a capa logica
             int idUsuario = servicioUsuarios.ObtenerIdUsuario(usuario);
 
             if (idUsuario == -1)
@@ -41,22 +45,19 @@ namespace CapaVista
                 return;
             }
 
+            for (int i = 0; i < controlesRespuesta.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(controlesRespuesta[i].Text))
+                {
+                    MessageBox.Show("Respondé todas las preguntas antes de continuar.");
+                    return;
+                }
+            }
+
             Dictionary<int, string> respuestas = new Dictionary<int, string>();
 
-            if (preguntasSeleccionadas.Count >= 1)
-                respuestas.Add(preguntasSeleccionadas[0].IdPregunta, txtRespuesta1.Text);
-
-            if (preguntasSeleccionadas.Count >= 2)
-                respuestas.Add(preguntasSeleccionadas[1].IdPregunta, txtRespuesta2.Text);
-
-            if (preguntasSeleccionadas.Count >= 3)
-                respuestas.Add(preguntasSeleccionadas[2].IdPregunta, txtRespuesta3.Text);
-
-            if (preguntasSeleccionadas.Count >= 4)
-                respuestas.Add(preguntasSeleccionadas[3].IdPregunta, txtRespuesta4.Text);
-
-            if (preguntasSeleccionadas.Count >= 5)
-                respuestas.Add(preguntasSeleccionadas[4].IdPregunta, txtRespuesta5.Text);
+            for (int i = 0; i < preguntasSeleccionadas.Count; i++)
+                respuestas.Add(preguntasSeleccionadas[i].IdPregunta, controlesRespuesta[i].Text);
 
             bool ok = servicioPreguntas.registrarRespuestasUsuario(idUsuario, respuestas);
 
@@ -70,7 +71,7 @@ namespace CapaVista
 
             if (esPrimerLogin)
             {
-                frmContraseña frm = new frmContraseña(usuario);
+                frmCambiarContraseña frm = new frmCambiarContraseña(usuario);
                 this.Hide();
                 frm.ShowDialog();
                 this.Close();
@@ -89,9 +90,10 @@ namespace CapaVista
             this.Hide();
             this.Close();
         }
+
         private void CargarPreguntasAleatorias()
         {
-            preguntasSeleccionadas = servicioPreguntas.ObtenerPreguntasAleatoriasSegunConfiguracion();
+            preguntasSeleccionadas = servicioPreguntas.ObtenerTodasLasPreguntasDisponibles();
 
             if (preguntasSeleccionadas.Count == 0)
             {
@@ -99,63 +101,41 @@ namespace CapaVista
                 return;
             }
 
-            OcultarPreguntas();
+            pnlPreguntas.Controls.Clear();
+            controlesRespuesta.Clear();
 
-            if (preguntasSeleccionadas.Count >= 1)
-            {
-                lblPregunta1.Visible = true;
-                txtRespuesta1.Visible = true;
-                lblPregunta1.Text = preguntasSeleccionadas[0].Pregunta;
-            }
+            const int altoFila = 96;
+            int anchoDisponible = pnlPreguntas.ClientSize.Width - 20;
 
-            if (preguntasSeleccionadas.Count >= 2)
+            for (int i = 0; i < preguntasSeleccionadas.Count; i++)
             {
-                lblPregunta2.Visible = true;
-                txtRespuesta2.Visible = true;
-                lblPregunta2.Text = preguntasSeleccionadas[1].Pregunta;
-            }
+                Label lblPregunta = new Label
+                {
+                    AutoSize = true,
+                    MaximumSize = new Size(anchoDisponible, 0),
+                    Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold),
+                    ForeColor = Color.White,
+                    Location = new Point(0, i * altoFila),
+                    Text = preguntasSeleccionadas[i].Pregunta
+                };
 
-            if (preguntasSeleccionadas.Count >= 3)
-            {
-                lblPregunta3.Visible = true;
-                txtRespuesta3.Visible = true;
-                lblPregunta3.Text = preguntasSeleccionadas[2].Pregunta;
-            }
+                TextBox txtRespuesta = new TextBox
+                {
+                    BackColor = Color.FromArgb(8, 10, 13),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                    ForeColor = Color.White,
+                    Multiline = true,
+                    Location = new Point(0, i * altoFila + 34),
+                    Size = new Size(anchoDisponible, 32)
+                };
 
-            if (preguntasSeleccionadas.Count >= 4)
-            {
-                lblPregunta4.Visible = true;
-                txtRespuesta4.Visible = true;
-                lblPregunta4.Text = preguntasSeleccionadas[3].Pregunta;
-            }
-
-            if (preguntasSeleccionadas.Count >= 5)
-            {
-                lblPregunta5.Visible = true;
-                txtRespuesta5.Visible = true;
-                lblPregunta5.Text = preguntasSeleccionadas[4].Pregunta;
+                pnlPreguntas.Controls.Add(lblPregunta);
+                pnlPreguntas.Controls.Add(txtRespuesta);
+                controlesRespuesta.Add(txtRespuesta);
             }
         }
-        private void OcultarPreguntas()
-        {
-            lblPregunta1.Visible = false;
-            lblPregunta2.Visible = false;
-            lblPregunta3.Visible = false;
-            lblPregunta4.Visible = false;
-            lblPregunta5.Visible = false;
 
-            txtRespuesta1.Visible = false;
-            txtRespuesta2.Visible = false;
-            txtRespuesta3.Visible = false;
-            txtRespuesta4.Visible = false;
-            txtRespuesta5.Visible = false;
-
-            txtRespuesta1.Text = "";
-            txtRespuesta2.Text = "";
-            txtRespuesta3.Text = "";
-            txtRespuesta4.Text = "";
-            txtRespuesta5.Text = "";
-        }
         private void AbrirPantallaPrincipal(string usuario)
         {
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();

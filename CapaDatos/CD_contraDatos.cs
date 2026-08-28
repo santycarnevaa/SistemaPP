@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace CapaDatos
 {
@@ -32,6 +32,7 @@ namespace CapaDatos
                 throw new Exception("Error SQL al cambiar la contraseña: " + ex.Message, ex);
             }
         }
+
         public bool insertarPassword(int idUsuario, string passwordHash)
         {
             try
@@ -181,15 +182,13 @@ namespace CapaDatos
                         (
                             IdUsuario,
                             PasswordHash,
-                            FechaCreacion,
-                            EsTemporal
+                            FechaCreacion
                         )
                         VALUES
                         (
                             @IdUsuario,
                             @PasswordHash,
-                            GETDATE(),
-                            0
+                            GETDATE()
                         );
                     ";
 

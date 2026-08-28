@@ -1,13 +1,13 @@
-﻿using CapaLogica;
-using Entidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using CapaLogica;
+using Entidades;
 
 namespace CapaVista
 {
-    public partial class frmrecuperar : Form
+    public partial class frmPreguntas : Form
     {
         private string usuario;
 
@@ -16,15 +16,15 @@ namespace CapaVista
 
         private List<PreguntaSeguridad> preguntasUsuario = new List<PreguntaSeguridad>();
 
-        public frmrecuperar(string usuario)
+        public frmPreguntas(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
 
-            this.Load += frmrecuperar_Load;
+            this.Load += frmPreguntas_Load;
         }
 
-        private void frmrecuperar_Load(object sender, EventArgs e)
+        private void frmPreguntas_Load(object sender, EventArgs e)
         {
             CargarPreguntasSegunConfiguracion();
             ingresar();
@@ -140,7 +140,7 @@ namespace CapaVista
 
             if (respuestasCorrectas)
             {
-                frmContraseña frm = new frmContraseña(usuario);
+                frmCambiarContraseña frm = new frmCambiarContraseña(usuario);
                 this.Hide();
                 frm.ShowDialog();
                 this.Close();
@@ -211,7 +211,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            frmLogin frm = new frmLogin();
             this.Hide();
             frm.ShowDialog();
             this.Close();

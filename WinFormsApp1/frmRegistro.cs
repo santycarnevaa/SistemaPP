@@ -1,8 +1,8 @@
-﻿using CapaLogica;
-using Entidades;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CapaLogica;
+using Entidades;
 
 namespace CapaVista
 {
@@ -20,10 +20,13 @@ namespace CapaVista
         private bool cargandoDatos = false;
         private string modo = "normal";
 
-        public frmRegistro()
+        private List<rol> rolesDisponibles = new List<rol>();
+        private string usuario;
+
+        public frmRegistro(string usuario)
         {
             InitializeComponent();
-
+            this.usuario = usuario;
 
             btnbuscar.Click += btnbuscar_Click;
             btnLimpiar.Click += btnLimpiar_Click;
@@ -40,25 +43,12 @@ namespace CapaVista
 
             cmbPartido.SelectedIndexChanged -= cmbPartido_SelectedIndexChanged;
             cmbPartido.SelectedIndexChanged += cmbPartido_SelectedIndexChanged;
-        
-
-
-            configurargrilla(DgvPrueba);
-
-            this.Load -= frmRegistro_Load;
-            this.Load += frmRegistro_Load;
-
-            cmbProvincia.SelectedIndexChanged -= cmbProvincia_SelectedIndexChanged;
-            cmbProvincia.SelectedIndexChanged += cmbProvincia_SelectedIndexChanged;
-
-            cmbPartido.SelectedIndexChanged -= cmbPartido_SelectedIndexChanged;
-            cmbPartido.SelectedIndexChanged += cmbPartido_SelectedIndexChanged;
         }
 
-        private void frmRegistro_Load(object sender, EventArgs e)
+        private async void frmRegistro_Load(object sender, EventArgs e)
         {
             cargarRoles();
-            cargarProvincias();
+            await cargarProvincias();
             actualizargrilla();
 
             datFecha.MaxDate = DateTime.Today.AddYears(-16);
@@ -82,6 +72,7 @@ namespace CapaVista
 
             filtroscb.SelectedIndex = 0;
         }
+
         private void PintarBoton(Button boton, Color color, bool habilitado)
         {
             boton.Enabled = habilitado;
@@ -218,29 +209,38 @@ namespace CapaVista
 
         private void cargarRoles()
         {
+            rolesDisponibles = servicioUsuarios.ListarRoles();
+
             cmbRol.Items.Clear();
-            cmbRol.Items.Add("Usuario");
-            cmbRol.Items.Add("Administrador");
+            foreach (rol rol in rolesDisponibles)
+                cmbRol.Items.Add(rol.NombreRol);
+
             cmbRol.SelectedIndex = -1;
         }
 
         private int obtenerIdRol()
         {
-            switch (cmbRol.Text)
-            {
-                case "Usuario":
-                    return 1;
-                case "Administrador":
-                    return 2;
-                default:
-                    return 0;
-            }
+            rol rolSeleccionado = rolesDisponibles.FirstOrDefault(r => r.NombreRol == cmbRol.Text);
+            return rolSeleccionado != null ? rolSeleccionado.IdRol : 0;
         }
 
-        private void cargarProvincias()
+        private async Task cargarProvincias()
         {
             try
             {
+                this.Cursor = Cursors.WaitCursor;
+
+                // En una instalación limpia las tablas de georreferencia están
+                // vacías; cargarGeorefEnBase() ya se cuida de no volver a pedirle
+                // datos a la API si ya están cargados, así que es seguro llamarla
+                // siempre acá.
+                bool georefOk = await servicioGeoref.cargarGeorefEnBase();
+
+                if (!georefOk)
+                {
+                    MessageBox.Show("No se pudieron cargar los datos geográficos desde la API. Verificá la conexión a internet e intentá de nuevo.");
+                }
+
                 var provincias = servicioGeoref.ObtenerProvincias();
 
                 cmbProvincia.DataSource = null;
@@ -255,6 +255,10 @@ namespace CapaVista
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar provincias: " + ex.Message);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
             }
         }
 
@@ -398,7 +402,7 @@ namespace CapaVista
         {
             if (e.KeyCode == Keys.Enter)
             {
-                btnbuscar.PerformClick(); 
+                btnbuscar.PerformClick();
 
                 e.SuppressKeyPress = true;
             }
@@ -426,8 +430,8 @@ namespace CapaVista
             actualizargrilla();
 
             txtboxbuscar.Focus();
-
         }
+
         private void btnModificar_Click(object sender, EventArgs e)
         {
             if (modo == "normal")
@@ -609,8 +613,6 @@ namespace CapaVista
 
             return true;
         }
-
-
 
         private void configurargrilla(DataGridView dgv)
         {
@@ -824,6 +826,9 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            frmAdmin frm = new frmAdmin(usuario);
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
         }
 
