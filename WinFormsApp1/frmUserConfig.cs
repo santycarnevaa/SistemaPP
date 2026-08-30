@@ -33,18 +33,26 @@ namespace CapaVista
         {
             if (servicioConfiguracion.requiere2FA())
             {
-                frmCodigo frmCod = new frmCodigo(usuario);
+                frmCodigo frmCod = new frmCodigo(usuario, OrigenVerificacion.CambioVoluntario);
                 this.Hide();
                 frmCod.ShowDialog();
                 this.Close();
             }
             else
             {
-                frmPreguntas frmPreg = new frmPreguntas(usuario);
+                frmPreguntas frmPreg = new frmPreguntas(usuario, OrigenVerificacion.CambioVoluntario);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Close();
             }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            frmUsuario frm = new frmUsuario(usuario);
+            this.Hide();
+            frm.ShowDialog();
+            this.Close();
         }
     }
 }

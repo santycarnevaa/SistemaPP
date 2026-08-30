@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CapaLogica;
 using Entidades;
@@ -187,7 +188,7 @@ namespace CapaVista
         {
             if (DgvPrueba.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Seleccione un usuario para modificar.");
+                new MensajeError("Seleccione un usuario para modificar.").Mostrar();
                 return;
             }
 
@@ -238,7 +239,7 @@ namespace CapaVista
 
                 if (!georefOk)
                 {
-                    MessageBox.Show("No se pudieron cargar los datos geográficos desde la API. Verificá la conexión a internet e intentá de nuevo.");
+                    new MensajeError("No se pudieron cargar los datos geográficos desde la API. Verificá la conexión a internet e intentá de nuevo.").Mostrar();
                 }
 
                 var provincias = servicioGeoref.ObtenerProvincias();
@@ -254,7 +255,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar provincias: " + ex.Message);
+                new MensajeError("Error al cargar provincias: " + ex.Message).Mostrar();
             }
             finally
             {
@@ -286,7 +287,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar partidos: " + ex.Message);
+                new MensajeError("Error al cargar partidos: " + ex.Message).Mostrar();
             }
         }
 
@@ -312,7 +313,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar localidades: " + ex.Message);
+                new MensajeError("Error al cargar localidades: " + ex.Message).Mostrar();
             }
         }
 
@@ -342,7 +343,7 @@ namespace CapaVista
 
             if (idRol == 0)
             {
-                MessageBox.Show("Seleccione un rol válido.");
+                new MensajeError("Seleccione un rol válido.").Mostrar();
                 return;
             }
 
@@ -367,7 +368,7 @@ namespace CapaVista
                     idRol
                 );
 
-                MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado));
+                new MensajeInformacion(servicioUsuarios.ObtenerMensajeRegistro(resultado)).Mostrar();
 
                 if (resultado == resultadoRegistroUsuario.Ok)
                 {
@@ -377,7 +378,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al registrar usuario: " + ex.Message);
+                new MensajeError("Error real al registrar usuario: " + ex.Message).Mostrar();
             }
         }
 
@@ -453,7 +454,7 @@ namespace CapaVista
 
             if (idRol == 0)
             {
-                MessageBox.Show("Seleccione un rol válido.");
+                new MensajeError("Seleccione un rol válido.").Mostrar();
                 return;
             }
 
@@ -482,18 +483,18 @@ namespace CapaVista
 
                 if (ok)
                 {
-                    MessageBox.Show("Usuario modificado correctamente.");
+                    new MensajeExito("Usuario modificado correctamente.").Mostrar();
                     actualizargrilla();
                     VolverEstadoNormal();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo modificar el usuario.");
+                    new MensajeError("No se pudo modificar el usuario.").Mostrar();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al modificar usuario: " + ex.Message);
+                new MensajeError("Error real al modificar usuario: " + ex.Message).Mostrar();
             }
         }
 
@@ -507,7 +508,7 @@ namespace CapaVista
 
             if (DgvPrueba.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Seleccione un usuario.");
+                new MensajeError("Seleccione un usuario.").Mostrar();
                 return;
             }
 
@@ -516,37 +517,48 @@ namespace CapaVista
 
             string accion = activo ? "dar de baja" : "activar";
 
-            DialogResult r = MessageBox.Show(
-                $"¿Desea {accion} este usuario?",
-                "Confirmación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (r != DialogResult.Yes)
+            if (!new MensajeConfirmacion($"¿Desea {accion} este usuario?").Confirmado())
                 return;
 
             bool ok = servicioUsuarios.CambiarEstadoUsuario(idUsuario, !activo);
 
             if (ok)
             {
-                MessageBox.Show(activo ? "Usuario dado de baja correctamente." : "Usuario activado correctamente.");
+                new MensajeExito(activo ? "Usuario dado de baja correctamente." : "Usuario activado correctamente.").Mostrar();
                 actualizargrilla();
                 VolverEstadoNormal();
             }
             else
             {
-                MessageBox.Show("No se pudo actualizar el estado.");
+                new MensajeError("No se pudo actualizar el estado.").Mostrar();
             }
         }
 
         private bool ValidarCamposRegistro()
         {
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text))
+            {
+                new MensajeError("Debe completar todos los campos obligatorios.").Mostrar();
+                return false;
+            }
+
+            return ValidarCamposComunes();
+        }
+
+        private bool ValidarCamposModificacion()
+        {
+            return ValidarCamposComunes();
+        }
+
+        // Validaciones comunes a alta y modificación de usuario (T15): antes
+        // estaban duplicadas, y la modificación ni siquiera validaba DNI ni
+        // teléfono. Usuario (solo se edita en el alta) se valida aparte.
+        private bool ValidarCamposComunes()
+        {
             if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
                 string.IsNullOrWhiteSpace(txtApellido.Text) ||
                 string.IsNullOrWhiteSpace(txtDni.Text) ||
                 string.IsNullOrWhiteSpace(txtTelefono.Text) ||
-                string.IsNullOrWhiteSpace(txtUsuario.Text) ||
                 string.IsNullOrWhiteSpace(txtCorreo.Text) ||
                 string.IsNullOrWhiteSpace(txtCalle.Text) ||
                 string.IsNullOrWhiteSpace(txtNumCalle.Text) ||
@@ -556,36 +568,19 @@ namespace CapaVista
                 string.IsNullOrWhiteSpace(cmbLocalidad.Text) ||
                 string.IsNullOrWhiteSpace(cmbRol.Text))
             {
-                MessageBox.Show("Debe completar todos los campos obligatorios.");
+                new MensajeError("Debe completar todos los campos obligatorios.").Mostrar();
                 return false;
             }
 
-            if (!int.TryParse(txtDni.Text, out _))
+            if (!Regex.IsMatch(txtDni.Text.Trim(), @"^\d{7,8}$"))
             {
-                MessageBox.Show("El DNI debe ser numérico.");
+                new MensajeError("El DNI debe tener 7 u 8 dígitos numéricos.").Mostrar();
                 return false;
             }
 
-            if (!int.TryParse(txtTelefono.Text, out _))
+            if (!Regex.IsMatch(txtTelefono.Text.Trim(), @"^\d{8,15}$"))
             {
-                MessageBox.Show("El teléfono debe ser numérico.");
-                return false;
-            }
-
-            if (!ValidarEdad())
-                return false;
-
-            return true;
-        }
-
-        private bool ValidarCamposModificacion()
-        {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
-                string.IsNullOrWhiteSpace(txtApellido.Text) ||
-                string.IsNullOrWhiteSpace(txtCorreo.Text) ||
-                string.IsNullOrWhiteSpace(cmbRol.Text))
-            {
-                MessageBox.Show("Debe completar nombre, apellido, correo y rol.");
+                new MensajeError("El teléfono debe tener entre 8 y 15 dígitos numéricos.").Mostrar();
                 return false;
             }
 
@@ -607,7 +602,7 @@ namespace CapaVista
 
             if (edad < 16)
             {
-                MessageBox.Show("El usuario debe tener al menos 16 años.");
+                new MensajeError("El usuario debe tener al menos 16 años.").Mostrar();
                 return false;
             }
 
@@ -694,7 +689,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar usuarios en la grilla: " + ex.Message);
+                new MensajeError("Error al cargar usuarios en la grilla: " + ex.Message).Mostrar();
             }
         }
 

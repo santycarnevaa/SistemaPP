@@ -52,12 +52,9 @@ namespace CapaVista
 
             if (servicioConfigCorreo.CorrespondeRotar())
             {
-                MessageBox.Show(
-                    "Corresponde rotar la contraseña de aplicación de correo. Podés hacerlo desde Configuración.",
-                    "Rotación de credenciales",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                new MensajeAdvertencia(
+                    "Corresponde rotar la contraseña de aplicación de correo. Podés hacerlo desde Configuración."
+                ).Mostrar();
             }
         }
     }

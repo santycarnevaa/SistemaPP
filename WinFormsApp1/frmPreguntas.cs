@@ -7,19 +7,25 @@ using Entidades;
 
 namespace CapaVista
 {
+    // Pantalla de recuperación de contraseña: le pide al usuario la cantidad de preguntas
+    // que diga la política configurada (de las que ya respondió antes) y, si acierta todas,
+    // lo deja pasar a cambiar la contraseña.
     public partial class frmPreguntas : Form
     {
         private string usuario;
+        private OrigenVerificacion origen;
 
         private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         private CL_ServicioPreguntasSeguridad servicioPreguntas = new CL_ServicioPreguntasSeguridad();
+        private CL_servicioContras servicioContras = new CL_servicioContras();
 
         private List<PreguntaSeguridad> preguntasUsuario = new List<PreguntaSeguridad>();
 
-        public frmPreguntas(string usuario)
+        public frmPreguntas(string usuario, OrigenVerificacion origen = OrigenVerificacion.RecuperarContrasena)
         {
             InitializeComponent();
             this.usuario = usuario;
+            this.origen = origen;
 
             this.Load += frmPreguntas_Load;
         }
@@ -30,13 +36,16 @@ namespace CapaVista
             ingresar();
         }
 
+        // Trae las preguntas que este usuario ya respondió, se queda con la cantidad que
+        // indique la política (1, 3 o 5) y muestra esa cantidad de filas Label+TextBox
+        // (hasta 5 posibles, prearmadas en el diseñador).
         private void CargarPreguntasSegunConfiguracion()
         {
             var config = servicioConfiguracion.ObtenerConfiguracion();
 
             if (config == null)
             {
-                MessageBox.Show("No se pudo obtener la configuración del sistema.");
+                new MensajeError("No se pudo obtener la configuración del sistema.").Mostrar();
                 return;
             }
 
@@ -46,7 +55,7 @@ namespace CapaVista
 
             if (preguntasUsuario.Count < cantidadPreguntas)
             {
-                MessageBox.Show("El usuario no tiene suficientes preguntas de seguridad registradas.");
+                new MensajeError("El usuario no tiene suficientes preguntas de seguridad registradas.").Mostrar();
                 return;
             }
 
@@ -90,6 +99,8 @@ namespace CapaVista
             }
         }
 
+        // Esconde y limpia las 5 filas de pregunta/respuesta antes de mostrar
+        // solo las que correspondan.
         private void OcultarTodasLasPreguntas()
         {
             lblPreg1.Visible = false;
@@ -111,11 +122,14 @@ namespace CapaVista
             txtPreg5.Text = "";
         }
 
+        // Junta lo que se escribió en las filas visibles y lo manda a validar contra los
+        // hashes guardados. Si está todo bien, sigue a cambiar la contraseña; si no,
+        // limpia los campos y avisa.
         private void btnIngresar_Click(object sender, EventArgs e)
         {
             if (preguntasUsuario.Count == 0)
             {
-                MessageBox.Show("No hay preguntas cargadas para validar.");
+                new MensajeError("No hay preguntas cargadas para validar.").Mostrar();
                 return;
             }
 
@@ -140,10 +154,19 @@ namespace CapaVista
 
             if (respuestasCorrectas)
             {
-                frmCambiarContraseña frm = new frmCambiarContraseña(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
+                if (origen == OrigenVerificacion.RecuperarContrasena)
+                {
+                    // T10: la recuperación ya no deja elegir la contraseña acá
+                    // directo; se genera una temporal y se manda por correo.
+                    EnviarPasswordTemporalYVolver();
+                }
+                else
+                {
+                    frmCambiarContraseña frm = new frmCambiarContraseña(usuario);
+                    this.Hide();
+                    frm.ShowDialog();
+                    this.Close();
+                }
             }
             else
             {
@@ -153,15 +176,12 @@ namespace CapaVista
                 txtPreg4.Text = "";
                 txtPreg5.Text = "";
 
-                MessageBox.Show(
-                    "Una o más respuestas son incorrectas.",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                new MensajeError("Una o más respuestas son incorrectas.").Mostrar();
             }
         }
 
+        // Habilita el botón "Ingresar" solo cuando todas las preguntas visibles
+        // tienen una respuesta escrita.
         private void ingresar()
         {
             bool habilitar = true;
@@ -214,6 +234,18 @@ namespace CapaVista
             frmLogin frm = new frmLogin();
             this.Hide();
             frm.ShowDialog();
+            this.Close();
+        }
+
+        private void EnviarPasswordTemporalYVolver()
+        {
+            bool enviado = servicioContras.GenerarYEnviarPasswordTemporal(usuario);
+
+            if (enviado)
+                new MensajeExito("Se generó una nueva contraseña temporal y se envió a tu correo. Usala para iniciar sesión.").Mostrar();
+            else
+                new MensajeError("No se pudo generar la contraseña temporal. Intentá nuevamente más tarde.").Mostrar();
+
             this.Close();
         }
     }

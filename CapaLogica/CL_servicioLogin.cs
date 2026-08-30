@@ -115,14 +115,13 @@ namespace CapaLogica
                 case resultadoLogin.PasswordVacia:
                     return "Ingrese la contraseña.";
 
+                // Unificado a propósito: si cada caso tuviera su propio mensaje, alguien
+                // podría probar nombres de usuario al azar y, por el mensaje que recibe,
+                // deducir cuáles existen en el sistema (enumeración de usuarios).
                 case resultadoLogin.UsuarioNoExiste:
-                    return "El usuario no existe.";
-
                 case resultadoLogin.UsuarioInactivo:
-                    return "El usuario está inactivo. No puede iniciar sesión.";
-
                 case resultadoLogin.PasswordIncorrecta:
-                    return "La contraseña es incorrecta.";
+                    return "Usuario o contraseña incorrectos.";
 
                 default:
                     return "Ocurrió un error al iniciar sesión.";

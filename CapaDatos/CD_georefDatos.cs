@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Entidades;
 using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
@@ -24,8 +25,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.guardarProvincia", ex);
                 return false;
             }
         }
@@ -47,8 +49,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.guardarPartido", ex);
                 return false;
             }
         }
@@ -70,8 +73,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.guardarLocalidad", ex);
                 return false;
             }
         }
@@ -101,7 +105,10 @@ namespace CapaDatos
                     reader.Close();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_georefDatos.obtenerProvincias", ex);
+            }
 
             return lista;
         }
@@ -133,7 +140,10 @@ namespace CapaDatos
                     reader.Close();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_georefDatos.obtenerPartidosPorProvincia", ex);
+            }
 
             return lista;
         }
@@ -165,7 +175,10 @@ namespace CapaDatos
                     reader.Close();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_georefDatos.obtenerLocalidadesPorPartido", ex);
+            }
 
             return lista;
         }
@@ -184,8 +197,9 @@ namespace CapaDatos
                     return resultado != null && Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.hayDatosCargados", ex);
                 return false;
             }
         }
@@ -229,8 +243,9 @@ namespace CapaDatos
                     return resultado != null ? Convert.ToInt32(resultado) : -1;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.guardarDireccion", ex);
                 return -1;
             }
         }
@@ -279,8 +294,9 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_georefDatos.actualizarDireccion", ex);
                 return false;
             }
         }

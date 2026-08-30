@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
     public class CD_contraDatos : CD_conexion
     {
-        public bool CambiarContra(int idUsuario, string nuevoPasswordHash)
+        public bool CambiarContra(int idUsuario, string nuevoPasswordHash, bool validarHistorial = true)
         {
             try
             {
@@ -16,6 +17,7 @@ namespace CapaDatos
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                     cmd.Parameters.AddWithValue("@NuevaPasswordHash", nuevoPasswordHash);
+                    cmd.Parameters.AddWithValue("@ValidarHistorial", validarHistorial);
 
                     object resultado = cmd.ExecuteScalar();
 
@@ -39,22 +41,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        INSERT INTO dbo.Passwords
-                        (
-                            IdUsuario,
-                            PasswordHash,
-                            FechaCreacion
-                        )
-                        VALUES
-                        (
-                            @IdUsuario,
-                            @PasswordHash,
-                            GETDATE()
-                        );
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_InsertarPassword", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                     cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
@@ -78,14 +66,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT PasswordHash
-                        FROM dbo.Passwords
-                        WHERE IdUsuario = @IdUsuario
-                        ORDER BY FechaCreacion DESC;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerContrasAnteriores", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -98,8 +80,9 @@ namespace CapaDatos
                     reader.Close();
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_contraDatos.obtenerContrasAnteriores", ex);
                 return new List<string>();
             }
 
@@ -112,14 +95,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT TOP 1 PasswordHash
-                        FROM dbo.Passwords
-                        WHERE IdUsuario = @IdUsuario
-                        ORDER BY FechaCreacion DESC;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUltimoPasswordHash", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
                     object result = cmd.ExecuteScalar();
@@ -127,8 +104,9 @@ namespace CapaDatos
                     return result != null ? result.ToString() : string.Empty;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_contraDatos.obtenerUltimoPasswordHash", ex);
                 return string.Empty;
             }
         }
@@ -139,22 +117,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT COUNT(*)
-                        FROM dbo.Usuarios U
-                        INNER JOIN dbo.Passwords P
-                            ON U.IdUsuario = P.IdUsuario
-                        WHERE U.Usuario = @Usuario
-                          AND U.Activo = 1
-                          AND P.PasswordHash = @PasswordHash
-                          AND P.FechaCreacion = (
-                                SELECT MAX(P2.FechaCreacion)
-                                FROM dbo.Passwords P2
-                                WHERE P2.IdUsuario = U.IdUsuario
-                          );
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_VerificarLogin", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
                     cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
@@ -164,57 +128,33 @@ namespace CapaDatos
                     return cantidad > 0;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_contraDatos.verificarLogin", ex);
                 return false;
             }
         }
 
         public bool actualizarPasswordYPrimerLogin(int idUsuario, string passwordHash)
         {
-            using (SqlConnection conexion = conectar())
-            using (SqlTransaction tran = conexion.BeginTransaction())
+            try
             {
-                try
+                using (SqlConnection conexion = conectar())
                 {
-                    string insertPassword = @"
-                        INSERT INTO dbo.Passwords
-                        (
-                            IdUsuario,
-                            PasswordHash,
-                            FechaCreacion
-                        )
-                        VALUES
-                        (
-                            @IdUsuario,
-                            @PasswordHash,
-                            GETDATE()
-                        );
-                    ";
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarPasswordYPrimerLogin", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    SqlCommand cmdPassword = new SqlCommand(insertPassword, conexion, tran);
-                    cmdPassword.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmdPassword.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                    cmdPassword.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
 
-                    string updateUsuario = @"
-                        UPDATE dbo.Usuarios
-                        SET PrimerLogin = 0
-                        WHERE IdUsuario = @IdUsuario;
-                    ";
-
-                    SqlCommand cmdUsuario = new SqlCommand(updateUsuario, conexion, tran);
-                    cmdUsuario.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmdUsuario.ExecuteNonQuery();
-
-                    tran.Commit();
+                    cmd.ExecuteNonQuery();
                     return true;
                 }
-                catch
-                {
-                    tran.Rollback();
-                    return false;
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_contraDatos.actualizarPasswordYPrimerLogin", ex);
+                return false;
             }
         }
     }

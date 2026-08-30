@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Entidades;
 using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
@@ -71,6 +72,7 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.RegistrarUsuarioCompleto", ex);
                 throw new Exception("Error SQL al registrar usuario: " + ex.Message, ex);
             }
         }
@@ -91,7 +93,11 @@ namespace CapaDatos
                     return true;
                 }
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.AsignarRolUsuario", ex);
+                return false;
+            }
         }
 
         public List<rol> ListarRoles()
@@ -134,8 +140,9 @@ namespace CapaDatos
                     return resultado != null ? Convert.ToInt32(resultado) : 0;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarUsuarioPorNombreUser", ex);
                 return 0;
             }
         }
@@ -156,8 +163,9 @@ namespace CapaDatos
                     da.Fill(tabla);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarUsuarioPorCorreo", ex);
                 tabla = new DataTable();
             }
 
@@ -178,8 +186,9 @@ namespace CapaDatos
                     return resultado != null ? resultado.ToString() : string.Empty;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarUsuarioPorId", ex);
                 return string.Empty;
             }
         }
@@ -200,7 +209,10 @@ namespace CapaDatos
                     da.Fill(tabla);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorPartido", ex);
+            }
 
             return tabla;
         }
@@ -221,7 +233,10 @@ namespace CapaDatos
                     da.Fill(tabla);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorLocalidad", ex);
+            }
 
             return tabla;
         }
@@ -242,7 +257,10 @@ namespace CapaDatos
                     da.Fill(tabla);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorCP", ex);
+            }
 
             return tabla;
         }
@@ -270,8 +288,9 @@ namespace CapaDatos
                     return Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ExisteUsuario", ex);
                 return false;
             }
         }
@@ -290,8 +309,9 @@ namespace CapaDatos
                     return Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ExisteCorreo", ex);
                 return false;
             }
         }
@@ -310,8 +330,9 @@ namespace CapaDatos
                     return Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ExisteDNI", ex);
                 return false;
             }
         }
@@ -322,13 +343,8 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    string query = @"
-                        SELECT Activo
-                        FROM dbo.Usuarios
-                        WHERE Usuario = @Usuario;
-                    ";
-
-                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_UsuarioActivo", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
 
                     object result = cmd.ExecuteScalar();
@@ -336,9 +352,48 @@ namespace CapaDatos
                     return result != null && Convert.ToBoolean(result);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.UsuarioActivo", ex);
                 return false;
+            }
+        }
+
+        // Nombre, apellido, DNI y fecha de nacimiento reales del usuario, usados
+        // en CL_servicioContras para validar que la contraseña no los contenga.
+        public (string nombre, string apellido, string dni, DateTime? fechaNacimiento) ObtenerDatosPersonalesPorUsuario(string usuario)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerDatosPersonalesPorUsuario", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        string nombre = reader["Nombre"].ToString();
+                        string apellido = reader["Apellido"].ToString();
+                        string dni = reader["DNI"].ToString();
+                        DateTime? fechaNacimiento = reader["FechaNacimiento"] == DBNull.Value
+                            ? (DateTime?)null
+                            : Convert.ToDateTime(reader["FechaNacimiento"]);
+
+                        reader.Close();
+                        return (nombre, apellido, dni, fechaNacimiento);
+                    }
+
+                    reader.Close();
+                    return (string.Empty, string.Empty, string.Empty, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.ObtenerDatosPersonalesPorUsuario", ex);
+                return (string.Empty, string.Empty, string.Empty, null);
             }
         }
 
@@ -356,8 +411,9 @@ namespace CapaDatos
                     return Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.EsPrimerLogin", ex);
                 return false;
             }
         }
@@ -383,6 +439,7 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ObtenerRolUsuario", ex);
                 throw new Exception("Error SQL al obtener el rol del usuario: " + ex.Message, ex);
             }
         }
@@ -445,8 +502,9 @@ namespace CapaDatos
                     return resultado != null ? Convert.ToInt32(resultado) : 0;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.RegistrarPersonaUsuarioConDireccion", ex);
                 return 0;
             }
         }
@@ -471,6 +529,7 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.CambiarEstadoUsuario", ex);
                 throw new Exception("Error al cambiar estado del usuario: " + ex.Message);
             }
         }
@@ -538,6 +597,7 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ActualizarDatosUsuario", ex);
                 throw new Exception("Error SQL al actualizar usuario: " + ex.Message, ex);
             }
         }
@@ -558,8 +618,9 @@ namespace CapaDatos
                     return resultado != null ? resultado.ToString() : "";
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ObtenerCorreoPorUsuario", ex);
                 return "";
             }
         }
@@ -616,6 +677,7 @@ namespace CapaDatos
             }
             catch (Exception ex)
             {
+                Logger.RegistrarError("CD_usuariosDatos.ObtenerUsuariosGrilla", ex);
                 throw new Exception("Error SQL al obtener usuarios para la grilla: " + ex.Message, ex);
             }
 

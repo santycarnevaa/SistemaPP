@@ -76,11 +76,20 @@ namespace CapaLogica
             if (idRol <= 0)
                 return resultadoRegistroUsuario.RolInvalido;
 
+            if (!DniValido(dni))
+                return resultadoRegistroUsuario.DniInvalido;
+
+            if (!TelefonoValido(telefono))
+                return resultadoRegistroUsuario.TelefonoInvalido;
+
             if (usuarioDatos.ExisteUsuario(usuario))
                 return resultadoRegistroUsuario.UsuarioYaExiste;
 
             if (usuarioDatos.ExisteCorreo(correo))
                 return resultadoRegistroUsuario.CorreoYaExiste;
+
+            if (usuarioDatos.ExisteDNI(dni))
+                return resultadoRegistroUsuario.DniYaExiste;
 
             if (!CorreoValido(correo))
                 return resultadoRegistroUsuario.CorreoInvalido;
@@ -168,10 +177,10 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(apellido))
                 return false;
 
-            if (string.IsNullOrWhiteSpace(dni))
+            if (!DniValido(dni))
                 return false;
 
-            if (string.IsNullOrWhiteSpace(telefono))
+            if (!TelefonoValido(telefono))
                 return false;
 
             if (string.IsNullOrWhiteSpace(calle))
@@ -265,6 +274,18 @@ namespace CapaLogica
             return Regex.IsMatch(correo, patron);
         }
 
+        // DNI argentino: 7 u 8 dígitos, sin puntos.
+        private bool DniValido(string dni)
+        {
+            return !string.IsNullOrWhiteSpace(dni) && Regex.IsMatch(dni.Trim(), @"^\d{7,8}$");
+        }
+
+        // Teléfono: solo dígitos, con o sin código de área (entre 8 y 15 dígitos).
+        private bool TelefonoValido(string telefono)
+        {
+            return !string.IsNullOrWhiteSpace(telefono) && Regex.IsMatch(telefono.Trim(), @"^\d{8,15}$");
+        }
+
         public string ObtenerMensajeRegistro(resultadoRegistroUsuario resultado)
         {
             switch (resultado)
@@ -316,6 +337,15 @@ namespace CapaLogica
 
                 case resultadoRegistroUsuario.CorreoYaExiste:
                     return "El correo ya está registrado.";
+
+                case resultadoRegistroUsuario.DniYaExiste:
+                    return "El DNI ya está registrado.";
+
+                case resultadoRegistroUsuario.DniInvalido:
+                    return "El DNI debe tener 7 u 8 dígitos numéricos.";
+
+                case resultadoRegistroUsuario.TelefonoInvalido:
+                    return "El teléfono debe tener entre 8 y 15 dígitos numéricos.";
 
                 case resultadoRegistroUsuario.ErrorBaseDatos:
                     return "No se pudo registrar el usuario en la base de datos.";

@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Entidades;
 using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
@@ -41,8 +42,9 @@ namespace CapaDatos
                     return null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerConfiguracion", ex);
                 return null;
             }
         }
@@ -86,8 +88,9 @@ namespace CapaDatos
 
                 return 8;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerMinimoCaracteresContra", ex);
                 return 8;
             }
         }
@@ -103,8 +106,9 @@ namespace CapaDatos
 
                 return 3;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerCantidadPreguntasSeguridad", ex);
                 return 3;
             }
         }

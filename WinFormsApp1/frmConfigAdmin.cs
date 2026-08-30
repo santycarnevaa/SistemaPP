@@ -34,7 +34,7 @@ namespace CapaVista
             }
             catch
             {
-                MessageBox.Show("No se pudo abrir el navegador. Entrá manualmente a myaccount.google.com/apppasswords para generar la contraseña de aplicación.");
+                new MensajeError("No se pudo abrir el navegador. Entrá manualmente a myaccount.google.com/apppasswords para generar la contraseña de aplicación.").Mostrar();
             }
         }
 
@@ -50,7 +50,7 @@ namespace CapaVista
         {
             if (!int.TryParse(txtCaracteres.Text, out int minCaracteres) || minCaracteres < 1)
             {
-                MessageBox.Show("Ingrese un número válido para la cantidad mínima de caracteres.");
+                new MensajeError("Ingrese un número válido para la cantidad mínima de caracteres.").Mostrar();
                 return;
             }
             configuracionSistema config = new configuracionSistema
@@ -68,11 +68,11 @@ namespace CapaVista
             bool resultado = servicioConfiguracion.actualizarConfiguracion(config);
             if (resultado)
             {
-                MessageBox.Show("Configuración guardada exitosamente.");
+                new MensajeExito("Configuración guardada exitosamente.").Mostrar();
             }
             else
             {
-                MessageBox.Show("Error al guardar la configuración. Intente nuevamente.");
+                new MensajeError("Error al guardar la configuración. Intente nuevamente.").Mostrar();
             }
         }
 
@@ -82,7 +82,7 @@ namespace CapaVista
 
             if (config == null)
             {
-                MessageBox.Show("No hay configuración cargada. Se usarán valores por defecto.");
+                new MensajeInformacion("No hay configuración cargada. Se usarán valores por defecto.").Mostrar();
 
                 txtCaracteres.Text = "8";
                 ckbMayusculas.Checked = false;
@@ -139,13 +139,13 @@ namespace CapaVista
         {
             if (string.IsNullOrWhiteSpace(txtCorreoRemitente.Text))
             {
-                MessageBox.Show("Ingrese el correo remitente.");
+                new MensajeError("Ingrese el correo remitente.").Mostrar();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtPasswordNueva.Text))
             {
-                MessageBox.Show("Ingrese la nueva contraseña de aplicación.");
+                new MensajeError("Ingrese la nueva contraseña de aplicación.").Mostrar();
                 return;
             }
 
@@ -159,18 +159,18 @@ namespace CapaVista
 
                 if (ok)
                 {
-                    MessageBox.Show("Credenciales de correo actualizadas correctamente.");
+                    new MensajeExito("Credenciales de correo actualizadas correctamente.").Mostrar();
                     txtPasswordNueva.Text = "";
                     CargarConfiguracionCorreo();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudieron actualizar las credenciales.");
+                    new MensajeError("No se pudieron actualizar las credenciales.").Mostrar();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al actualizar credenciales: " + ex.Message);
+                new MensajeError("Error real al actualizar credenciales: " + ex.Message).Mostrar();
             }
         }
 
@@ -184,13 +184,13 @@ namespace CapaVista
                 bool resultado = await servicioGeoref.cargarGeorefEnBase();
 
                 if (resultado)
-                    MessageBox.Show("Datos geográficos actualizados correctamente.");
+                    new MensajeExito("Datos geográficos actualizados correctamente.").Mostrar();
                 else
-                    MessageBox.Show("No se pudieron actualizar los datos geográficos.");
+                    new MensajeError("No se pudieron actualizar los datos geográficos.").Mostrar();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar GeoRef: " + ex.Message);
+                new MensajeError("Error al actualizar GeoRef: " + ex.Message).Mostrar();
             }
             finally
             {

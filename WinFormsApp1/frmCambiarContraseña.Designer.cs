@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCambiarContraseña));
             btnSiguiente = new Button();
             txtNuevaContra = new TextBox();
             label1 = new Label();
@@ -35,7 +36,11 @@
             label2 = new Label();
             lblRequisitos = new Label();
             pictureBox2 = new PictureBox();
+            pctOjoNueva = new PictureBox();
+            pctOjoConfirmar = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pctOjoNueva).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pctOjoConfirmar).BeginInit();
             SuspendLayout();
             //
             // lblRequisitos
@@ -72,6 +77,7 @@
             txtNuevaContra.Location = new Point(166, 124);
             txtNuevaContra.Multiline = true;
             txtNuevaContra.Name = "txtNuevaContra";
+            txtNuevaContra.PasswordChar = '•';
             txtNuevaContra.Size = new Size(221, 33);
             txtNuevaContra.TabIndex = 14;
             txtNuevaContra.TextAlign = HorizontalAlignment.Center;
@@ -97,6 +103,7 @@
             txtConfirmarContra.Location = new Point(167, 189);
             txtConfirmarContra.Multiline = true;
             txtConfirmarContra.Name = "txtConfirmarContra";
+            txtConfirmarContra.PasswordChar = '•';
             txtConfirmarContra.Size = new Size(221, 33);
             txtConfirmarContra.TabIndex = 16;
             txtConfirmarContra.TextAlign = HorizontalAlignment.Center;
@@ -115,6 +122,7 @@
             //
             // pictureBox2
             //
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
             pictureBox2.ImageLocation = "";
             pictureBox2.Location = new Point(521, 12);
             pictureBox2.Name = "pictureBox2";
@@ -124,12 +132,38 @@
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             //
+            // pctOjoNueva
+            //
+            pctOjoNueva.Image = (Image)resources.GetObject("pctOjoNueva.Image");
+            pctOjoNueva.ImageLocation = "";
+            pctOjoNueva.Location = new Point(398, 129);
+            pctOjoNueva.Name = "pctOjoNueva";
+            pctOjoNueva.Size = new Size(23, 23);
+            pctOjoNueva.SizeMode = PictureBoxSizeMode.Zoom;
+            pctOjoNueva.TabIndex = 19;
+            pctOjoNueva.TabStop = false;
+            pctOjoNueva.Click += pctOjoNueva_Click;
+            //
+            // pctOjoConfirmar
+            //
+            pctOjoConfirmar.Image = (Image)resources.GetObject("pctOjoConfirmar.Image");
+            pctOjoConfirmar.ImageLocation = "";
+            pctOjoConfirmar.Location = new Point(398, 194);
+            pctOjoConfirmar.Name = "pctOjoConfirmar";
+            pctOjoConfirmar.Size = new Size(23, 23);
+            pctOjoConfirmar.SizeMode = PictureBoxSizeMode.Zoom;
+            pctOjoConfirmar.TabIndex = 20;
+            pctOjoConfirmar.TabStop = false;
+            pctOjoConfirmar.Click += pctOjoConfirmar_Click;
+            //
             // frmCambiarContraseña
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(556, 300);
+            Controls.Add(pctOjoConfirmar);
+            Controls.Add(pctOjoNueva);
             Controls.Add(pictureBox2);
             Controls.Add(label2);
             Controls.Add(txtConfirmarContra);
@@ -142,6 +176,8 @@
             StartPosition = FormStartPosition.CenterScreen;
             Load += frmCambiarContraseña_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pctOjoNueva).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pctOjoConfirmar).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -155,5 +191,7 @@
         private Label label2;
         private Label lblRequisitos;
         private PictureBox pictureBox2;
+        private PictureBox pctOjoNueva;
+        private PictureBox pctOjoConfirmar;
     }
 }

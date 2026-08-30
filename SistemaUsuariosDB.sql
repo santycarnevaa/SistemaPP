@@ -1352,7 +1352,8 @@ GO
 
 CREATE PROCEDURE [dbo].[SP_CambiarPassword]
     @IdUsuario INT,
-    @NuevaPasswordHash VARCHAR(256)
+    @NuevaPasswordHash VARCHAR(256),
+    @ValidarHistorial BIT = 1
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -1371,7 +1372,7 @@ BEGIN
             RETURN;
         END;
 
-        IF EXISTS (
+        IF @ValidarHistorial = 1 AND EXISTS (
             SELECT 1
             FROM dbo.HistorialPasswords
             WHERE IdUsuario = @IdUsuario
@@ -1693,6 +1694,154 @@ BEGIN
             ERROR_MESSAGE() AS Error;
 
     END CATCH
+END;
+GO
+
+-- ============================================================================
+-- FASE 2 DEL ROADMAP: procedimientos nuevos
+-- Reemplazan el SQL manual que quedaba en CD_contraDatos.cs y en
+-- CD_usuariosDatos.UsuarioActivo (T14), y agregan el soporte necesario para
+-- la contraseña temporal en recuperación (T10) y la validación de datos
+-- personales reales en la contraseña (T12).
+-- ============================================================================
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_InsertarPassword]
+    @IdUsuario INT,
+    @PasswordHash VARCHAR(256)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.Passwords
+    (
+        IdUsuario,
+        PasswordHash,
+        FechaCreacion
+    )
+    VALUES
+    (
+        @IdUsuario,
+        @PasswordHash,
+        GETDATE()
+    );
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_ObtenerContrasAnteriores]
+    @IdUsuario INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT PasswordHash
+    FROM dbo.Passwords
+    WHERE IdUsuario = @IdUsuario
+    ORDER BY FechaCreacion DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_ObtenerUltimoPasswordHash]
+    @IdUsuario INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1 PasswordHash
+    FROM dbo.Passwords
+    WHERE IdUsuario = @IdUsuario
+    ORDER BY FechaCreacion DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_VerificarLogin]
+    @Usuario VARCHAR(50),
+    @PasswordHash VARCHAR(256)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*)
+    FROM dbo.Usuarios U
+    INNER JOIN dbo.Passwords P
+        ON U.IdUsuario = P.IdUsuario
+    WHERE U.Usuario = @Usuario
+      AND U.Activo = 1
+      AND P.PasswordHash = @PasswordHash
+      AND P.FechaCreacion = (
+            SELECT MAX(P2.FechaCreacion)
+            FROM dbo.Passwords P2
+            WHERE P2.IdUsuario = U.IdUsuario
+      );
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_ActualizarPasswordYPrimerLogin]
+    @IdUsuario INT,
+    @PasswordHash VARCHAR(256)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO dbo.Passwords
+        (
+            IdUsuario,
+            PasswordHash,
+            FechaCreacion
+        )
+        VALUES
+        (
+            @IdUsuario,
+            @PasswordHash,
+            GETDATE()
+        );
+
+        UPDATE dbo.Usuarios
+        SET PrimerLogin = 0
+        WHERE IdUsuario = @IdUsuario;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_UsuarioActivo]
+    @Usuario VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Activo
+    FROM dbo.Usuarios
+    WHERE Usuario = @Usuario;
+END;
+GO
+
+-- Datos personales reales del usuario, para T12: validar que la contraseña
+-- nueva no contenga nombre, apellido, DNI ni año de nacimiento.
+CREATE OR ALTER PROCEDURE [dbo].[SP_ObtenerDatosPersonalesPorUsuario]
+    @Usuario VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        P.Nombre,
+        P.Apellido,
+        P.DNI,
+        P.FechaNacimiento
+    FROM dbo.Usuarios U
+    INNER JOIN dbo.Personas P
+        ON U.IdPersona = P.IdPersona
+    WHERE U.Usuario = @Usuario;
 END;
 GO
 

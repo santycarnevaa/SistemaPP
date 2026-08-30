@@ -12,6 +12,8 @@ using Entidades;
 
 namespace CapaVista
 {
+    // Pantalla de primer login: el usuario responde las 15 preguntas de seguridad
+    // completas para poder usarlas después en la recuperación de contraseña.
     public partial class frmPregUsuario : Form
     {
         private CL_ServicioPreguntasSeguridad servicioPreguntas = new CL_ServicioPreguntasSeguridad();
@@ -30,10 +32,14 @@ namespace CapaVista
 
         private void frmPregUsuario_Load(object sender, EventArgs e)
         {
+            // Si es el primer login, después de responder las preguntas se manda al usuario
+            // a cambiar la contraseña temporal; si no, directo a la pantalla principal.
             esPrimerLogin = servicioUsuarios.esPrimerLogin(usuario);
             CargarPreguntasAleatorias();
         }
 
+        // Valida que estén todas las respuestas completas, las guarda, y sigue el flujo
+        // según si esto pasó en el primer login o en otro momento.
         private void btnEnviar_Click(object sender, EventArgs e)
         {
             //Mover mensajes a capa logica
@@ -41,7 +47,7 @@ namespace CapaVista
 
             if (idUsuario == -1)
             {
-                MessageBox.Show("No se pudo identificar el usuario.");
+                new MensajeError("No se pudo identificar el usuario.").Mostrar();
                 return;
             }
 
@@ -49,7 +55,7 @@ namespace CapaVista
             {
                 if (string.IsNullOrWhiteSpace(controlesRespuesta[i].Text))
                 {
-                    MessageBox.Show("Respondé todas las preguntas antes de continuar.");
+                    new MensajeAdvertencia("Respondé todas las preguntas antes de continuar.").Mostrar();
                     return;
                 }
             }
@@ -63,11 +69,11 @@ namespace CapaVista
 
             if (!ok)
             {
-                MessageBox.Show("No se pudieron guardar las respuestas.");
+                new MensajeError("No se pudieron guardar las respuestas.").Mostrar();
                 return;
             }
 
-            MessageBox.Show("Respuestas guardadas correctamente.");
+            new MensajeExito("Respuestas guardadas correctamente.").Mostrar();
 
             if (esPrimerLogin)
             {
@@ -91,13 +97,15 @@ namespace CapaVista
             this.Close();
         }
 
+        // A pesar del nombre, ya no elige preguntas al azar: trae las 15 completas y arma
+        // un par Label+TextBox por cada una, apiladas dentro de un panel con scroll.
         private void CargarPreguntasAleatorias()
         {
             preguntasSeleccionadas = servicioPreguntas.ObtenerTodasLasPreguntasDisponibles();
 
             if (preguntasSeleccionadas.Count == 0)
             {
-                MessageBox.Show("No hay preguntas de seguridad cargadas.");
+                new MensajeError("No hay preguntas de seguridad cargadas.").Mostrar();
                 return;
             }
 
@@ -136,6 +144,7 @@ namespace CapaVista
             }
         }
 
+        // Abre frmAdmin o frmUsuario según el rol, una vez terminado este paso.
         private void AbrirPantallaPrincipal(string usuario)
         {
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
@@ -158,7 +167,7 @@ namespace CapaVista
             }
             else
             {
-                MessageBox.Show("No se pudo identificar el rol del usuario.");
+                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
             }
         }
 

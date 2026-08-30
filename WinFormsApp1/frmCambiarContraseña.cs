@@ -29,19 +29,19 @@ namespace CapaVista
 
             if (string.IsNullOrWhiteSpace(nuevaContra))
             {
-                MessageBox.Show("Ingrese una nueva contraseña.");
+                new MensajeError("Ingrese una nueva contraseña.").Mostrar();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(confirmarContra))
             {
-                MessageBox.Show("Confirme la nueva contraseña.");
+                new MensajeError("Confirme la nueva contraseña.").Mostrar();
                 return;
             }
 
             if (nuevaContra != confirmarContra)
             {
-                MessageBox.Show("Las contraseñas no coinciden.");
+                new MensajeError("Las contraseñas no coinciden.").Mostrar();
                 return;
             }
 
@@ -51,7 +51,7 @@ namespace CapaVista
 
                 if (requisitosIncumplidos.Count > 0)
                 {
-                    MessageBox.Show("La contraseña no cumple los requisitos:\n\n- " + string.Join("\n- ", requisitosIncumplidos));
+                    new MensajeError("La contraseña no cumple los requisitos:\n\n- " + string.Join("\n- ", requisitosIncumplidos)).Mostrar();
                     return;
                 }
 
@@ -59,7 +59,7 @@ namespace CapaVista
 
                 if (cambioOk)
                 {
-                    MessageBox.Show("Contraseña cambiada correctamente.");
+                    new MensajeExito("Contraseña cambiada correctamente.").Mostrar();
 
                     AbrirPantallaPrincipal(usuario);
                     this.Hide();
@@ -67,12 +67,12 @@ namespace CapaVista
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo cambiar la contraseña. Puede que ya se haya usado antes.");
+                    new MensajeError("No se pudo cambiar la contraseña. Puede que ya se haya usado antes.").Mostrar();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al cambiar contraseña: " + ex.Message);
+                new MensajeError("Error real al cambiar contraseña: " + ex.Message).Mostrar();
             }
         }
 
@@ -103,7 +103,25 @@ namespace CapaVista
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             frmLogin frm = new frmLogin();
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
+        }
+
+        private void pctOjoNueva_Click(object sender, EventArgs e)
+        {
+            if (txtNuevaContra.PasswordChar == '•')
+                txtNuevaContra.PasswordChar = '\0';
+            else
+                txtNuevaContra.PasswordChar = '•';
+        }
+
+        private void pctOjoConfirmar_Click(object sender, EventArgs e)
+        {
+            if (txtConfirmarContra.PasswordChar == '•')
+                txtConfirmarContra.PasswordChar = '\0';
+            else
+                txtConfirmarContra.PasswordChar = '•';
         }
 
         private void AbrirPantallaPrincipal(string usuario)
@@ -128,7 +146,7 @@ namespace CapaVista
             }
             else
             {
-                MessageBox.Show("No se pudo identificar el rol del usuario.");
+                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
             }
         }
 

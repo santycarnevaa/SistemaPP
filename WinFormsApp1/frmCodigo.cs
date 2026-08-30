@@ -8,15 +8,17 @@ namespace CapaVista
     {
         private string usuario;
         private string codigoGenerado;
+        private OrigenVerificacion origen;
 
         private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
         private CL_servicioMail servicioMail = new CL_servicioMail();
 
-        public frmCodigo(string usuario)
+        public frmCodigo(string usuario, OrigenVerificacion origen = OrigenVerificacion.RecuperarContrasena)
         {
             InitializeComponent();
 
             this.usuario = usuario;
+            this.origen = origen;
 
             txt2.Enabled = false;
             txt3.Enabled = false;
@@ -40,7 +42,7 @@ namespace CapaVista
 
                 if (string.IsNullOrWhiteSpace(correo))
                 {
-                    MessageBox.Show("No se pudo obtener el correo del usuario.");
+                    new MensajeError("No se pudo obtener el correo del usuario.").Mostrar();
                     this.Close();
                     return;
                 }
@@ -52,17 +54,17 @@ namespace CapaVista
 
                 if (enviado)
                 {
-                    MessageBox.Show("Se envió un código de verificación a su correo.");
+                    new MensajeExito("Se envió un código de verificación a su correo.").Mostrar();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo enviar el código de verificación.");
+                    new MensajeError("No se pudo enviar el código de verificación.").Mostrar();
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al generar o enviar el código: " + ex.Message);
+                new MensajeError("Error al generar o enviar el código: " + ex.Message).Mostrar();
                 this.Close();
             }
         }
@@ -73,7 +75,7 @@ namespace CapaVista
 
             if (codigoIngresado != codigoGenerado)
             {
-                MessageBox.Show("Código equivocado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                new MensajeError("Código equivocado").Mostrar();
 
                 txt1.Text = "";
                 txt2.Text = "";
@@ -92,10 +94,42 @@ namespace CapaVista
                 return;
             }
 
-            frmPreguntas frm = new frmPreguntas(usuario);
+            if (origen == OrigenVerificacion.ConfirmacionLogin)
+            {
+                // Login estándar con 2FA (T09): el código solo confirma la
+                // identidad, no hace falta pasar por las preguntas de seguridad.
+                AbrirPantallaPrincipal(usuario);
+                return;
+            }
+
+            frmPreguntas frm = new frmPreguntas(usuario, origen);
             this.Hide();
             frm.ShowDialog();
             this.Close();
+        }
+
+        private void AbrirPantallaPrincipal(string usuario)
+        {
+            int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
+
+            if (idRol == 2)
+            {
+                frmAdmin frm = new frmAdmin(usuario);
+                this.Hide();
+                frm.ShowDialog();
+                this.Close();
+            }
+            else if (idRol == 1)
+            {
+                frmUsuario frm = new frmUsuario(usuario);
+                this.Hide();
+                frm.ShowDialog();
+                this.Close();
+            }
+            else
+            {
+                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
+            }
         }
 
         private void txt1_TextChanged(object sender, EventArgs e)
