@@ -11,11 +11,12 @@ using CapaLogica;
 
 namespace CapaVista
 {
-    public partial class frmContraseña : Form
+    public partial class frmCambiarContraseña : Form
     {
         private CL_servicioContras servicioContras = new CL_servicioContras();
         private string usuario;
-        public frmContraseña(string usuario)
+
+        public frmCambiarContraseña(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
@@ -28,29 +29,37 @@ namespace CapaVista
 
             if (string.IsNullOrWhiteSpace(nuevaContra))
             {
-                MessageBox.Show("Ingrese una nueva contraseña.");
+                new MensajeError("Ingrese una nueva contraseña.").Mostrar();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(confirmarContra))
             {
-                MessageBox.Show("Confirme la nueva contraseña.");
+                new MensajeError("Confirme la nueva contraseña.").Mostrar();
                 return;
             }
 
             if (nuevaContra != confirmarContra)
             {
-                MessageBox.Show("Las contraseñas no coinciden.");
+                new MensajeError("Las contraseñas no coinciden.").Mostrar();
                 return;
             }
 
             try
             {
+                List<string> requisitosIncumplidos = servicioContras.RequisitosIncumplidos(nuevaContra, usuario);
+
+                if (requisitosIncumplidos.Count > 0)
+                {
+                    new MensajeError("La contraseña no cumple los requisitos:\n\n- " + string.Join("\n- ", requisitosIncumplidos)).Mostrar();
+                    return;
+                }
+
                 bool cambioOk = servicioContras.cambiarContra(usuario, nuevaContra);
 
                 if (cambioOk)
                 {
-                    MessageBox.Show("Contraseña cambiada correctamente.");
+                    new MensajeExito("Contraseña cambiada correctamente.").Mostrar();
 
                     AbrirPantallaPrincipal(usuario);
                     this.Hide();
@@ -58,12 +67,12 @@ namespace CapaVista
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo cambiar la contraseña. Verifique que cumpla las políticas y que no haya sido usada antes.");
+                    new MensajeError("No se pudo cambiar la contraseña. Puede que ya se haya usado antes.").Mostrar();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al cambiar contraseña: " + ex.Message);
+                new MensajeError("Error real al cambiar contraseña: " + ex.Message).Mostrar();
             }
         }
 
@@ -93,9 +102,28 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            frmLogin frm = new frmLogin();
+            this.Hide();
+            frm.ShowDialog();
             this.Close();
         }
+
+        private void pctOjoNueva_Click(object sender, EventArgs e)
+        {
+            if (txtNuevaContra.PasswordChar == '•')
+                txtNuevaContra.PasswordChar = '\0';
+            else
+                txtNuevaContra.PasswordChar = '•';
+        }
+
+        private void pctOjoConfirmar_Click(object sender, EventArgs e)
+        {
+            if (txtConfirmarContra.PasswordChar == '•')
+                txtConfirmarContra.PasswordChar = '\0';
+            else
+                txtConfirmarContra.PasswordChar = '•';
+        }
+
         private void AbrirPantallaPrincipal(string usuario)
         {
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
@@ -118,13 +146,13 @@ namespace CapaVista
             }
             else
             {
-                MessageBox.Show("No se pudo identificar el rol del usuario.");
+                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
             }
         }
 
-        private void frmContraseña_Load(object sender, EventArgs e)
+        private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
-
+            lblRequisitos.Text = servicioContras.DescribirRequisitos();
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,11 +6,11 @@ using CapaLogica;
 namespace CapaVista
 
 {
-    public partial class frmlogin : Form
+    public partial class frmLogin : Form
     {
         CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         public string usuario;
-        public frmlogin()
+        public frmLogin()
         {
             InitializeComponent();
 
@@ -25,12 +25,7 @@ namespace CapaVista
         {
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                MessageBox.Show(
-                    "Por favor, ingrese su nombre de usuario para recuperar su cuenta.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
+                new MensajeInformacion("Por favor, ingrese su nombre de usuario para recuperar su cuenta.").Mostrar();
                 return;
             }
 
@@ -43,25 +38,22 @@ namespace CapaVista
 
             if (!existeUsuario)
             {
-                MessageBox.Show(
-                    "El usuario ingresado no existe.",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                // No decimos "no existe": igual que en el login, evitamos confirmar
+                // o negar si un nombre de usuario estÃ¡ registrado en el sistema.
+                new MensajeError("No se pudo iniciar la recuperaciÃ³n de cuenta. VerificÃ¡ el usuario ingresado.").Mostrar();
                 return;
             }
 
             if (servicioConfiguracion.requiere2FA())
             {
-                frmCodigo frmCod = new frmCodigo(usuario);
+                frmCodigo frmCod = new frmCodigo(usuario, OrigenVerificacion.RecuperarContrasena);
                 this.Hide();
                 frmCod.ShowDialog();
                 this.Show();
             }
             else
             {
-                frmrecuperar frmPreg = new frmrecuperar(usuario);
+                frmPreguntas frmPreg = new frmPreguntas(usuario, OrigenVerificacion.RecuperarContrasena);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Show();
@@ -71,25 +63,10 @@ namespace CapaVista
         private void btnIniciar_Click(object sender, EventArgs e)
         {
             CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
-            resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
+            resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseÃ±a.Text);
 
             switch (resultado)
             {
-                case resultadoLogin.UsuarioVacio:
-                    MessageBox.Show("El campo de usuario no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.PasswordVacia:
-                    MessageBox.Show("El campo de contraseña no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.UsuarioNoExiste:
-                    MessageBox.Show("El usuario no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.UsuarioInactivo:
-                    MessageBox.Show("El usuario está inactivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.PasswordIncorrecta:
-                    MessageBox.Show("La contraseña es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
                 case resultadoLogin.PrimerLogin:
                     frmPregUsuario frmPreg = new frmPregUsuario(txtUsuario.Text.Trim());
                     this.Hide();
@@ -97,40 +74,39 @@ namespace CapaVista
                     this.Show();
                     break;
                 case resultadoLogin.Ok:
-                    AbrirPantallaPrincipal(txtUsuario.Text.Trim());
-                    this.Hide();
+                    string usuarioOk = txtUsuario.Text.Trim();
+
+                    if (servicioConfiguracion.requiere2FA())
+                    {
+                        frmCodigo frmCod = new frmCodigo(usuarioOk, OrigenVerificacion.ConfirmacionLogin);
+                        this.Hide();
+                        frmCod.ShowDialog();
+                        this.Show();
+                    }
+                    else
+                    {
+                        AbrirPantallaPrincipal(usuarioOk);
+                        this.Hide();
+                    }
+                    break;
+                default:
+                    // Usuario/contraseÃ±a vacÃ­os, usuario inexistente, inactivo o contraseÃ±a
+                    // incorrecta: el mensaje exacto lo decide CL_ServicioLogin, que unifica
+                    // los tres Ãºltimos casos para no revelar cuÃ¡les usuarios existen.
+                    new MensajeError(servicioLogin.ObtenerMensajeResultado(resultado)).Mostrar();
                     break;
             }
-            //if (usuario != txtUsuario.Text || contraseña != txtContraseña.Text)
-            // {
-            //     MessageBox.Show("Algun campo esta incorrecto", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //     return;
-            // }
-            //if (ingreso == true)
-            // {
-            //     frmPregUsuario frm = new frmPregUsuario();
-            //     this.Hide();
-            //     frm.ShowDialog();
-            //     this.Show();
-            // }
-            //else
-            // {
-            //     frmUsuario frm = new frmUsuario();
-            //     this.Hide();
-            //     frm.ShowDialog();
-            //     this.Show();
-            // }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            if (txtContraseña.PasswordChar == '•')
+            if (txtContraseÃ±a.PasswordChar == 'â€¢')
             {
-                txtContraseña.PasswordChar = '\0';
+                txtContraseÃ±a.PasswordChar = '\0';
             }
-            else if (txtContraseña.PasswordChar == '\0')
+            else if (txtContraseÃ±a.PasswordChar == '\0')
             {
-                txtContraseña.PasswordChar = '•';
+                txtContraseÃ±a.PasswordChar = 'â€¢';
             }
         }
 
@@ -165,11 +141,11 @@ namespace CapaVista
             }
             else
             {
-                MessageBox.Show("No se pudo identificar el rol del usuario.");
+                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
             }
         }
 
-        private void frmlogin_Load(object sender, EventArgs e)
+        private void frmLogin_Load(object sender, EventArgs e)
         {
 
         }

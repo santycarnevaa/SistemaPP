@@ -59,5 +59,15 @@ namespace CapaVista.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Rueda_de_Config_ {
+            get {
+                object obj = ResourceManager.GetObject("Rueda de Config.", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

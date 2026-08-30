@@ -1,11 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
 using Entidades;
+using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
+    // Acceso a datos de preguntas y respuestas de seguridad.
     public class CD_preguntasDatos : CD_conexion
     {
+        // Trae las 15 preguntas del sistema, sin filtrar por usuario.
+        // Se usa para mostrarle a un usuario el pool completo la primera vez que tiene que responderlas.
         public List<PreguntaSeguridad> ObtenerPreguntasDisponibles()
         {
             List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
@@ -32,14 +36,18 @@ namespace CapaDatos
                     reader.Close();
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_preguntasDatos.ObtenerPreguntasDisponibles", ex);
                 return new List<PreguntaSeguridad>();
             }
 
             return preguntas;
         }
 
+        // Trae únicamente las preguntas que ESE usuario ya respondió, junto con el hash guardado
+        // de cada respuesta. El filtro por usuario lo hace el SP (WHERE IdUsuario = @IdUsuario);
+        // se usa en la recuperación de contraseña, para saber qué preguntarle a cada quien.
         public List<PreguntaSeguridad> obtenerPreguntasUsuario(int idUsuario)
         {
             List<PreguntaSeguridad> lista = new List<PreguntaSeguridad>();
@@ -57,6 +65,8 @@ namespace CapaDatos
 
                     while (reader.Read())
                     {
+                        // El objeto no incluye IdUsuario: el filtro por usuario ya se aplicó
+                        // en el SP, así que no hace falta cargarlo acá.
                         lista.Add(new PreguntaSeguridad
                         {
                             IdPregunta = Convert.ToInt32(reader["IdPregunta"]),
@@ -75,6 +85,7 @@ namespace CapaDatos
             return lista;
         }
 
+        // Guarda la respuesta (ya hasheada por la capa de lógica) de un usuario a una pregunta puntual.
         public bool InsertarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
             try
@@ -99,6 +110,8 @@ namespace CapaDatos
             }
         }
 
+        // Compara, directamente en la base, si el hash pasado por parámetro coincide con el
+        // que ya está guardado para esa pregunta de ese usuario.
         public bool VerificarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
             try
@@ -117,12 +130,15 @@ namespace CapaDatos
                     return resultado != null && Convert.ToBoolean(resultado);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_preguntasDatos.VerificarRespuestaUsuario", ex);
                 return false;
             }
         }
 
+        // Indica si el usuario ya respondió al menos una pregunta de seguridad
+        // (para saber si puede usar la recuperación de contraseña por preguntas).
         public bool UsuarioTienePreguntas(int idUsuario)
         {
             try
@@ -130,8 +146,9 @@ namespace CapaDatos
                 List<PreguntaSeguridad> preguntas = obtenerPreguntasUsuario(idUsuario);
                 return preguntas.Count > 0;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_preguntasDatos.UsuarioTienePreguntas", ex);
                 return false;
             }
         }

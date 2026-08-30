@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConfigAdmin));
             lblApellido = new Label();
             rb1 = new RadioButton();
@@ -40,13 +41,25 @@
             ckbNumeros = new CheckBox();
             ckbCaracteresEsp = new CheckBox();
             ckbRepetirContra = new CheckBox();
+            ckbMayusculas = new CheckBox();
+            ckbMinusculas = new CheckBox();
             label2 = new Label();
             ckb2FA = new CheckBox();
             ckbDatosPersonales = new CheckBox();
             pictureBox2 = new PictureBox();
             btnGuardar = new Button();
+            button1 = new Button();
+            lblCorreoRemitente = new Label();
+            txtCorreoRemitente = new TextBox();
+            lblPasswordNueva = new Label();
+            txtPasswordNueva = new TextBox();
+            lblDiasRotacion = new Label();
+            numDiasRotacion = new NumericUpDown();
+            lblUltimaRotacion = new Label();
+            toolTipAyuda = new ToolTip(components);
             grbCantidadPreg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numDiasRotacion).BeginInit();
             SuspendLayout();
             // 
             // lblApellido
@@ -163,9 +176,9 @@
             ckbCaracteresEsp.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ckbCaracteresEsp.Location = new Point(7, 99);
             ckbCaracteresEsp.Name = "ckbCaracteresEsp";
-            ckbCaracteresEsp.Size = new Size(250, 20);
+            ckbCaracteresEsp.Size = new Size(160, 20);
             ckbCaracteresEsp.TabIndex = 52;
-            ckbCaracteresEsp.Text = "Requiere caracteres Especiales";
+            ckbCaracteresEsp.Text = "Requiere Especiales";
             ckbCaracteresEsp.UseVisualStyleBackColor = true;
             // 
             // ckbRepetirContra
@@ -178,7 +191,29 @@
             ckbRepetirContra.TabIndex = 53;
             ckbRepetirContra.Text = "Permite repetir Contraseñas";
             ckbRepetirContra.UseVisualStyleBackColor = true;
-            // 
+            //
+            // ckbMayusculas
+            //
+            ckbMayusculas.AutoSize = true;
+            ckbMayusculas.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ckbMayusculas.Location = new Point(226, 225);
+            ckbMayusculas.Name = "ckbMayusculas";
+            ckbMayusculas.Size = new Size(179, 20);
+            ckbMayusculas.TabIndex = 57;
+            ckbMayusculas.Text = "Requiere Mayúsculas";
+            ckbMayusculas.UseVisualStyleBackColor = true;
+            //
+            // ckbMinusculas
+            //
+            ckbMinusculas.AutoSize = true;
+            ckbMinusculas.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ckbMinusculas.Location = new Point(226, 251);
+            ckbMinusculas.Name = "ckbMinusculas";
+            ckbMinusculas.Size = new Size(174, 20);
+            ckbMinusculas.TabIndex = 58;
+            ckbMinusculas.Text = "Requiere Minúsculas";
+            ckbMinusculas.UseVisualStyleBackColor = true;
+            //
             // label2
             // 
             label2.AutoSize = true;
@@ -239,17 +274,123 @@
             btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
             // 
+            // button1
+            // 
+            button1.BackColor = Color.FromArgb(8, 10, 13);
+            button1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.White;
+            button1.Location = new Point(226, 330);
+            button1.Name = "button1";
+            button1.Size = new Size(193, 37);
+            button1.TabIndex = 84;
+            button1.Text = "Actualizar credenciales";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            //
+            // lblCorreoRemitente
+            //
+            lblCorreoRemitente.AutoSize = true;
+            lblCorreoRemitente.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCorreoRemitente.ForeColor = Color.White;
+            lblCorreoRemitente.Location = new Point(226, 40);
+            lblCorreoRemitente.Name = "lblCorreoRemitente";
+            lblCorreoRemitente.Size = new Size(133, 16);
+            lblCorreoRemitente.TabIndex = 85;
+            lblCorreoRemitente.Text = "Correo remitente:";
+            //
+            // txtCorreoRemitente
+            //
+            txtCorreoRemitente.BackColor = Color.FromArgb(8, 10, 13);
+            txtCorreoRemitente.BorderStyle = BorderStyle.FixedSingle;
+            txtCorreoRemitente.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtCorreoRemitente.ForeColor = Color.White;
+            txtCorreoRemitente.Location = new Point(226, 59);
+            txtCorreoRemitente.Name = "txtCorreoRemitente";
+            txtCorreoRemitente.Size = new Size(185, 23);
+            txtCorreoRemitente.TabIndex = 86;
+            //
+            // lblPasswordNueva
+            //
+            lblPasswordNueva.AutoSize = true;
+            lblPasswordNueva.Cursor = Cursors.Hand;
+            lblPasswordNueva.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
+            lblPasswordNueva.ForeColor = Color.White;
+            lblPasswordNueva.Location = new Point(226, 90);
+            lblPasswordNueva.Name = "lblPasswordNueva";
+            lblPasswordNueva.Size = new Size(191, 16);
+            lblPasswordNueva.TabIndex = 87;
+            lblPasswordNueva.Text = "Nueva contraseña de app:";
+            toolTipAyuda.SetToolTip(lblPasswordNueva, "Clic para abrir la página de Google donde se genera la contraseña de aplicación (16 caracteres, sin espacios). Requiere tener la verificación en 2 pasos activada en la cuenta de Gmail.");
+            lblPasswordNueva.Click += lblPasswordNueva_Click;
+            //
+            // txtPasswordNueva
+            //
+            txtPasswordNueva.BackColor = Color.FromArgb(8, 10, 13);
+            txtPasswordNueva.BorderStyle = BorderStyle.FixedSingle;
+            txtPasswordNueva.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtPasswordNueva.ForeColor = Color.White;
+            txtPasswordNueva.Location = new Point(226, 109);
+            txtPasswordNueva.Name = "txtPasswordNueva";
+            txtPasswordNueva.PasswordChar = '*';
+            txtPasswordNueva.Size = new Size(185, 23);
+            txtPasswordNueva.TabIndex = 88;
+            toolTipAyuda.SetToolTip(txtPasswordNueva, "Contraseña de aplicación de Gmail (16 caracteres, sin espacios) - no es la contraseña normal de la cuenta. Se genera en myaccount.google.com/apppasswords, con la verificación en 2 pasos activada.");
+            //
+            // lblDiasRotacion
+            //
+            lblDiasRotacion.AutoSize = true;
+            lblDiasRotacion.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblDiasRotacion.ForeColor = Color.White;
+            lblDiasRotacion.Location = new Point(226, 140);
+            lblDiasRotacion.Name = "lblDiasRotacion";
+            lblDiasRotacion.Size = new Size(140, 16);
+            lblDiasRotacion.TabIndex = 89;
+            lblDiasRotacion.Text = "Días para rotación:";
+            //
+            // numDiasRotacion
+            //
+            numDiasRotacion.BackColor = Color.FromArgb(8, 10, 13);
+            numDiasRotacion.ForeColor = Color.White;
+            numDiasRotacion.Location = new Point(226, 159);
+            numDiasRotacion.Maximum = new decimal(new int[] { 365, 0, 0, 0 });
+            numDiasRotacion.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numDiasRotacion.Name = "numDiasRotacion";
+            numDiasRotacion.Size = new Size(80, 23);
+            numDiasRotacion.TabIndex = 90;
+            numDiasRotacion.Value = new decimal(new int[] { 90, 0, 0, 0 });
+            //
+            // lblUltimaRotacion
+            //
+            lblUltimaRotacion.AutoSize = true;
+            lblUltimaRotacion.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblUltimaRotacion.ForeColor = Color.White;
+            lblUltimaRotacion.Location = new Point(226, 195);
+            lblUltimaRotacion.Name = "lblUltimaRotacion";
+            lblUltimaRotacion.Size = new Size(150, 15);
+            lblUltimaRotacion.TabIndex = 91;
+            lblUltimaRotacion.Text = "Última rotación: -";
+            //
             // frmConfigAdmin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(409, 425);
+            ClientSize = new Size(431, 436);
+            Controls.Add(lblUltimaRotacion);
+            Controls.Add(numDiasRotacion);
+            Controls.Add(lblDiasRotacion);
+            Controls.Add(txtPasswordNueva);
+            Controls.Add(lblPasswordNueva);
+            Controls.Add(txtCorreoRemitente);
+            Controls.Add(lblCorreoRemitente);
+            Controls.Add(button1);
             Controls.Add(btnGuardar);
             Controls.Add(pictureBox2);
             Controls.Add(ckbDatosPersonales);
             Controls.Add(ckb2FA);
             Controls.Add(label2);
+            Controls.Add(ckbMinusculas);
+            Controls.Add(ckbMayusculas);
             Controls.Add(ckbRepetirContra);
             Controls.Add(ckbCaracteresEsp);
             Controls.Add(ckbNumeros);
@@ -267,6 +408,7 @@
             grbCantidadPreg.ResumeLayout(false);
             grbCantidadPreg.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numDiasRotacion).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -284,10 +426,21 @@
         private CheckBox ckbNumeros;
         private CheckBox ckbCaracteresEsp;
         private CheckBox ckbRepetirContra;
+        private CheckBox ckbMayusculas;
+        private CheckBox ckbMinusculas;
         private Label label2;
         private CheckBox ckb2FA;
         private CheckBox ckbDatosPersonales;
         private PictureBox pictureBox2;
         private Button btnGuardar;
+        private Button button1;
+        private Label lblCorreoRemitente;
+        private TextBox txtCorreoRemitente;
+        private Label lblPasswordNueva;
+        private TextBox txtPasswordNueva;
+        private Label lblDiasRotacion;
+        private NumericUpDown numDiasRotacion;
+        private Label lblUltimaRotacion;
+        private ToolTip toolTipAyuda;
     }
 }

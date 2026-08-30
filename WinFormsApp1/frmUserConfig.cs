@@ -15,6 +15,7 @@ namespace CapaVista
     {
         private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         private string usuario;
+
         public frmUserConfig(string usuario)
         {
             InitializeComponent();
@@ -32,18 +33,26 @@ namespace CapaVista
         {
             if (servicioConfiguracion.requiere2FA())
             {
-                frmCodigo frmCod = new frmCodigo(usuario);
+                frmCodigo frmCod = new frmCodigo(usuario, OrigenVerificacion.CambioVoluntario);
                 this.Hide();
                 frmCod.ShowDialog();
                 this.Close();
             }
             else
             {
-                frmrecuperar frmPreg = new frmrecuperar(usuario);
+                frmPreguntas frmPreg = new frmPreguntas(usuario, OrigenVerificacion.CambioVoluntario);
                 this.Hide();
                 frmPreg.ShowDialog();
                 this.Close();
             }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            frmUsuario frm = new frmUsuario(usuario);
+            this.Hide();
+            frm.ShowDialog();
+            this.Close();
         }
     }
 }

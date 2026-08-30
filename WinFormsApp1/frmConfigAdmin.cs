@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,10 +18,24 @@ namespace CapaVista
         private string usuario;
         private CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
         private CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
+        private CL_servicioConfiguracionCorreo servicioConfigCorreo = new CL_servicioConfiguracionCorreo();
+
         public frmConfigAdmin(string usuario)
         {
             InitializeComponent();
             this.usuario = usuario;
+        }
+
+        private void lblPasswordNueva_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo("https://myaccount.google.com/apppasswords") { UseShellExecute = true });
+            }
+            catch
+            {
+                new MensajeError("No se pudo abrir el navegador. Entrá manualmente a myaccount.google.com/apppasswords para generar la contraseña de aplicación.").Mostrar();
+            }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
@@ -35,12 +50,14 @@ namespace CapaVista
         {
             if (!int.TryParse(txtCaracteres.Text, out int minCaracteres) || minCaracteres < 1)
             {
-                MessageBox.Show("Ingrese un número válido para la cantidad mínima de caracteres.");
+                new MensajeError("Ingrese un número válido para la cantidad mínima de caracteres.").Mostrar();
                 return;
             }
             configuracionSistema config = new configuracionSistema
             {
                 minCaracteres = minCaracteres,
+                requiereMayusculas = ckbMayusculas.Checked,
+                requiereMinusculas = ckbMinusculas.Checked,
                 requiereNumeros = ckbNumeros.Checked,
                 requiereEspeciales = ckbCaracteresEsp.Checked,
                 requiere2FA = ckb2FA.Checked,
@@ -51,11 +68,11 @@ namespace CapaVista
             bool resultado = servicioConfiguracion.actualizarConfiguracion(config);
             if (resultado)
             {
-                MessageBox.Show("Configuración guardada exitosamente.");
+                new MensajeExito("Configuración guardada exitosamente.").Mostrar();
             }
             else
             {
-                MessageBox.Show("Error al guardar la configuración. Intente nuevamente.");
+                new MensajeError("Error al guardar la configuración. Intente nuevamente.").Mostrar();
             }
         }
 
@@ -65,9 +82,11 @@ namespace CapaVista
 
             if (config == null)
             {
-                MessageBox.Show("No hay configuración cargada. Se usarán valores por defecto.");
+                new MensajeInformacion("No hay configuración cargada. Se usarán valores por defecto.").Mostrar();
 
                 txtCaracteres.Text = "8";
+                ckbMayusculas.Checked = false;
+                ckbMinusculas.Checked = false;
                 ckbNumeros.Checked = true;
                 ckbCaracteresEsp.Checked = true;
                 ckb2FA.Checked = false;
@@ -80,6 +99,8 @@ namespace CapaVista
 
             txtCaracteres.Text = config.minCaracteres.ToString();
 
+            ckbMayusculas.Checked = config.requiereMayusculas;
+            ckbMinusculas.Checked = config.requiereMinusculas;
             ckbNumeros.Checked = config.requiereNumeros;
             ckbCaracteresEsp.Checked = config.requiereEspeciales;
             ckb2FA.Checked = config.requiere2FA;
@@ -94,6 +115,63 @@ namespace CapaVista
                 rb5.Checked = true;
             else
                 rb3.Checked = true;
+
+            CargarConfiguracionCorreo();
+        }
+
+        private void CargarConfiguracionCorreo()
+        {
+            var configCorreo = servicioConfigCorreo.ObtenerConfiguracion();
+
+            if (configCorreo == null)
+            {
+                lblUltimaRotacion.Text = "Última rotación: nunca se cargó una credencial.";
+                numDiasRotacion.Value = 90;
+                return;
+            }
+
+            txtCorreoRemitente.Text = configCorreo.CorreoRemitente;
+            numDiasRotacion.Value = configCorreo.DiasRotacion;
+            lblUltimaRotacion.Text = "Última rotación: " + configCorreo.FechaUltimaRotacion.ToString("dd/MM/yyyy");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtCorreoRemitente.Text))
+            {
+                new MensajeError("Ingrese el correo remitente.").Mostrar();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPasswordNueva.Text))
+            {
+                new MensajeError("Ingrese la nueva contraseña de aplicación.").Mostrar();
+                return;
+            }
+
+            try
+            {
+                bool ok = servicioConfigCorreo.RotarCredenciales(
+                    txtCorreoRemitente.Text.Trim(),
+                    txtPasswordNueva.Text,
+                    (int)numDiasRotacion.Value
+                );
+
+                if (ok)
+                {
+                    new MensajeExito("Credenciales de correo actualizadas correctamente.").Mostrar();
+                    txtPasswordNueva.Text = "";
+                    CargarConfiguracionCorreo();
+                }
+                else
+                {
+                    new MensajeError("No se pudieron actualizar las credenciales.").Mostrar();
+                }
+            }
+            catch (Exception ex)
+            {
+                new MensajeError("Error real al actualizar credenciales: " + ex.Message).Mostrar();
+            }
         }
 
         private async void btnRegistros_Click(object sender, EventArgs e)
@@ -106,13 +184,13 @@ namespace CapaVista
                 bool resultado = await servicioGeoref.cargarGeorefEnBase();
 
                 if (resultado)
-                    MessageBox.Show("Datos geográficos actualizados correctamente.");
+                    new MensajeExito("Datos geográficos actualizados correctamente.").Mostrar();
                 else
-                    MessageBox.Show("No se pudieron actualizar los datos geográficos.");
+                    new MensajeError("No se pudieron actualizar los datos geográficos.").Mostrar();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar GeoRef: " + ex.Message);
+                new MensajeError("Error al actualizar GeoRef: " + ex.Message).Mostrar();
             }
             finally
             {
