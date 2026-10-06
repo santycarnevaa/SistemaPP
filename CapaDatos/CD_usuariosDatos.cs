@@ -198,13 +198,72 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
 
                     object resultado = cmd.ExecuteScalar();
-                    return resultado != null ? Convert.ToInt32(resultado) : 0;
+                    return resultado != null && resultado != DBNull.Value ? Convert.ToInt32(resultado) : -1;
                 }
             }
             catch
             {
-                return 0;
+                return -1;
             }
+        }
+
+        // Devuelve el usuario tal como esta guardado (mayusculas/minusculas),
+        // porque el hash de la contraseña se arma con ese texto.
+        public string ObtenerNombreUsuarioExacto(string usuario)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT Usuario FROM dbo.Usuarios WHERE Usuario = @Usuario;", conexion);
+                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+                    object resultado = cmd.ExecuteScalar();
+                    return resultado != null && resultado != DBNull.Value ? resultado.ToString() : string.Empty;
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public List<string> ObtenerDatosPersonales(string usuario)
+        {
+            List<string> datos = new List<string>();
+
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    string query = @"
+                        SELECT P.Nombre, P.Apellido, P.DNI
+                        FROM dbo.Usuarios U
+                        INNER JOIN dbo.Personas P ON U.IdPersona = P.IdPersona
+                        WHERE U.Usuario = @Usuario;
+                    ";
+
+                    SqlCommand cmd = new SqlCommand(query, conexion);
+                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        datos.Add(reader["Nombre"].ToString());
+                        datos.Add(reader["Apellido"].ToString());
+                        datos.Add(reader["DNI"].ToString());
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch
+            {
+                return new List<string>();
+            }
+
+            return datos;
         }
 
         public DataTable BuscarUsuarioPorCorreo(string correo)

@@ -21,10 +21,10 @@ namespace CapaVista
 
         private void btnRegistros_Click(object sender, EventArgs e)
         {
-            frmRegistro frm = new frmRegistro();
+            frmRegistro frm = new frmRegistro(usuario);
             this.Hide();
             frm.ShowDialog();
-            this.Close();
+            this.Show();
         }
 
         private void btnPreg_Click(object sender, EventArgs e)
@@ -32,14 +32,12 @@ namespace CapaVista
             frmConfigAdmin frm = new frmConfigAdmin(usuario);
             this.Hide();
             frm.ShowDialog();
-            this.Close();
+            this.Show();
         }
 
+        // cerrar sesion: vuelve al login
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
-            this.Hide();
-            frm.ShowDialog();
             this.Close();
         }
 

@@ -24,26 +24,28 @@ namespace CapaVista
         private void button1_Click(object sender, EventArgs e)
         {
             frmPregUsuario frm = new frmPregUsuario(usuario);
+            this.Hide();
             frm.ShowDialog();
-            this.Close();
+            this.Show();
         }
 
         private void btnContraseña_Click(object sender, EventArgs e)
         {
+            Form frm;
+
             if (servicioConfiguracion.requiere2FA())
-            {
-                frmCodigo frmCod = new frmCodigo(usuario);
-                this.Hide();
-                frmCod.ShowDialog();
-                this.Close();
-            }
+                frm = new frmCodigo(usuario);
             else
-            {
-                frmrecuperar frmPreg = new frmrecuperar(usuario);
-                this.Hide();
-                frmPreg.ShowDialog();
-                this.Close();
-            }
+                frm = new frmrecuperar(usuario);
+
+            this.Hide();
+            frm.ShowDialog();
+            this.Show();
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

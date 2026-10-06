@@ -25,22 +25,24 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmAdmin frm = new frmAdmin(usuario);
-            this.Hide();
-            frm.ShowDialog();
             this.Close();
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtCaracteres.Text, out int minCaracteres) || minCaracteres < 1)
+            if (!int.TryParse(txtCaracteres.Text, out int minCaracteres) || minCaracteres < 4 || minCaracteres > 30)
             {
-                MessageBox.Show("Ingrese un número válido para la cantidad mínima de caracteres.");
+                MessageBox.Show("El mínimo de caracteres debe ser un número entre 4 y 30.");
                 return;
             }
+
+            // la pantalla no tiene opcion de mayusculas, se conserva el valor que ya estaba
+            configuracionSistema actual = servicioConfiguracion.ObtenerConfiguracion();
+
             configuracionSistema config = new configuracionSistema
             {
                 minCaracteres = minCaracteres,
+                requiereMayusculas = actual != null && actual.requiereMayusculas,
                 requiereNumeros = ckbNumeros.Checked,
                 requiereEspeciales = ckbCaracteresEsp.Checked,
                 requiere2FA = ckb2FA.Checked,
@@ -48,14 +50,21 @@ namespace CapaVista
                 validarDatosPersonales = !ckbDatosPersonales.Checked,
                 cantPreguntas = rb1.Checked ? 1 : rb5.Checked ? 5 : 3
             };
-            bool resultado = servicioConfiguracion.actualizarConfiguracion(config);
-            if (resultado)
+            try
             {
-                MessageBox.Show("Configuración guardada exitosamente.");
+                bool resultado = servicioConfiguracion.actualizarConfiguracion(config);
+                if (resultado)
+                {
+                    MessageBox.Show("Configuración guardada exitosamente.");
+                }
+                else
+                {
+                    MessageBox.Show("Error al guardar la configuración. Intente nuevamente.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar la configuración. Intente nuevamente.");
+                MessageBox.Show("Error al guardar la configuración: " + ex.Message);
             }
         }
 
@@ -102,6 +111,7 @@ namespace CapaVista
             {
                 btnRegistros.Enabled = false;
                 btnRegistros.Text = "Actualizando...";
+                this.Cursor = Cursors.WaitCursor;
 
                 bool resultado = await servicioGeoref.cargarGeorefEnBase();
 
@@ -116,6 +126,7 @@ namespace CapaVista
             }
             finally
             {
+                this.Cursor = Cursors.Default;
                 btnRegistros.Enabled = true;
                 btnRegistros.Text = "Actualizar API";
             }

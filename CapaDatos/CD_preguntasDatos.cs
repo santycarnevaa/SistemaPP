@@ -99,6 +99,25 @@ namespace CapaDatos
             }
         }
 
+        public bool EliminarRespuestasUsuario(int idUsuario)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM dbo.RespuestasUsuario WHERE IdUsuario = @IdUsuario;", conexion);
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool VerificarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
             try

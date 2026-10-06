@@ -13,31 +13,36 @@ namespace CapaLogica
         {
             try
             {
-                if (datos.hayDatosCargados())
-                    return true;
-
                 List<itemGeoref> provincias = await ObtenerProvinciasApi();
+
+                if (provincias.Count == 0)
+                    return false;
 
                 foreach (itemGeoref provincia in provincias)
                 {
-                    datos.guardarProvincia(provincia.Id, provincia.Nombre);
+                    if (!datos.guardarProvincia(provincia.Id, provincia.Nombre))
+                        return false;
 
                     List<itemGeoref> partidos = await ObtenerPartidosApi(provincia.Id);
 
                     foreach (itemGeoref partido in partidos)
                     {
                         datos.guardarPartido(partido.Id, partido.Nombre, provincia.Id);
+                    }
 
-                        List<itemGeoref> localidades = await ObtenerLocalidadesApi(partido.Id);
+                    // una sola llamada por provincia en lugar de una por partido
+                    List<itemGeoref> localidades = await ObtenerLocalidadesPorProvinciaApi(provincia.Id);
 
-                        foreach (itemGeoref localidad in localidades)
-                        {
-                            datos.guardarLocalidad(localidad.Id, localidad.Nombre, partido.Id);
-                        }
+                    foreach (itemGeoref localidad in localidades)
+                    {
+                        if (localidad.Departamento == null || string.IsNullOrWhiteSpace(localidad.Departamento.Id))
+                            continue;
+
+                        datos.guardarLocalidad(localidad.Id, localidad.Nombre, localidad.Departamento.Id);
                     }
                 }
 
-                return true;
+                return datos.hayDatosCargados();
             }
             catch
             {
@@ -73,9 +78,9 @@ namespace CapaLogica
                 .ToList();
         }
 
-        private async Task<List<itemGeoref>> ObtenerLocalidadesApi(string idPartido)
+        private async Task<List<itemGeoref>> ObtenerLocalidadesPorProvinciaApi(string idProvincia)
         {
-            string url = $"https://apis.datos.gob.ar/georef/api/localidades?departamento={idPartido}&campos=id,nombre&max=1000";
+            string url = $"https://apis.datos.gob.ar/georef/api/localidades?provincia={idProvincia}&campos=id,nombre,departamento.id&max=5000";
 
             respuestasGeoref res = await client.GetFromJsonAsync<respuestasGeoref>(url);
 

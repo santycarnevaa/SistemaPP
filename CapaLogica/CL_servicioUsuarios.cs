@@ -17,6 +17,10 @@ namespace CapaLogica
         private CL_servicioMail servicioMail = new CL_servicioMail();
         private generarContra generarContra = new generarContra();
         private encriptar encriptar = new encriptar();
+
+        // Se guarda por si falla el envio del mail, para poder mostrarla en pantalla
+        public string UltimaContraTemporal { get; private set; } = "";
+
         public resultadoRegistroUsuario RegistrarUsuario(
         string calle,
         string numero,
@@ -37,8 +41,14 @@ namespace CapaLogica
         string correo,
         int idRol)
         {
+            UltimaContraTemporal = "";
+
             if (string.IsNullOrWhiteSpace(usuario))
                 return resultadoRegistroUsuario.UsuarioVacio;
+
+            usuario = usuario.Trim();
+            correo = correo?.Trim() ?? "";
+            dni = dni?.Trim() ?? "";
 
             if (string.IsNullOrWhiteSpace(nombre))
                 return resultadoRegistroUsuario.NombreVacio;
@@ -79,11 +89,14 @@ namespace CapaLogica
             if (usuarioDatos.ExisteUsuario(usuario))
                 return resultadoRegistroUsuario.UsuarioYaExiste;
 
-            if (usuarioDatos.ExisteCorreo(correo))
-                return resultadoRegistroUsuario.CorreoYaExiste;
-            //k
             if (!CorreoValido(correo))
                 return resultadoRegistroUsuario.CorreoInvalido;
+
+            if (usuarioDatos.ExisteCorreo(correo))
+                return resultadoRegistroUsuario.CorreoYaExiste;
+
+            if (usuarioDatos.ExisteDNI(dni))
+                return resultadoRegistroUsuario.DniYaExiste;
 
             string direccionOriginal = calle + " " + numero + ", " + localidad + ", " + partido + ", " + provincia;
             string direccionNormalizada = direccionOriginal.ToUpper().Trim();
@@ -129,7 +142,10 @@ namespace CapaLogica
             bool mailOk = servicioMail.enviarContraTemporal(correo, passwordTemporal);
 
             if (!mailOk)
+            {
+                UltimaContraTemporal = passwordTemporal;
                 return resultadoRegistroUsuario.ErrorEnvioMail;
+            }
 
             return resultadoRegistroUsuario.Ok;
 
@@ -328,6 +344,9 @@ namespace CapaLogica
                     return "El usuario se creó, pero no se pudo enviar el correo con la contraseña temporal.";
                 case resultadoRegistroUsuario.CorreoInvalido:
                     return "Debe ingresar un correo electrónico válido.";
+
+                case resultadoRegistroUsuario.DniYaExiste:
+                    return "Ya existe una persona registrada con ese DNI.";
 
                 default:
                     return "Ocurrió un error desconocido.";

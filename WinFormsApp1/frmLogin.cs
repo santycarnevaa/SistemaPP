@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +14,8 @@ namespace CapaVista
         {
             InitializeComponent();
 
+            // permite iniciar sesion apretando Enter
+            this.AcceptButton = btnIniciar;
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -27,7 +29,7 @@ namespace CapaVista
             {
                 MessageBox.Show(
                     "Por favor, ingrese su nombre de usuario para recuperar su cuenta.",
-                    "InformaciÛn",
+                    "Informaci√≥n",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 );
@@ -36,101 +38,104 @@ namespace CapaVista
 
             string usuario = txtUsuario.Text.Trim();
 
-            CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
-            CL_ServicioConfiguracion servicioConfiguracion = new CL_ServicioConfiguracion();
-
-            bool existeUsuario = servicioUsuarios.ExisteUsuario(usuario);
-
-            if (!existeUsuario)
+            try
             {
-                MessageBox.Show(
-                    "El usuario ingresado no existe.",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return;
-            }
+                CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
+                CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
 
-            if (servicioConfiguracion.requiere2FA())
-            {
-                frmCodigo frmCod = new frmCodigo(usuario);
+                if (!servicioUsuarios.ExisteUsuario(usuario))
+                {
+                    MessageBox.Show("El usuario ingresado no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!servicioLogin.UsuarioActivo(usuario))
+                {
+                    MessageBox.Show("El usuario est√° inactivo. Comun√≠quese con el administrador.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                Form frmSiguiente;
+
+                if (servicioConfiguracion.requiere2FA())
+                    frmSiguiente = new frmCodigo(usuario);
+                else
+                    frmSiguiente = new frmrecuperar(usuario);
+
                 this.Hide();
-                frmCod.ShowDialog();
+                frmSiguiente.ShowDialog();
+                txtContrase√±a.Clear();
                 this.Show();
             }
-            else
+            catch (Exception ex)
             {
-                frmrecuperar frmPreg = new frmrecuperar(usuario);
-                this.Hide();
-                frmPreg.ShowDialog();
                 this.Show();
+                MessageBox.Show("No se pudo conectar con la base de datos.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
-            CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
-            resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseÒa.Text);
+            string usuario = txtUsuario.Text.Trim();
 
-            switch (resultado)
+            try
             {
-                case resultadoLogin.UsuarioVacio:
-                    MessageBox.Show("El campo de usuario no puede estar vacÌo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.PasswordVacia:
-                    MessageBox.Show("El campo de contraseÒa no puede estar vacÌo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.UsuarioNoExiste:
-                    MessageBox.Show("El usuario no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.UsuarioInactivo:
-                    MessageBox.Show("El usuario est· inactivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.PasswordIncorrecta:
-                    MessageBox.Show("La contraseÒa es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-                case resultadoLogin.PrimerLogin:
-                    frmPregUsuario frmPreg = new frmPregUsuario(txtUsuario.Text.Trim());
-                    this.Hide();
-                    frmPreg.ShowDialog();
-                    this.Show();
-                    break;
-                case resultadoLogin.Ok:
-                    AbrirPantallaPrincipal(txtUsuario.Text.Trim());
-                    this.Hide();
-                    break;
+                CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
+                resultadoLogin resultado = servicioLogin.Login(usuario, txtContrase√±a.Text);
+
+                switch (resultado)
+                {
+                    case resultadoLogin.UsuarioVacio:
+                        MessageBox.Show("El campo de usuario no puede estar vac√≠o.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case resultadoLogin.PasswordVacia:
+                        MessageBox.Show("El campo de contrase√±a no puede estar vac√≠o.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case resultadoLogin.UsuarioNoExiste:
+                        MessageBox.Show("El usuario no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case resultadoLogin.UsuarioInactivo:
+                        MessageBox.Show("El usuario est√° inactivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case resultadoLogin.PasswordIncorrecta:
+                        MessageBox.Show("La contrase√±a es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtContrase√±a.Clear();
+                        txtContrase√±a.Focus();
+                        break;
+                    case resultadoLogin.PrimerLogin:
+                        MessageBox.Show("Es tu primer ingreso. Primero vas a elegir tus preguntas de seguridad y despu√©s tu nueva contrase√±a.", "Bienvenido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        frmPregUsuario frmPreg = new frmPregUsuario(usuario);
+                        this.Hide();
+                        DialogResult r = frmPreg.ShowDialog();
+                        txtContrase√±a.Clear();
+
+                        if (r == DialogResult.OK)
+                            AbrirPantallaPrincipal(usuario);
+                        else
+                            this.Show();
+                        break;
+                    case resultadoLogin.Ok:
+                        AbrirPantallaPrincipal(usuario);
+                        break;
+                }
             }
-            //if (usuario != txtUsuario.Text || contraseÒa != txtContraseÒa.Text)
-            // {
-            //     MessageBox.Show("Algun campo esta incorrecto", "error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //     return;
-            // }
-            //if (ingreso == true)
-            // {
-            //     frmPregUsuario frm = new frmPregUsuario();
-            //     this.Hide();
-            //     frm.ShowDialog();
-            //     this.Show();
-            // }
-            //else
-            // {
-            //     frmUsuario frm = new frmUsuario();
-            //     this.Hide();
-            //     frm.ShowDialog();
-            //     this.Show();
-            // }
+            catch (Exception ex)
+            {
+                this.Show();
+                MessageBox.Show("No se pudo conectar con la base de datos.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            if (txtContraseÒa.PasswordChar == 'ï')
+            if (txtContrase√±a.PasswordChar == '‚Ä¢')
             {
-                txtContraseÒa.PasswordChar = '\0';
+                txtContrase√±a.PasswordChar = '\0';
             }
-            else if (txtContraseÒa.PasswordChar == '\0')
+            else if (txtContrase√±a.PasswordChar == '\0')
             {
-                txtContraseÒa.PasswordChar = 'ï';
+                txtContrase√±a.PasswordChar = '‚Ä¢';
             }
         }
 
@@ -143,30 +148,34 @@ namespace CapaVista
         {
 
         }
+
+        // Abre la pantalla segun el rol y, al cerrar sesion, vuelve al login
         private void AbrirPantallaPrincipal(string usuario)
         {
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
             int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
 
+            Form frm;
+
             if (idRol == 2)
-            {
-                frmAdmin frm = new frmAdmin(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
+                frm = new frmAdmin(usuario);
             else if (idRol == 1)
-            {
-                frmUsuario frm = new frmUsuario(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
+                frm = new frmUsuario(usuario);
             else
             {
+                this.Show();
                 MessageBox.Show("No se pudo identificar el rol del usuario.");
+                return;
             }
+
+            this.Hide();
+            frm.ShowDialog();
+
+            txtContrase√±a.Clear();
+            txtContrase√±a.PasswordChar = '‚Ä¢';
+            this.Show();
+            txtUsuario.Focus();
         }
 
         private void frmlogin_Load(object sender, EventArgs e)

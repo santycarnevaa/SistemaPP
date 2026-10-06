@@ -103,10 +103,6 @@ namespace CapaLogica
     <div class='wrapper'>
         <div class='container'>
 
-            <div class='logo'>
-                <img src='logo.jpg' alt='Logo'>
-            </div>
-
             <div class='title'>Se solicitó una nueva contraseña</div>
 
             <p class='text'>
@@ -242,10 +238,6 @@ namespace CapaLogica
 <body>
     <div class='wrapper'>
         <div class='container'>
-
-            <div class='logo'>
-                <img src='logo.jpg' alt='Logo'>
-            </div>
 
             <div class='title'>Código de recuperación</div>
 

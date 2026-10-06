@@ -49,16 +49,15 @@
             // btnConfig
             // 
             btnConfig.BackColor = Color.FromArgb(8, 10, 13);
-            btnConfig.Enabled = false;
             btnConfig.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnConfig.ForeColor = Color.White;
             btnConfig.Location = new Point(27, 140);
             btnConfig.Name = "btnConfig";
             btnConfig.Size = new Size(258, 37);
             btnConfig.TabIndex = 4;
-            btnConfig.Text = "Configuracion";
+            btnConfig.Text = "Volver";
             btnConfig.UseVisualStyleBackColor = false;
-            //btnConfig.Click += btnConfig_Click;
+            btnConfig.Click += btnConfig_Click;
             // 
             // btnContraseña
             // 

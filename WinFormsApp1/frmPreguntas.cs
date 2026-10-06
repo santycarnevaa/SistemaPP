@@ -22,6 +22,34 @@ namespace CapaVista
             this.usuario = usuario;
 
             this.Load += frmrecuperar_Load;
+
+            TextBox[] cajas = { txtPreg1, txtPreg2, txtPreg3, txtPreg4, txtPreg5 };
+            foreach (TextBox caja in cajas)
+                caja.KeyDown += Respuesta_KeyDown;
+        }
+
+        // Enter pasa a la siguiente respuesta y en la ultima intenta ingresar
+        private void Respuesta_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            e.SuppressKeyPress = true;
+
+            TextBox[] cajas = { txtPreg1, txtPreg2, txtPreg3, txtPreg4, txtPreg5 };
+            int actual = Array.IndexOf(cajas, sender);
+
+            for (int i = actual + 1; i < cajas.Length; i++)
+            {
+                if (cajas[i].Visible)
+                {
+                    cajas[i].Focus();
+                    return;
+                }
+            }
+
+            if (btnIngresar.Enabled)
+                btnIngresar.PerformClick();
         }
 
         private void frmrecuperar_Load(object sender, EventArgs e)
@@ -34,21 +62,35 @@ namespace CapaVista
         {
             var config = servicioConfiguracion.ObtenerConfiguracion();
 
-            if (config == null)
+            int cantidadPreguntas = config != null ? config.cantPreguntas : 3;
+
+            try
             {
-                MessageBox.Show("No se pudo obtener la configuración del sistema.");
+                preguntasUsuario = servicioPreguntas.obtenerPreguntasUsuario(usuario);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No se pudieron obtener las preguntas: " + ex.Message);
+                preguntasUsuario = new List<PreguntaSeguridad>();
+            }
+
+            if (preguntasUsuario.Count == 0)
+            {
+                MessageBox.Show(
+                    "Este usuario todavía no configuró sus preguntas de seguridad.\nDebe iniciar sesión con la contraseña que recibió por correo.",
+                    "Recuperar cuenta",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                BeginInvoke(new Action(Close));
                 return;
             }
 
-            int cantidadPreguntas = config.cantPreguntas;
+            // si el usuario respondio menos preguntas que las configuradas, se usan las que tiene
+            if (cantidadPreguntas > preguntasUsuario.Count)
+                cantidadPreguntas = preguntasUsuario.Count;
 
-            preguntasUsuario = servicioPreguntas.obtenerPreguntasUsuario(usuario);
-
-            if (preguntasUsuario.Count < cantidadPreguntas)
-            {
-                MessageBox.Show("El usuario no tiene suficientes preguntas de seguridad registradas.");
-                return;
-            }
+            if (cantidadPreguntas > 5)
+                cantidadPreguntas = 5;
 
             preguntasUsuario = preguntasUsuario.Take(cantidadPreguntas).ToList();
 
@@ -142,7 +184,7 @@ namespace CapaVista
             {
                 frmContraseña frm = new frmContraseña(usuario);
                 this.Hide();
-                frm.ShowDialog();
+                this.DialogResult = frm.ShowDialog();
                 this.Close();
             }
             else
@@ -211,9 +253,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
-            this.Hide();
-            frm.ShowDialog();
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
     }

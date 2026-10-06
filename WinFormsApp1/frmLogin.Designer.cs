@@ -95,7 +95,7 @@
             lblRecuperar.TabStop = true;
             lblRecuperar.Text = "¿Olvidaste tu contraseña?";
             lblRecuperar.LinkClicked += lblRecuperar_LinkClicked;
-            // 
+            //
             // label2
             // 
             label2.AutoSize = true;
