@@ -15,7 +15,10 @@ namespace CapaVista
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new frmlogin());
+            // MODO PRUEBA: abre directo el registro para crear usuarios.
+            // Para la presentacion, comentar la linea de frmRegistro y descomentar la de frmlogin.
+            Application.Run(new frmRegistro());
+            //Application.Run(new frmlogin());
         }
     }
 }

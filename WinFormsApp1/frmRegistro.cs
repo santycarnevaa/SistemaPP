@@ -19,29 +19,21 @@ namespace CapaVista
         private bool hayCambios = false;
         private bool cargandoDatos = false;
         private string modo = "normal";
+        private string usuarioActual = "";
+
+        public frmRegistro(string usuarioActual) : this()
+        {
+            this.usuarioActual = usuarioActual;
+        }
 
         public frmRegistro()
         {
             InitializeComponent();
 
-
             btnbuscar.Click += btnbuscar_Click;
             btnLimpiar.Click += btnLimpiar_Click;
             filtroscb.SelectedIndexChanged += filtroscb_SelectedIndexChanged;
             txtboxbuscar.KeyDown += txtboxbuscar_KeyDown;
-
-            configurargrilla(DgvPrueba);
-
-            this.Load -= frmRegistro_Load;
-            this.Load += frmRegistro_Load;
-
-            cmbProvincia.SelectedIndexChanged -= cmbProvincia_SelectedIndexChanged;
-            cmbProvincia.SelectedIndexChanged += cmbProvincia_SelectedIndexChanged;
-
-            cmbPartido.SelectedIndexChanged -= cmbPartido_SelectedIndexChanged;
-            cmbPartido.SelectedIndexChanged += cmbPartido_SelectedIndexChanged;
-        
-
 
             configurargrilla(DgvPrueba);
 
@@ -59,15 +51,15 @@ namespace CapaVista
         {
             cargarRoles();
             cargarProvincias();
-            actualizargrilla();
 
             datFecha.MaxDate = DateTime.Today.AddYears(-16);
             datFecha.MinDate = DateTime.Today.AddYears(-100);
 
             ConectarEventosCambios();
+
+            actualizargrilla();
             VolverEstadoNormal();
             CargarFiltros();
-
         }
 
         private void CargarFiltros()
@@ -251,6 +243,15 @@ namespace CapaVista
 
                 cmbPartido.DataSource = null;
                 cmbLocalidad.DataSource = null;
+
+                if (provincias.Count == 0)
+                {
+                    MessageBox.Show(
+                        "No hay provincias cargadas.\nVaya a \"Configurar sistema\" y presione \"Actualizar API\" para cargarlas.",
+                        "Datos geográficos",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
@@ -363,9 +364,31 @@ namespace CapaVista
                     idRol
                 );
 
-                MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado));
-
                 if (resultado == resultadoRegistroUsuario.Ok)
+                {
+                    MessageBox.Show(
+                        "Usuario registrado correctamente.\nSe envió la contraseña temporal a " + txtCorreo.Text.Trim() + ".",
+                        "Registro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else if (resultado == resultadoRegistroUsuario.ErrorEnvioMail)
+                {
+                    // el usuario ya quedo creado: se muestra la contraseña para no perderla
+                    MessageBox.Show(
+                        "El usuario se creó, pero no se pudo enviar el correo.\n\n" +
+                        "Contraseña temporal: " + servicioUsuarios.UltimaContraTemporal + "\n\n" +
+                        "Anótela y entréguesela al usuario.",
+                        "Registro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    MessageBox.Show(servicioUsuarios.ObtenerMensajeRegistro(resultado), "Registro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                if (resultado == resultadoRegistroUsuario.Ok || resultado == resultadoRegistroUsuario.ErrorEnvioMail)
                 {
                     actualizargrilla();
                     VolverEstadoNormal();
@@ -373,7 +396,7 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al registrar usuario: " + ex.Message);
+                MessageBox.Show("Error al registrar usuario: " + ex.Message);
             }
         }
 
@@ -489,7 +512,10 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al modificar usuario: " + ex.Message);
+                if (ex.Message.Contains("UNIQUE") || ex.Message.Contains("duplicate"))
+                    MessageBox.Show("No se pudo modificar: ya existe otra persona con ese DNI.");
+                else
+                    MessageBox.Show("Error al modificar usuario: " + ex.Message);
             }
         }
 
@@ -509,6 +535,13 @@ namespace CapaVista
 
             int idUsuario = Convert.ToInt32(DgvPrueba.SelectedRows[0].Cells["IdUsuario"].Value);
             bool activo = Convert.ToBoolean(DgvPrueba.SelectedRows[0].Cells["Activo"].Value);
+            string usuarioFila = DgvPrueba.SelectedRows[0].Cells["Usuario"].Value?.ToString() ?? "";
+
+            if (activo && usuarioFila.Equals(usuarioActual, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("No puede darse de baja a sí mismo.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             string accion = activo ? "dar de baja" : "activar";
 
@@ -522,7 +555,17 @@ namespace CapaVista
             if (r != DialogResult.Yes)
                 return;
 
-            bool ok = servicioUsuarios.CambiarEstadoUsuario(idUsuario, !activo);
+            bool ok;
+
+            try
+            {
+                ok = servicioUsuarios.CambiarEstadoUsuario(idUsuario, !activo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cambiar el estado: " + ex.Message);
+                return;
+            }
 
             if (ok)
             {
@@ -562,7 +605,8 @@ namespace CapaVista
                 return false;
             }
 
-            if (!int.TryParse(txtTelefono.Text, out _))
+            // long porque los telefonos de 10 digitos (ej. 3511234567) no entran en un int
+            if (!long.TryParse(txtTelefono.Text, out _))
             {
                 MessageBox.Show("El teléfono debe ser numérico.");
                 return false;

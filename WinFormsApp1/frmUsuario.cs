@@ -33,11 +33,9 @@ namespace CapaVista
             lblBienvenido.Text = "Bienvenido, " + usuario;
         }
 
+        // cerrar sesion: vuelve al login
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
-            this.Hide();
-            frm.ShowDialog();
             this.Close();
         }
 
@@ -46,7 +44,7 @@ namespace CapaVista
             frmUserConfig frm = new frmUserConfig(usuario);
             this.Hide();
             frm.ShowDialog();
-            this.Close();
+            this.Show();
         }
 
         private void lblBienvenido_Click(object sender, EventArgs e)

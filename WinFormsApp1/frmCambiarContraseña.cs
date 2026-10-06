@@ -46,24 +46,31 @@ namespace CapaVista
 
             try
             {
+                string error = servicioContras.validarContra(nuevaContra, usuario);
+
+                if (error != "")
+                {
+                    MessageBox.Show(error, "Contraseña no válida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 bool cambioOk = servicioContras.cambiarContra(usuario, nuevaContra);
 
                 if (cambioOk)
                 {
-                    MessageBox.Show("Contraseña cambiada correctamente.");
+                    MessageBox.Show("Contraseña cambiada correctamente.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    AbrirPantallaPrincipal(usuario);
-                    this.Hide();
+                    this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo cambiar la contraseña. Verifique que cumpla las políticas y que no haya sido usada antes.");
+                    MessageBox.Show("No se pudo cambiar la contraseña. Intente nuevamente.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error real al cambiar contraseña: " + ex.Message);
+                MessageBox.Show("Error al cambiar la contraseña: " + ex.Message);
             }
         }
 
@@ -93,33 +100,8 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
-        }
-        private void AbrirPantallaPrincipal(string usuario)
-        {
-            CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
-
-            int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
-
-            if (idRol == 2)
-            {
-                frmAdmin frm = new frmAdmin(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
-            else if (idRol == 1)
-            {
-                frmUsuario frm = new frmUsuario(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("No se pudo identificar el rol del usuario.");
-            }
         }
 
         private void frmContraseña_Load(object sender, EventArgs e)

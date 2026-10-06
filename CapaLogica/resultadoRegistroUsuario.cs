@@ -21,6 +21,7 @@
         ErrorBaseDatos,
         ErrorPasswordTemporal,
         ErrorEnvioMail,
-        CorreoInvalido
+        CorreoInvalido,
+        DniYaExiste
     }
 }

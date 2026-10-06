@@ -41,7 +41,7 @@ namespace CapaVista
                 if (string.IsNullOrWhiteSpace(correo))
                 {
                     MessageBox.Show("No se pudo obtener el correo del usuario.");
-                    this.Close();
+                    BeginInvoke(new Action(Close));
                     return;
                 }
 
@@ -56,14 +56,14 @@ namespace CapaVista
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo enviar el código de verificación.");
-                    this.Close();
+                    MessageBox.Show("No se pudo enviar el código de verificación. Verifique la conexión a internet.");
+                    BeginInvoke(new Action(Close));
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al generar o enviar el código: " + ex.Message);
-                this.Close();
+                BeginInvoke(new Action(Close));
             }
         }
 
@@ -94,7 +94,7 @@ namespace CapaVista
 
             frmrecuperar frm = new frmrecuperar(usuario);
             this.Hide();
-            frm.ShowDialog();
+            this.DialogResult = frm.ShowDialog();
             this.Close();
         }
 
@@ -202,9 +202,7 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            frmlogin frm = new frmlogin();
-            this.Hide();
-            frm.ShowDialog();
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 

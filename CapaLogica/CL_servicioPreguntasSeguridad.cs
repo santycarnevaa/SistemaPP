@@ -44,13 +44,14 @@ namespace CapaLogica
                 if (string.IsNullOrWhiteSpace(respuestaIngresada))
                     return false;
 
-                string respuestaNormalizada = respuestaIngresada.Trim().ToLower();
+                string hashNormalizado = encriptar.HashMetodo(normalizarRespuesta(respuestaIngresada));
 
-                string hashIngresado = encriptar.HashMetodo(respuestaNormalizada);
+                // las respuestas viejas se guardaban sin normalizar, por eso se acepta tambien el texto tal cual
+                string hashOriginal = encriptar.HashMetodo(respuestaIngresada);
 
                 string hashGuardado = preguntasUsuario[i].RespuestaHash;
 
-                if (hashIngresado != hashGuardado)
+                if (hashNormalizado != hashGuardado && hashOriginal != hashGuardado)
                     return false;
             }
 
@@ -65,15 +66,19 @@ namespace CapaLogica
             if (respuestas == null || respuestas.Count == 0)
                 return false;
 
+            if (respuestas.Values.Any(string.IsNullOrWhiteSpace))
+                return false;
+
+            // se reemplazan las respuestas anteriores por las nuevas
+            if (!preguntasDatos.EliminarRespuestasUsuario(idUsuario))
+                return false;
+
             foreach (var item in respuestas)
             {
                 int idPregunta = item.Key;
                 string respuesta = item.Value;
 
-                if (string.IsNullOrWhiteSpace(respuesta))
-                    return false;
-
-                string respuestaHash = encriptar.HashMetodo(respuesta);
+                string respuestaHash = encriptar.HashMetodo(normalizarRespuesta(respuesta));
 
                 bool guardado = preguntasDatos.InsertarRespuestaUsuario(
                     idUsuario,
@@ -86,6 +91,11 @@ namespace CapaLogica
             }
 
             return true;
+        }
+
+        private string normalizarRespuesta(string respuesta)
+        {
+            return respuesta.Trim().ToLower();
         }
 
         public List<PreguntaSeguridad> ObtenerPreguntasAleatoriasSegunConfiguracion()

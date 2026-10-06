@@ -25,6 +25,34 @@ namespace CapaVista
             InitializeComponent();
             this.usuario = usuario;
             this.Load += frmPregUsuario_Load;
+
+            TextBox[] cajas = { txtRespuesta1, txtRespuesta2, txtRespuesta3, txtRespuesta4, txtRespuesta5 };
+            foreach (TextBox caja in cajas)
+                caja.KeyDown += Respuesta_KeyDown;
+        }
+
+        // Las cajas son multilinea: sin esto, Enter agrega un renglon y el texto "desaparece".
+        // Enter pasa a la siguiente respuesta y en la ultima envia.
+        private void Respuesta_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            e.SuppressKeyPress = true;
+
+            TextBox[] cajas = { txtRespuesta1, txtRespuesta2, txtRespuesta3, txtRespuesta4, txtRespuesta5 };
+            int actual = Array.IndexOf(cajas, sender);
+
+            for (int i = actual + 1; i < cajas.Length; i++)
+            {
+                if (cajas[i].Visible)
+                {
+                    cajas[i].Focus();
+                    return;
+                }
+            }
+
+            btnEnviar.PerformClick();
         }
         private void frmPregUsuario_Load(object sender, EventArgs e)
         {
@@ -39,6 +67,24 @@ namespace CapaVista
             {
                 MessageBox.Show("No se pudo identificar el usuario.");
                 return;
+            }
+
+            if (preguntasSeleccionadas.Count == 0)
+            {
+                MessageBox.Show("No hay preguntas de seguridad cargadas.");
+                return;
+            }
+
+            TextBox[] cajas = { txtRespuesta1, txtRespuesta2, txtRespuesta3, txtRespuesta4, txtRespuesta5 };
+
+            for (int i = 0; i < preguntasSeleccionadas.Count && i < cajas.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(cajas[i].Text))
+                {
+                    MessageBox.Show("Debe responder todas las preguntas.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cajas[i].Focus();
+                    return;
+                }
             }
 
             Dictionary<int, string> respuestas = new Dictionary<int, string>();
@@ -70,23 +116,28 @@ namespace CapaVista
 
             if (esPrimerLogin)
             {
+                MessageBox.Show("Ahora elegí tu nueva contraseña.", "Primer ingreso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 frmContraseña frm = new frmContraseña(usuario);
                 this.Hide();
-                frm.ShowDialog();
+
+                if (frm.ShowDialog() == DialogResult.OK)
+                    this.DialogResult = DialogResult.OK;
+                else
+                    this.DialogResult = DialogResult.Cancel;
+
                 this.Close();
             }
             else
             {
-                AbrirPantallaPrincipal(usuario);
-                this.Hide();
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            AbrirPantallaPrincipal(usuario);
-            this.Hide();
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
         private void CargarPreguntasAleatorias()
@@ -96,6 +147,7 @@ namespace CapaVista
             if (preguntasSeleccionadas.Count == 0)
             {
                 MessageBox.Show("No hay preguntas de seguridad cargadas.");
+                BeginInvoke(new Action(Close));
                 return;
             }
 

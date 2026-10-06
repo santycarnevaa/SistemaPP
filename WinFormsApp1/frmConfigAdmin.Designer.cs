@@ -128,7 +128,7 @@
             txtCaracteres.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtCaracteres.ForeColor = Color.White;
             txtCaracteres.Location = new Point(183, 47);
-            txtCaracteres.MaxLength = 1;
+            txtCaracteres.MaxLength = 2;
             txtCaracteres.Multiline = true;
             txtCaracteres.Name = "txtCaracteres";
             txtCaracteres.Size = new Size(38, 23);
