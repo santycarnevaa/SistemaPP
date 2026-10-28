@@ -77,11 +77,12 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
+            BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(800, 450);
             Controls.Add(lblBienvenido);
             Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmUsuario";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Usuario";

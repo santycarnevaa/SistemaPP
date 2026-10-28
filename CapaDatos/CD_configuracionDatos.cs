@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
 using Entidades;
+using Microsoft.Data.SqlClient;
+using Utilidades;
 
 namespace CapaDatos
 {
@@ -25,6 +26,7 @@ namespace CapaDatos
                             minCaracteres = Convert.ToInt32(reader["MinCaracteres"]),
                             cantPreguntas = Convert.ToInt32(reader["CantPreguntas"]),
                             requiereMayusculas = Convert.ToBoolean(reader["RequiereMayusculas"]),
+                            requiereMinusculas = Convert.ToBoolean(reader["RequiereMinusculas"]),
                             requiereNumeros = Convert.ToBoolean(reader["RequiereNumeros"]),
                             requiereEspeciales = Convert.ToBoolean(reader["RequiereEspeciales"]),
                             requiere2FA = Convert.ToBoolean(reader["Requiere2FA"]),
@@ -40,8 +42,9 @@ namespace CapaDatos
                     return null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerConfiguracion", ex);
                 return null;
             }
         }
@@ -57,6 +60,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@MinCaracteres", config.minCaracteres);
                     cmd.Parameters.AddWithValue("@CantPreguntas", config.cantPreguntas);
                     cmd.Parameters.AddWithValue("@RequiereMayusculas", config.requiereMayusculas);
+                    cmd.Parameters.AddWithValue("@RequiereMinusculas", config.requiereMinusculas);
                     cmd.Parameters.AddWithValue("@RequiereNumeros", config.requiereNumeros);
                     cmd.Parameters.AddWithValue("@RequiereEspeciales", config.requiereEspeciales);
                     cmd.Parameters.AddWithValue("@Requiere2FA", config.requiere2FA);
@@ -84,8 +88,9 @@ namespace CapaDatos
 
                 return 8;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerMinimoCaracteresContra", ex);
                 return 8;
             }
         }
@@ -101,8 +106,9 @@ namespace CapaDatos
 
                 return 3;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CD_configuracionDatos.obtenerCantidadPreguntasSeguridad", ex);
                 return 3;
             }
         }

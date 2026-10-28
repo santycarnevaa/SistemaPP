@@ -28,9 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUserConfig));
             btnPreg = new Button();
             btnConfig = new Button();
             btnContraseña = new Button();
+            pictureBox2 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // btnPreg
@@ -58,7 +61,6 @@
             btnConfig.TabIndex = 4;
             btnConfig.Text = "Configuracion";
             btnConfig.UseVisualStyleBackColor = false;
-            //btnConfig.Click += btnConfig_Click;
             // 
             // btnContraseña
             // 
@@ -73,6 +75,18 @@
             btnContraseña.UseVisualStyleBackColor = false;
             btnContraseña.Click += btnContraseña_Click;
             // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(280, 12);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 6;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
+            // 
             // frmUserConfig
             // 
             AccessibleName = "z";
@@ -80,13 +94,15 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(315, 215);
+            Controls.Add(pictureBox2);
             Controls.Add(btnContraseña);
             Controls.Add(btnConfig);
             Controls.Add(btnPreg);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmUserConfig";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmConfig";
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
         }
 
@@ -95,5 +111,6 @@
         private Button btnPreg;
         private Button btnConfig;
         private Button btnContraseña;
+        private PictureBox pictureBox2;
     }
 }

@@ -1,13 +1,12 @@
-﻿using CapaDatos;
-using Entidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using CapaDatos;
+using Entidades;
 using Utilidades;
+
 namespace CapaLogica
 {
     public class CL_servicioUsuarios
@@ -17,25 +16,26 @@ namespace CapaLogica
         private CL_servicioMail servicioMail = new CL_servicioMail();
         private generarContra generarContra = new generarContra();
         private encriptar encriptar = new encriptar();
+
         public resultadoRegistroUsuario RegistrarUsuario(
-        string calle,
-        string numero,
-        string codigoPostal,
-        string depto,
-        string piso,
-        string provincia,
-        string partido,
-        string localidad,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
 
-        string nombre,
-        string apellido,
-        string dni,
-        string telefono,
-        DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-        string usuario,
-        string correo,
-        int idRol)
+            string usuario,
+            string correo,
+            int idRol)
         {
             if (string.IsNullOrWhiteSpace(usuario))
                 return resultadoRegistroUsuario.UsuarioVacio;
@@ -76,12 +76,21 @@ namespace CapaLogica
             if (idRol <= 0)
                 return resultadoRegistroUsuario.RolInvalido;
 
+            if (!DniValido(dni))
+                return resultadoRegistroUsuario.DniInvalido;
+
+            if (!TelefonoValido(telefono))
+                return resultadoRegistroUsuario.TelefonoInvalido;
+
             if (usuarioDatos.ExisteUsuario(usuario))
                 return resultadoRegistroUsuario.UsuarioYaExiste;
 
             if (usuarioDatos.ExisteCorreo(correo))
                 return resultadoRegistroUsuario.CorreoYaExiste;
-            //k
+
+            if (usuarioDatos.ExisteDNI(dni))
+                return resultadoRegistroUsuario.DniYaExiste;
+
             if (!CorreoValido(correo))
                 return resultadoRegistroUsuario.CorreoInvalido;
 
@@ -121,11 +130,6 @@ namespace CapaLogica
             if (idUsuario == -1)
                 return resultadoRegistroUsuario.ErrorBaseDatos;
 
-            //bool passwordOk = servicioContras.registrarContraTemporal(idUsuario, passwordTemporal);
-
-            //if (!passwordOk)
-            //    return resultadoRegistroUsuario.ErrorPasswordTemporal;
-
             bool mailOk = servicioMail.enviarContraTemporal(correo, passwordTemporal);
 
             if (!mailOk)
@@ -134,6 +138,7 @@ namespace CapaLogica
             return resultadoRegistroUsuario.Ok;
 
         }
+
         public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
             if (idUsuario <= 0)
@@ -143,25 +148,25 @@ namespace CapaLogica
         }
 
         public bool ActualizarDatosUsuario(
-    int idUsuario,
+            int idUsuario,
 
-    string nombre,
-    string apellido,
-    string dni,
-    string telefono,
-    DateTime fechaNacimiento,
+            string nombre,
+            string apellido,
+            string dni,
+            string telefono,
+            DateTime fechaNacimiento,
 
-    string calle,
-    string numero,
-    string codigoPostal,
-    string depto,
-    string piso,
-    string provincia,
-    string partido,
-    string localidad,
+            string calle,
+            string numero,
+            string codigoPostal,
+            string depto,
+            string piso,
+            string provincia,
+            string partido,
+            string localidad,
 
-    string correo,
-    int idRol)
+            string correo,
+            int idRol)
         {
             if (idUsuario <= 0)
                 return false;
@@ -172,10 +177,10 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(apellido))
                 return false;
 
-            if (string.IsNullOrWhiteSpace(dni))
+            if (!DniValido(dni))
                 return false;
 
-            if (string.IsNullOrWhiteSpace(telefono))
+            if (!TelefonoValido(telefono))
                 return false;
 
             if (string.IsNullOrWhiteSpace(calle))
@@ -198,6 +203,7 @@ namespace CapaLogica
 
             if (string.IsNullOrWhiteSpace(correo))
                 return false;
+
             if (!CorreoValido(correo))
                 return false;
 
@@ -257,6 +263,7 @@ namespace CapaLogica
 
             return usuarioDatos.ExisteCorreo(correo);
         }
+
         private bool CorreoValido(string correo)
         {
             if (string.IsNullOrWhiteSpace(correo))
@@ -266,6 +273,19 @@ namespace CapaLogica
 
             return Regex.IsMatch(correo, patron);
         }
+
+        // DNI argentino: 7 u 8 dígitos, sin puntos.
+        private bool DniValido(string dni)
+        {
+            return !string.IsNullOrWhiteSpace(dni) && Regex.IsMatch(dni.Trim(), @"^\d{7,8}$");
+        }
+
+        // Teléfono: solo dígitos, con o sin código de área (entre 8 y 15 dígitos).
+        private bool TelefonoValido(string telefono)
+        {
+            return !string.IsNullOrWhiteSpace(telefono) && Regex.IsMatch(telefono.Trim(), @"^\d{8,15}$");
+        }
+
         public string ObtenerMensajeRegistro(resultadoRegistroUsuario resultado)
         {
             switch (resultado)
@@ -318,6 +338,15 @@ namespace CapaLogica
                 case resultadoRegistroUsuario.CorreoYaExiste:
                     return "El correo ya está registrado.";
 
+                case resultadoRegistroUsuario.DniYaExiste:
+                    return "El DNI ya está registrado.";
+
+                case resultadoRegistroUsuario.DniInvalido:
+                    return "El DNI debe tener 7 u 8 dígitos numéricos.";
+
+                case resultadoRegistroUsuario.TelefonoInvalido:
+                    return "El teléfono debe tener entre 8 y 15 dígitos numéricos.";
+
                 case resultadoRegistroUsuario.ErrorBaseDatos:
                     return "No se pudo registrar el usuario en la base de datos.";
 
@@ -367,6 +396,11 @@ namespace CapaLogica
         public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
         {
             return usuarioDatos.BuscarUsuariosParaGrilla(texto, filtro);
+        }
+
+        public List<rol> ListarRoles()
+        {
+            return usuarioDatos.ListarRoles();
         }
     }
 }

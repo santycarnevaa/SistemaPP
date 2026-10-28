@@ -1,6 +1,6 @@
 ﻿namespace CapaVista
 {
-    partial class frmlogin
+    partial class frmLogin
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmlogin));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLogin));
             btnIniciar = new Button();
             txtUsuario = new TextBox();
             txtContraseña = new TextBox();
@@ -144,7 +144,7 @@
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             // 
-            // frmlogin
+            // frmLogin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -161,10 +161,10 @@
             ForeColor = SystemColors.ButtonShadow;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
-            Name = "frmlogin";
+            Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "login";
-            Load += frmlogin_Load;
+            Load += frmLogin_Load;
             ((System.ComponentModel.ISupportInitialize)pctOjo).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);

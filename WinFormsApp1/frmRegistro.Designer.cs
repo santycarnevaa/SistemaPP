@@ -661,7 +661,7 @@
             Controls.Add(pictureBox2);
             Controls.Add(groupBox1);
             ForeColor = Color.White;
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmRegistro";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
