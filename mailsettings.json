@@ -1,0 +1,8 @@
+{
+  "Host": "smtp.gmail.com",
+  "Port": 587,
+  "EnableSsl": true,
+  "From": "anamiaarce40@gmail.com",
+  "DisplayName": "Sistema",
+  "Password": "ooib tvrq lasa ayls"
+}

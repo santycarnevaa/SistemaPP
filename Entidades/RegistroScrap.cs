@@ -11,5 +11,9 @@ namespace Entidades
         public string Motivo { get; set; }
         public decimal Costo_Valorizado { get; set; }
         public DateTime Fecha { get; set; }
+
+        // Datos de lectura que arma SP_ObtenerScrap (no son columnas de la tabla).
+        public string Producto { get; set; }
+        public string Usuario { get; set; }
     }
 }

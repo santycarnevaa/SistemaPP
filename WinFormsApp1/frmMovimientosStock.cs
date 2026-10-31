@@ -53,6 +53,12 @@ namespace CapaVista
 
             dgvKardex.DataSource = null;
             dgvKardex.DataSource = servicioStock.ObtenerKardex(idProducto, dtpDesde.Value.Date, dtpHasta.Value.Date.AddDays(1).AddSeconds(-1));
+
+            foreach (string columna in new[] { "FK_Producto", "FK_Usuario" })
+            {
+                if (dgvKardex.Columns[columna] != null)
+                    dgvKardex.Columns[columna].Visible = false;
+            }
         }
 
         private void btnRegistrar_Click(object sender, EventArgs e)
@@ -69,14 +75,19 @@ namespace CapaVista
                 return;
             }
 
-            if (!int.TryParse(txtCantidad.Text, out int cantidad) || cantidad <= 0)
+            string tipoMovimiento = cmbTipoMovimiento.SelectedItem.ToString();
+            bool esAjuste = tipoMovimiento == "Ajuste";
+
+            // Ingreso y Egreso: entero > 0. Ajuste: entero distinto de 0, con signo (+ suma, - resta).
+            if (!int.TryParse(txtCantidad.Text, out int cantidad) || (esAjuste ? cantidad == 0 : cantidad <= 0))
             {
-                new MensajeError("La cantidad debe ser un número entero mayor a cero.").Mostrar();
+                new MensajeError(esAjuste
+                    ? "La cantidad del ajuste debe ser un número entero distinto de cero (negativo para restar)."
+                    : "La cantidad debe ser un número entero mayor a cero.").Mostrar();
                 return;
             }
 
             int idProducto = (int)cmbProducto.SelectedValue;
-            string tipoMovimiento = cmbTipoMovimiento.SelectedItem.ToString();
 
             var (exito, mensaje) = servicioStock.RegistrarMovimiento(idProducto, tipoMovimiento, cantidad, idUsuario);
 

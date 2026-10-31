@@ -100,7 +100,8 @@ namespace CapaDatos
             return productos;
         }
 
-        public int InsertarProducto(Producto p)
+        // El SP deja la fila de auditoría en la misma transacción que el alta.
+        public int InsertarProducto(Producto p, int idUsuario)
         {
             try
             {
@@ -121,6 +122,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Punto_Reposicion", p.Punto_Reposicion);
                     cmd.Parameters.AddWithValue("@Numero_Lote", string.IsNullOrWhiteSpace(p.Numero_Lote) ? DBNull.Value : p.Numero_Lote);
                     cmd.Parameters.AddWithValue("@Fecha_Vencimiento", p.Fecha_Vencimiento.HasValue ? p.Fecha_Vencimiento.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
 
                     object resultado = cmd.ExecuteScalar();
 
@@ -134,7 +136,7 @@ namespace CapaDatos
             }
         }
 
-        public bool ActualizarProducto(Producto p)
+        public bool ActualizarProducto(Producto p, int idUsuario)
         {
             try
             {
@@ -157,6 +159,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Numero_Lote", string.IsNullOrWhiteSpace(p.Numero_Lote) ? DBNull.Value : p.Numero_Lote);
                     cmd.Parameters.AddWithValue("@Fecha_Vencimiento", p.Fecha_Vencimiento.HasValue ? p.Fecha_Vencimiento.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Estado", p.Estado);
+                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
 
                     object resultado = cmd.ExecuteScalar();
 
@@ -170,7 +173,7 @@ namespace CapaDatos
             }
         }
 
-        public bool DarBajaProducto(int idCodigo)
+        public bool DarBajaProducto(int idCodigo, int idUsuario)
         {
             try
             {
@@ -179,6 +182,7 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand("dbo.SP_DarBajaProducto", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ID_Codigo", idCodigo);
+                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
 
                     object resultado = cmd.ExecuteScalar();
 
@@ -249,7 +253,8 @@ namespace CapaDatos
                             ID_Codigo = Convert.ToInt32(reader["ID_Codigo"]),
                             Nombre = reader["Nombre"].ToString(),
                             Numero_Lote = reader["Numero_Lote"] == DBNull.Value ? null : reader["Numero_Lote"].ToString(),
-                            Fecha_Vencimiento = reader["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["Fecha_Vencimiento"])
+                            Fecha_Vencimiento = reader["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["Fecha_Vencimiento"]),
+                            Stock_Actual = Convert.ToInt32(reader["Stock_Actual"])
                         });
                     }
 

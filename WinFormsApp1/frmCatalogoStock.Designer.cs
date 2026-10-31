@@ -24,11 +24,11 @@ namespace CapaVista
             btnReportes = new Button();
             btnVolver = new Button();
             SuspendLayout();
-            //
+            // 
             // btnProductos
-            //
+            // 
             btnProductos.BackColor = Color.FromArgb(8, 10, 13);
-            btnProductos.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnProductos.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnProductos.ForeColor = Color.White;
             btnProductos.Location = new Point(27, 30);
             btnProductos.Name = "btnProductos";
@@ -37,11 +37,11 @@ namespace CapaVista
             btnProductos.Text = "Productos";
             btnProductos.UseVisualStyleBackColor = false;
             btnProductos.Click += btnProductos_Click;
-            //
+            // 
             // btnMovimientos
-            //
+            // 
             btnMovimientos.BackColor = Color.FromArgb(8, 10, 13);
-            btnMovimientos.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnMovimientos.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnMovimientos.ForeColor = Color.White;
             btnMovimientos.Location = new Point(27, 85);
             btnMovimientos.Name = "btnMovimientos";
@@ -50,11 +50,11 @@ namespace CapaVista
             btnMovimientos.Text = "Movimientos de Stock";
             btnMovimientos.UseVisualStyleBackColor = false;
             btnMovimientos.Click += btnMovimientos_Click;
-            //
+            // 
             // btnScrap
-            //
+            // 
             btnScrap.BackColor = Color.FromArgb(8, 10, 13);
-            btnScrap.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnScrap.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnScrap.ForeColor = Color.White;
             btnScrap.Location = new Point(27, 140);
             btnScrap.Name = "btnScrap";
@@ -63,11 +63,11 @@ namespace CapaVista
             btnScrap.Text = "Scrap";
             btnScrap.UseVisualStyleBackColor = false;
             btnScrap.Click += btnScrap_Click;
-            //
+            // 
             // btnAuditoria
-            //
+            // 
             btnAuditoria.BackColor = Color.FromArgb(8, 10, 13);
-            btnAuditoria.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnAuditoria.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnAuditoria.ForeColor = Color.White;
             btnAuditoria.Location = new Point(27, 195);
             btnAuditoria.Name = "btnAuditoria";
@@ -76,11 +76,11 @@ namespace CapaVista
             btnAuditoria.Text = "Auditoría de Cambios";
             btnAuditoria.UseVisualStyleBackColor = false;
             btnAuditoria.Click += btnAuditoria_Click;
-            //
+            // 
             // btnReportes
-            //
+            // 
             btnReportes.BackColor = Color.FromArgb(8, 10, 13);
-            btnReportes.Font = new Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReportes.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnReportes.ForeColor = Color.White;
             btnReportes.Location = new Point(27, 250);
             btnReportes.Name = "btnReportes";
@@ -89,12 +89,12 @@ namespace CapaVista
             btnReportes.Text = "Reportes";
             btnReportes.UseVisualStyleBackColor = false;
             btnReportes.Click += btnReportes_Click;
-            //
+            // 
             // btnVolver
-            //
-            btnVolver.BackColor = Color.FromArgb(40, 40, 45);
+            // 
+            btnVolver.BackColor = Color.DimGray;
             btnVolver.FlatStyle = FlatStyle.Flat;
-            btnVolver.Font = new Font("Century Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnVolver.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnVolver.ForeColor = Color.White;
             btnVolver.Location = new Point(27, 310);
             btnVolver.Name = "btnVolver";
@@ -103,9 +103,9 @@ namespace CapaVista
             btnVolver.Text = "Volver";
             btnVolver.UseVisualStyleBackColor = false;
             btnVolver.Click += btnVolver_Click;
-            //
+            // 
             // frmCatalogoStock
-            //
+            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);

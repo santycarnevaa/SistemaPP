@@ -46,8 +46,15 @@ namespace CapaVista
             dgvScrap.DataSource = null;
             dgvScrap.DataSource = registros;
 
+            foreach (string columna in new[] { "FK_Producto", "FK_Usuario" })
+            {
+                if (dgvScrap.Columns[columna] != null)
+                    dgvScrap.Columns[columna].Visible = false;
+            }
+
+            int unidades = registros.Sum(r => r.Cantidad);
             decimal total = registros.Sum(r => r.Costo_Valorizado);
-            lblTotalPeriodo.Text = $"Costo valorizado total: {total:C}";
+            lblTotalPeriodo.Text = $"Total del período: {unidades} unidades — costo valorizado: {total:C}";
         }
 
         private void btnRegistrar_Click(object sender, EventArgs e)

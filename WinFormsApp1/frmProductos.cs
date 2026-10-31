@@ -10,6 +10,7 @@ namespace CapaVista
         private readonly string usuario;
         private int idUsuario;
         private int idSeleccionado = 0;
+        private string estadoSeleccionado = "Activo";
 
         private readonly CL_servicioProductos servicioProductos = new CL_servicioProductos();
         private readonly CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
@@ -69,6 +70,7 @@ namespace CapaVista
             Producto p = (Producto)dgvProductos.Rows[e.RowIndex].DataBoundItem;
 
             idSeleccionado = p.ID_Codigo;
+            estadoSeleccionado = p.Estado;
             cmbCategoria.SelectedValue = p.FK_Categoria;
             cmbMarca.SelectedValue = p.FK_Marca;
             txtNombre.Text = p.Nombre;
@@ -105,7 +107,7 @@ namespace CapaVista
                 return;
 
             producto.ID_Codigo = idSeleccionado;
-            producto.Estado = "Activo";
+            producto.Estado = idSeleccionado == 0 ? "Activo" : estadoSeleccionado;
 
             resultadoProducto resultado;
 
@@ -173,6 +175,7 @@ namespace CapaVista
         private void LimpiarCampos()
         {
             idSeleccionado = 0;
+            estadoSeleccionado = "Activo";
             cmbCategoria.SelectedIndex = -1;
             cmbMarca.SelectedIndex = -1;
             txtNombre.Text = "";

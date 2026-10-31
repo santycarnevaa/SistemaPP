@@ -4,6 +4,11 @@
 -- ============================================================================
 -- Este script crea las 4 tablas de este grupo y sus stored procedures.
 --
+-- ATENCIÓN: después de correr este script hay que correr Grupo1_Correcciones.sql,
+-- que reemplaza varios de los procedures de abajo (auditoría dentro de la
+-- transacción, kardex con saldo, reportes con nombres, etc.), agrega los
+-- triggers de protección y elimina SP_ActualizarStockActual.
+--
 -- IMPORTANTE: para que las FOREIGN KEY de más abajo funcionen, ya tienen que
 -- existir en la base:
 --   - dbo.Categorias (con PK IdCategoria)

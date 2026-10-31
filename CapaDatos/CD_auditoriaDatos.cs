@@ -35,7 +35,8 @@ namespace CapaDatos
                             Accion = reader["Accion"].ToString(),
                             FK_Usuario = Convert.ToInt32(reader["FK_Usuario"]),
                             Fecha_Hora = Convert.ToDateTime(reader["Fecha_Hora"]),
-                            Detalle_Cambio = reader["Detalle_Cambio"] == DBNull.Value ? null : reader["Detalle_Cambio"].ToString()
+                            Detalle_Cambio = reader["Detalle_Cambio"] == DBNull.Value ? null : reader["Detalle_Cambio"].ToString(),
+                            Usuario = reader["Usuario"].ToString()
                         });
                     }
 
@@ -49,6 +50,60 @@ namespace CapaDatos
             }
 
             return registros;
+        }
+
+        // Tablas que ya tienen al menos un registro de auditoría (de cualquier módulo),
+        // para armar el filtro sin tener que mantener una lista fija.
+        public List<string> ObtenerTablasAuditadas()
+        {
+            List<string> tablas = new List<string>();
+
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT DISTINCT Tabla_Afectada FROM dbo.Auditoria_Cambios ORDER BY Tabla_Afectada", conexion);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                        tablas.Add(reader["Tabla_Afectada"].ToString());
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_auditoriaDatos.ObtenerTablasAuditadas", ex);
+                return new List<string>();
+            }
+
+            return tablas;
+        }
+
+        public List<KeyValuePair<int, string>> ObtenerUsuarios()
+        {
+            List<KeyValuePair<int, string>> usuarios = new List<KeyValuePair<int, string>>();
+
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT IdUsuario, Usuario FROM dbo.Usuarios ORDER BY Usuario", conexion);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                        usuarios.Add(new KeyValuePair<int, string>(Convert.ToInt32(reader["IdUsuario"]), reader["Usuario"].ToString()));
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_auditoriaDatos.ObtenerUsuarios", ex);
+                return new List<KeyValuePair<int, string>>();
+            }
+
+            return usuarios;
         }
 
         public bool RegistrarCambio(string tablaAfectada, int idRegistroAfectado, string accion, int idUsuario, string detalle = null)

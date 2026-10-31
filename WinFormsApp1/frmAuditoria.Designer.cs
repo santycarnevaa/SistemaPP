@@ -19,6 +19,8 @@ namespace CapaVista
         {
             lblTabla = new Label();
             cmbTabla = new ComboBox();
+            lblUsuario = new Label();
+            cmbUsuario = new ComboBox();
             lblDesde = new Label();
             dtpDesde = new DateTimePicker();
             lblHasta = new Label();
@@ -42,17 +44,34 @@ namespace CapaVista
             // cmbTabla
             //
             cmbTabla.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbTabla.Items.AddRange(new object[] { "(Todas)", "Productos", "Movimientos_Stock", "Registros_Scrap" });
             cmbTabla.Location = new Point(12, 33);
             cmbTabla.Name = "cmbTabla";
-            cmbTabla.Size = new Size(220, 23);
+            cmbTabla.Size = new Size(190, 23);
             cmbTabla.TabIndex = 1;
+            //
+            // lblUsuario
+            //
+            lblUsuario.AutoSize = true;
+            lblUsuario.ForeColor = Color.White;
+            lblUsuario.Location = new Point(215, 15);
+            lblUsuario.Name = "lblUsuario";
+            lblUsuario.Size = new Size(47, 15);
+            lblUsuario.TabIndex = 9;
+            lblUsuario.Text = "Usuario";
+            //
+            // cmbUsuario
+            //
+            cmbUsuario.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbUsuario.Location = new Point(215, 33);
+            cmbUsuario.Name = "cmbUsuario";
+            cmbUsuario.Size = new Size(150, 23);
+            cmbUsuario.TabIndex = 10;
             //
             // lblDesde
             //
             lblDesde.AutoSize = true;
             lblDesde.ForeColor = Color.White;
-            lblDesde.Location = new Point(250, 15);
+            lblDesde.Location = new Point(380, 15);
             lblDesde.Name = "lblDesde";
             lblDesde.Size = new Size(39, 15);
             lblDesde.TabIndex = 2;
@@ -61,9 +80,9 @@ namespace CapaVista
             // dtpDesde
             //
             dtpDesde.Format = DateTimePickerFormat.Short;
-            dtpDesde.Location = new Point(250, 33);
+            dtpDesde.Location = new Point(380, 33);
             dtpDesde.Name = "dtpDesde";
-            dtpDesde.Size = new Size(160, 23);
+            dtpDesde.Size = new Size(130, 23);
             dtpDesde.TabIndex = 3;
             dtpDesde.Value = DateTime.Today.AddMonths(-1);
             //
@@ -71,7 +90,7 @@ namespace CapaVista
             //
             lblHasta.AutoSize = true;
             lblHasta.ForeColor = Color.White;
-            lblHasta.Location = new Point(430, 15);
+            lblHasta.Location = new Point(525, 15);
             lblHasta.Name = "lblHasta";
             lblHasta.Size = new Size(34, 15);
             lblHasta.TabIndex = 4;
@@ -80,9 +99,9 @@ namespace CapaVista
             // dtpHasta
             //
             dtpHasta.Format = DateTimePickerFormat.Short;
-            dtpHasta.Location = new Point(430, 33);
+            dtpHasta.Location = new Point(525, 33);
             dtpHasta.Name = "dtpHasta";
-            dtpHasta.Size = new Size(160, 23);
+            dtpHasta.Size = new Size(130, 23);
             dtpHasta.TabIndex = 5;
             //
             // btnFiltrar
@@ -90,9 +109,9 @@ namespace CapaVista
             btnFiltrar.BackColor = Color.RoyalBlue;
             btnFiltrar.FlatStyle = FlatStyle.Flat;
             btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(610, 31);
+            btnFiltrar.Location = new Point(675, 31);
             btnFiltrar.Name = "btnFiltrar";
-            btnFiltrar.Size = new Size(140, 27);
+            btnFiltrar.Size = new Size(120, 27);
             btnFiltrar.TabIndex = 6;
             btnFiltrar.Text = "Filtrar";
             btnFiltrar.UseVisualStyleBackColor = false;
@@ -130,6 +149,8 @@ namespace CapaVista
             ClientSize = new Size(984, 567);
             Controls.Add(lblTabla);
             Controls.Add(cmbTabla);
+            Controls.Add(lblUsuario);
+            Controls.Add(cmbUsuario);
             Controls.Add(lblDesde);
             Controls.Add(dtpDesde);
             Controls.Add(lblHasta);
@@ -150,6 +171,8 @@ namespace CapaVista
 
         private Label lblTabla;
         private ComboBox cmbTabla;
+        private Label lblUsuario;
+        private ComboBox cmbUsuario;
         private Label lblDesde;
         private DateTimePicker dtpDesde;
         private Label lblHasta;

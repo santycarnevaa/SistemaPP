@@ -1,0 +1,8 @@
+{
+  "Host": "smtp.gmail.com",
+  "Port": 587,
+  "EnableSsl": true,
+  "From": "tu_correo@gmail.com",
+  "DisplayName": "Sistema",
+  "Password": "xxxx xxxx xxxx xxxx"
+}

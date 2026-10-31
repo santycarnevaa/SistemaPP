@@ -8,6 +8,9 @@ namespace CapaLogica
         MarcaInvalida,
         PreciosInvalidos,
         OrdenStockInvalido,
+        StockCriticoNegativo,
+        PuntoReposicionInvalido,
+        UsuarioInvalido,
         ErrorBaseDatos
     }
 }

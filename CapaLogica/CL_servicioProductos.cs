@@ -35,46 +35,41 @@ namespace CapaLogica
 
         public resultadoProducto RegistrarProducto(Producto p, int idUsuario)
         {
-            resultadoProducto validacion = Validar(p);
+            resultadoProducto validacion = Validar(p, idUsuario);
 
             if (validacion != resultadoProducto.Ok)
                 return validacion;
 
-            int idNuevo = productosDatos.InsertarProducto(p);
+            // La fila de auditoría la escribe el propio SP, en la misma transacción.
+            int idNuevo = productosDatos.InsertarProducto(p, idUsuario);
 
             if (idNuevo <= 0)
                 return resultadoProducto.ErrorBaseDatos;
-
-            CD_auditoriaDatos.Registrar("Productos", idNuevo, "Alta", idUsuario, $"Alta de producto '{p.Nombre}'");
 
             return resultadoProducto.Ok;
         }
 
         public resultadoProducto ActualizarProducto(Producto p, int idUsuario)
         {
-            resultadoProducto validacion = Validar(p);
+            resultadoProducto validacion = Validar(p, idUsuario);
 
             if (validacion != resultadoProducto.Ok)
                 return validacion;
 
-            bool ok = productosDatos.ActualizarProducto(p);
+            bool ok = productosDatos.ActualizarProducto(p, idUsuario);
 
             if (!ok)
                 return resultadoProducto.ErrorBaseDatos;
-
-            CD_auditoriaDatos.Registrar("Productos", p.ID_Codigo, "Modificación", idUsuario, $"Modificación de producto '{p.Nombre}'");
 
             return resultadoProducto.Ok;
         }
 
         public bool DarBajaProducto(int idCodigo, int idUsuario)
         {
-            bool ok = productosDatos.DarBajaProducto(idCodigo);
+            if (idUsuario <= 0)
+                return false;
 
-            if (ok)
-                CD_auditoriaDatos.Registrar("Productos", idCodigo, "Baja", idUsuario, "Baja lógica de producto");
-
-            return ok;
+            return productosDatos.DarBajaProducto(idCodigo, idUsuario);
         }
 
         public List<Producto> ObtenerAlertaReposicion()
@@ -113,6 +108,12 @@ namespace CapaLogica
                     return "El precio de compra y el de venta deben ser mayores a cero.";
                 case resultadoProducto.OrdenStockInvalido:
                     return "Los niveles de stock deben cumplir: Crítico < Mínimo < Ideal < Máximo.";
+                case resultadoProducto.StockCriticoNegativo:
+                    return "El stock crítico no puede ser negativo.";
+                case resultadoProducto.PuntoReposicionInvalido:
+                    return "El punto de reposición debe estar entre 0 y el stock máximo.";
+                case resultadoProducto.UsuarioInvalido:
+                    return "No se pudo identificar al usuario que realiza la operación.";
                 case resultadoProducto.ErrorBaseDatos:
                     return "No se pudo guardar el producto en la base de datos.";
                 default:
@@ -120,8 +121,11 @@ namespace CapaLogica
             }
         }
 
-        private resultadoProducto Validar(Producto p)
+        private resultadoProducto Validar(Producto p, int idUsuario)
         {
+            if (idUsuario <= 0)
+                return resultadoProducto.UsuarioInvalido;
+
             if (string.IsNullOrWhiteSpace(p.Nombre))
                 return resultadoProducto.NombreVacio;
 
@@ -136,6 +140,12 @@ namespace CapaLogica
 
             if (!(p.Stock_Critico < p.Stock_Minimo && p.Stock_Minimo < p.Stock_Ideal && p.Stock_Ideal < p.Stock_Maximo))
                 return resultadoProducto.OrdenStockInvalido;
+
+            if (p.Stock_Critico < 0)
+                return resultadoProducto.StockCriticoNegativo;
+
+            if (p.Punto_Reposicion < 0 || p.Punto_Reposicion > p.Stock_Maximo)
+                return resultadoProducto.PuntoReposicionInvalido;
 
             return resultadoProducto.Ok;
         }

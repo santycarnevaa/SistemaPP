@@ -33,7 +33,9 @@ namespace CapaDatos
                             Cantidad = Convert.ToInt32(reader["Cantidad"]),
                             Motivo = reader["Motivo"].ToString(),
                             Costo_Valorizado = Convert.ToDecimal(reader["Costo_Valorizado"]),
-                            Fecha = Convert.ToDateTime(reader["Fecha"])
+                            Fecha = Convert.ToDateTime(reader["Fecha"]),
+                            Producto = reader["Producto"].ToString(),
+                            Usuario = reader["Usuario"].ToString()
                         });
                     }
 

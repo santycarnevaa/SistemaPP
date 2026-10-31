@@ -15,14 +15,20 @@ namespace CapaLogica
         // (por ejemplo, que el stock quedaría negativo).
         public (bool Exito, string Mensaje) RegistrarMovimiento(int idProducto, string tipoMovimiento, int cantidad, int idUsuario, string tipoDocOrigen = null, int? idDocOrigen = null)
         {
+            if (idUsuario <= 0)
+                return (false, "No se pudo identificar al usuario que realiza la operación.");
+
             if (idProducto <= 0)
                 return (false, "Debe seleccionar un producto.");
 
             if (!TiposMovimientoValidos.Contains(tipoMovimiento))
                 return (false, "Tipo de movimiento inválido.");
 
-            if (cantidad <= 0)
-                return (false, "La cantidad debe ser mayor a cero.");
+            // Ingreso y Egreso llevan cantidad positiva; el Ajuste lleva signo (+ suma, - resta).
+            if (tipoMovimiento == "Ajuste" ? cantidad == 0 : cantidad <= 0)
+                return (false, tipoMovimiento == "Ajuste"
+                    ? "La cantidad del ajuste no puede ser cero (usá un signo negativo para restar)."
+                    : "La cantidad debe ser mayor a cero.");
 
             MovimientoStock movimiento = new MovimientoStock
             {
@@ -34,19 +40,20 @@ namespace CapaLogica
                 ID_Documento_Origen = idDocOrigen
             };
 
-            string error = movimientosDatos.InsertarMovimiento(movimiento, out int stockResultante);
+            // El SP actualiza el stock y deja la auditoría en la misma transacción.
+            string error = movimientosDatos.InsertarMovimiento(movimiento, out _);
 
             if (error != null)
                 return (false, error);
-
-            CD_auditoriaDatos.Registrar("Movimientos_Stock", idProducto, "Alta",
-                idUsuario, $"{tipoMovimiento} de {cantidad} unidades — stock resultante: {stockResultante}");
 
             return (true, null);
         }
 
         public (bool Exito, string Mensaje) RegistrarScrap(int idProducto, int cantidad, string motivo, int idUsuario)
         {
+            if (idUsuario <= 0)
+                return (false, "No se pudo identificar al usuario que realiza la operación.");
+
             if (idProducto <= 0)
                 return (false, "Debe seleccionar un producto.");
 
@@ -64,13 +71,10 @@ namespace CapaLogica
                 Motivo = motivo
             };
 
-            string error = scrapDatos.InsertarScrap(scrap, out int stockResultante, out decimal costoValorizado);
+            string error = scrapDatos.InsertarScrap(scrap, out _, out _);
 
             if (error != null)
                 return (false, error);
-
-            CD_auditoriaDatos.Registrar("Registros_Scrap", idProducto, "Alta",
-                idUsuario, $"Scrap de {cantidad} unidades por '{motivo}' — costo valorizado: {costoValorizado:C}");
 
             return (true, null);
         }

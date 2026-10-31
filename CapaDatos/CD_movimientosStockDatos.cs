@@ -35,7 +35,10 @@ namespace CapaDatos
                             Cantidad = Convert.ToInt32(reader["Cantidad"]),
                             Fecha = Convert.ToDateTime(reader["Fecha"]),
                             Tipo_Documento_Origen = reader["Tipo_Documento_Origen"] == DBNull.Value ? null : reader["Tipo_Documento_Origen"].ToString(),
-                            ID_Documento_Origen = reader["ID_Documento_Origen"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["ID_Documento_Origen"])
+                            ID_Documento_Origen = reader["ID_Documento_Origen"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["ID_Documento_Origen"]),
+                            Producto = reader["Producto"].ToString(),
+                            Usuario = reader["Usuario"].ToString(),
+                            Stock_Posterior = Convert.ToInt32(reader["Stock_Posterior"])
                         });
                     }
 
