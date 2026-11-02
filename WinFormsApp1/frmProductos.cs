@@ -15,10 +15,36 @@ namespace CapaVista
         private readonly CL_servicioProductos servicioProductos = new CL_servicioProductos();
         private readonly CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
-        public frmProductos(string usuario)
+        private readonly bool soloLectura;
+
+        public frmProductos(string usuario, bool soloLectura = false)
         {
             InitializeComponent();
             this.usuario = usuario;
+            this.soloLectura = soloLectura;
+
+            if (soloLectura)
+                ActivarModoConsulta();
+        }
+
+        // Para el usuario común: se pueden ver los productos y su stock, pero no tocarlos.
+        private void ActivarModoConsulta()
+        {
+            Text = "Productos (solo consulta)";
+
+            btnNuevo.Visible = false;
+            btnGuardar.Visible = false;
+            btnBaja.Visible = false;
+            btnCancelar.Visible = false;
+
+            cmbCategoria.Enabled = false;
+            cmbMarca.Enabled = false;
+            chkTieneVencimiento.Enabled = false;
+            dtpFechaVencimiento.Enabled = false;
+
+            foreach (TextBox caja in new[] { txtNombre, txtPrecioCompra, txtPrecioVenta, txtStockCritico,
+                                             txtStockMinimo, txtStockIdeal, txtStockMaximo, txtPuntoReposicion, txtNumeroLote })
+                caja.ReadOnly = true;
         }
 
         private void frmProductos_Load(object sender, EventArgs e)
@@ -47,8 +73,14 @@ namespace CapaVista
             cmbMarca.SelectedIndex = -1;
         }
 
+        // Mientras se rearma la grilla no hay que cargar el formulario con la fila que el
+        // control selecciona solo: si no, un "alta" terminaría pisando el primer producto.
+        private bool cargandoGrilla;
+
         private void ActualizarGrilla()
         {
+            cargandoGrilla = true;
+
             dgvProductos.DataSource = null;
             dgvProductos.DataSource = servicioProductos.ObtenerProductos();
 
@@ -60,14 +92,40 @@ namespace CapaVista
 
             if (dgvProductos.Columns["Habilitado"] != null)
                 dgvProductos.Columns["Habilitado"].Visible = false;
+
+            DeseleccionarGrilla();
+            cargandoGrilla = false;
         }
 
+        private void DeseleccionarGrilla()
+        {
+            dgvProductos.ClearSelection();
+            dgvProductos.CurrentCell = null;
+        }
+
+        // RowEnter cubre la navegación con teclado; CellClick cubre volver a hacer clic en la
+        // fila que ya era la actual (en ese caso RowEnter no se dispara).
         private void dgvProductos_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || dgvProductos.Rows[e.RowIndex].DataBoundItem == null)
+            // El control también selecciona filas solo (al mostrarse el formulario): solo vale
+            // lo que hace el usuario, y eso implica que la grilla tiene el foco.
+            if (cargandoGrilla || !dgvProductos.Focused)
                 return;
 
-            Producto p = (Producto)dgvProductos.Rows[e.RowIndex].DataBoundItem;
+            MostrarProducto(e.RowIndex);
+        }
+
+        private void dgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            MostrarProducto(e.RowIndex);
+        }
+
+        private void MostrarProducto(int rowIndex)
+        {
+            if (rowIndex < 0 || dgvProductos.Rows[rowIndex].DataBoundItem == null)
+                return;
+
+            Producto p = (Producto)dgvProductos.Rows[rowIndex].DataBoundItem;
 
             idSeleccionado = p.ID_Codigo;
             estadoSeleccionado = p.Estado;
@@ -97,8 +155,7 @@ namespace CapaVista
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
-            if (dgvProductos.Rows.Count > 0)
-                dgvProductos.ClearSelection();
+            DeseleccionarGrilla();
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -164,7 +221,7 @@ namespace CapaVista
 
         private void chkTieneVencimiento_CheckedChanged(object sender, EventArgs e)
         {
-            dtpFechaVencimiento.Enabled = chkTieneVencimiento.Checked;
+            dtpFechaVencimiento.Enabled = chkTieneVencimiento.Checked && !soloLectura;
         }
 
         private void btnVolver_Click(object sender, EventArgs e)
@@ -190,6 +247,52 @@ namespace CapaVista
             chkTieneVencimiento.Checked = false;
         }
 
+        // Dice exactamente qué campo falta o está mal y lo deja con el foco.
+        private bool LeerEntero(TextBox caja, string nombreCampo, out int valor)
+        {
+            valor = 0;
+
+            if (string.IsNullOrWhiteSpace(caja.Text))
+            {
+                new MensajeError($"Completá el campo \"{nombreCampo}\".").Mostrar();
+                caja.Focus();
+                return false;
+            }
+
+            if (!int.TryParse(caja.Text, System.Globalization.NumberStyles.Integer, null, out valor))
+            {
+                new MensajeError($"\"{nombreCampo}\" debe ser un número entero, sin decimales ni separadores.").Mostrar();
+                caja.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Sin separador de miles: con cultura es-AR "100.50" se leería como 10050, así que se rechaza.
+        private bool LeerPrecio(TextBox caja, string nombreCampo, out decimal valor)
+        {
+            valor = 0;
+
+            if (string.IsNullOrWhiteSpace(caja.Text))
+            {
+                new MensajeError($"Completá el campo \"{nombreCampo}\".").Mostrar();
+                caja.Focus();
+                return false;
+            }
+
+            if (!decimal.TryParse(caja.Text, System.Globalization.NumberStyles.AllowDecimalPoint | System.Globalization.NumberStyles.AllowLeadingWhite | System.Globalization.NumberStyles.AllowTrailingWhite,
+                    System.Globalization.CultureInfo.CurrentCulture, out valor))
+            {
+                string separador = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                new MensajeError($"\"{nombreCampo}\" debe ser un número (decimales con \"{separador}\", sin separador de miles).").Mostrar();
+                caja.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
         private bool ValidarCamposNumericos(out Producto producto)
         {
             producto = null;
@@ -206,22 +309,16 @@ namespace CapaVista
                 return false;
             }
 
-            if (!decimal.TryParse(txtPrecioCompra.Text, out decimal precioCompra) ||
-                !decimal.TryParse(txtPrecioVenta.Text, out decimal precioVenta))
-            {
-                new MensajeError("Los precios deben ser valores numéricos.").Mostrar();
+            if (!LeerPrecio(txtPrecioCompra, "Precio de compra", out decimal precioCompra) ||
+                !LeerPrecio(txtPrecioVenta, "Precio de venta", out decimal precioVenta))
                 return false;
-            }
 
-            if (!int.TryParse(txtStockCritico.Text, out int stockCritico) ||
-                !int.TryParse(txtStockMinimo.Text, out int stockMinimo) ||
-                !int.TryParse(txtStockIdeal.Text, out int stockIdeal) ||
-                !int.TryParse(txtStockMaximo.Text, out int stockMaximo) ||
-                !int.TryParse(txtPuntoReposicion.Text, out int puntoReposicion))
-            {
-                new MensajeError("Los niveles de stock deben ser números enteros.").Mostrar();
+            if (!LeerEntero(txtStockCritico, "Stock crítico", out int stockCritico) ||
+                !LeerEntero(txtStockMinimo, "Stock mínimo", out int stockMinimo) ||
+                !LeerEntero(txtStockIdeal, "Stock ideal", out int stockIdeal) ||
+                !LeerEntero(txtStockMaximo, "Stock máximo", out int stockMaximo) ||
+                !LeerEntero(txtPuntoReposicion, "Punto de reposición", out int puntoReposicion))
                 return false;
-            }
 
             producto = new Producto
             {

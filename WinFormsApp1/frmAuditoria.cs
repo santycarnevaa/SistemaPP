@@ -12,9 +12,16 @@ namespace CapaVista
 
         private readonly CL_servicioAuditoria servicioAuditoria = new CL_servicioAuditoria();
 
-        public frmAuditoria()
+        // Si viene un usuario, la pantalla queda fija en su propia actividad ("Mi actividad").
+        private readonly int? usuarioFijo;
+
+        public frmAuditoria(int? idUsuarioFijo = null)
         {
             InitializeComponent();
+            usuarioFijo = idUsuarioFijo;
+
+            if (usuarioFijo.HasValue)
+                Text = "Mi actividad";
         }
 
         private void frmAuditoria_Load(object sender, EventArgs e)
@@ -40,6 +47,12 @@ namespace CapaVista
             cmbUsuario.DataSource = usuarios;
             cmbUsuario.DisplayMember = "Value";
             cmbUsuario.ValueMember = "Key";
+
+            if (usuarioFijo.HasValue)
+            {
+                cmbUsuario.SelectedValue = usuarioFijo.Value;
+                cmbUsuario.Enabled = false;
+            }
         }
 
         private void btnFiltrar_Click(object sender, EventArgs e)

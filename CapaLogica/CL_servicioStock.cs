@@ -7,6 +7,7 @@ namespace CapaLogica
     {
         private CD_movimientosStockDatos movimientosDatos = new CD_movimientosStockDatos();
         private CD_scrapDatos scrapDatos = new CD_scrapDatos();
+        private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
         private static readonly string[] TiposMovimientoValidos = { "Ingreso", "Egreso", "Ajuste" };
 
@@ -23,6 +24,10 @@ namespace CapaLogica
 
             if (!TiposMovimientoValidos.Contains(tipoMovimiento))
                 return (false, "Tipo de movimiento inválido.");
+
+            // Corregir el stock a mano (Ajuste) es una tarea del administrador.
+            if (tipoMovimiento == "Ajuste" && !servicioUsuarios.EsAdministradorPorId(idUsuario))
+                return (false, "Solo un administrador puede registrar ajustes de stock.");
 
             // Ingreso y Egreso llevan cantidad positiva; el Ajuste lleva signo (+ suma, - resta).
             if (tipoMovimiento == "Ajuste" ? cantidad == 0 : cantidad <= 0)

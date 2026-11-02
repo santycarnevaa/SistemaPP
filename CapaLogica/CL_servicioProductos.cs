@@ -7,6 +7,7 @@ namespace CapaLogica
     public class CL_servicioProductos
     {
         private CD_productosDatos productosDatos = new CD_productosDatos();
+        private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
         public List<Producto> ObtenerProductos(bool soloHabilitados = true)
         {
@@ -35,6 +36,9 @@ namespace CapaLogica
 
         public resultadoProducto RegistrarProducto(Producto p, int idUsuario)
         {
+            if (!servicioUsuarios.EsAdministradorPorId(idUsuario))
+                return resultadoProducto.SinPermiso;
+
             resultadoProducto validacion = Validar(p, idUsuario);
 
             if (validacion != resultadoProducto.Ok)
@@ -51,6 +55,9 @@ namespace CapaLogica
 
         public resultadoProducto ActualizarProducto(Producto p, int idUsuario)
         {
+            if (!servicioUsuarios.EsAdministradorPorId(idUsuario))
+                return resultadoProducto.SinPermiso;
+
             resultadoProducto validacion = Validar(p, idUsuario);
 
             if (validacion != resultadoProducto.Ok)
@@ -66,7 +73,7 @@ namespace CapaLogica
 
         public bool DarBajaProducto(int idCodigo, int idUsuario)
         {
-            if (idUsuario <= 0)
+            if (!servicioUsuarios.EsAdministradorPorId(idUsuario))
                 return false;
 
             return productosDatos.DarBajaProducto(idCodigo, idUsuario);
@@ -114,6 +121,8 @@ namespace CapaLogica
                     return "El punto de reposición debe estar entre 0 y el stock máximo.";
                 case resultadoProducto.UsuarioInvalido:
                     return "No se pudo identificar al usuario que realiza la operación.";
+                case resultadoProducto.SinPermiso:
+                    return "Tu usuario no tiene permiso para modificar el catálogo de productos.";
                 case resultadoProducto.ErrorBaseDatos:
                     return "No se pudo guardar el producto en la base de datos.";
                 default:

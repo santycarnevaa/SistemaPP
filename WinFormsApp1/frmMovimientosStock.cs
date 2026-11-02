@@ -23,9 +23,15 @@ namespace CapaVista
         {
             idUsuario = servicioUsuarios.ObtenerIdUsuario(usuario);
 
-            cmbProducto.DataSource = servicioProductos.ObtenerProductos();
+            // Los ajustes manuales de stock son solo del administrador (también se valida en Lógica).
+            if (!servicioUsuarios.EsAdministradorPorId(idUsuario))
+                cmbTipoMovimiento.Items.Remove("Ajuste");
+
+            // DisplayMember/ValueMember van ANTES del DataSource: si no, al asignarlos el combo
+            // dispara SelectedIndexChanged con un Producto como SelectedValue y la pantalla se cierra.
             cmbProducto.DisplayMember = "Nombre";
             cmbProducto.ValueMember = "ID_Codigo";
+            cmbProducto.DataSource = servicioProductos.ObtenerProductos();
             cmbProducto.SelectedIndex = -1;
 
             dtpHasta.Value = DateTime.Today;
@@ -43,13 +49,11 @@ namespace CapaVista
 
         private void CargarKardex()
         {
-            if (cmbProducto.SelectedValue == null)
+            if (cmbProducto.SelectedValue is not int idProducto)
             {
                 dgvKardex.DataSource = null;
                 return;
             }
-
-            int idProducto = (int)cmbProducto.SelectedValue;
 
             dgvKardex.DataSource = null;
             dgvKardex.DataSource = servicioStock.ObtenerKardex(idProducto, dtpDesde.Value.Date, dtpHasta.Value.Date.AddDays(1).AddSeconds(-1));

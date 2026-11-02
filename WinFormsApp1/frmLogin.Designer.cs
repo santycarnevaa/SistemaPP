@@ -148,6 +148,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AcceptButton = btnIniciar;
             BackColor = Color.FromArgb(8, 10, 13);
             ClientSize = new Size(433, 230);
             Controls.Add(pictureBox2);

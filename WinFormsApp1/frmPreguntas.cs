@@ -26,8 +26,6 @@ namespace CapaVista
             InitializeComponent();
             this.usuario = usuario;
             this.origen = origen;
-
-            this.Load += frmPreguntas_Load;
         }
 
         private void frmPreguntas_Load(object sender, EventArgs e)
@@ -46,6 +44,7 @@ namespace CapaVista
             if (config == null)
             {
                 new MensajeError("No se pudo obtener la configuración del sistema.").Mostrar();
+                BeginInvoke(new Action(Close));
                 return;
             }
 
@@ -55,7 +54,10 @@ namespace CapaVista
 
             if (preguntasUsuario.Count < cantidadPreguntas)
             {
+                // Sin preguntas respondidas no hay nada que validar: se avisa y se cierra la
+                // pantalla en vez de dejarla vacía y sin salida.
                 new MensajeError("El usuario no tiene suficientes preguntas de seguridad registradas.").Mostrar();
+                BeginInvoke(new Action(Close));
                 return;
             }
 

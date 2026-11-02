@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUserConfig));
             btnPreg = new Button();
-            btnConfig = new Button();
             btnContraseña = new Button();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -48,20 +47,7 @@
             btnPreg.Text = "Personaliza tus preguntas";
             btnPreg.UseVisualStyleBackColor = false;
             btnPreg.Click += button1_Click;
-            // 
-            // btnConfig
-            // 
-            btnConfig.BackColor = Color.FromArgb(8, 10, 13);
-            btnConfig.Enabled = false;
-            btnConfig.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnConfig.ForeColor = Color.White;
-            btnConfig.Location = new Point(27, 140);
-            btnConfig.Name = "btnConfig";
-            btnConfig.Size = new Size(258, 37);
-            btnConfig.TabIndex = 4;
-            btnConfig.Text = "Configuracion";
-            btnConfig.UseVisualStyleBackColor = false;
-            // 
+            //
             // btnContraseña
             // 
             btnContraseña.BackColor = Color.FromArgb(8, 10, 13);
@@ -93,10 +79,9 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(315, 215);
+            ClientSize = new Size(315, 145);
             Controls.Add(pictureBox2);
             Controls.Add(btnContraseña);
-            Controls.Add(btnConfig);
             Controls.Add(btnPreg);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "frmUserConfig";
@@ -109,7 +94,6 @@
         #endregion
 
         private Button btnPreg;
-        private Button btnConfig;
         private Button btnContraseña;
         private PictureBox pictureBox2;
     }

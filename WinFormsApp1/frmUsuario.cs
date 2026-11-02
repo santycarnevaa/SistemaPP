@@ -41,6 +41,13 @@ namespace CapaVista
             this.Close();
         }
 
+        // El usuario común entra al mismo menú que el administrador, pero con permisos acotados
+        // (consulta de productos, movimientos sin ajustes, scrap, reportes y su propia actividad).
+        private void btnCatalogoStock_Click(object sender, EventArgs e)
+        {
+            new frmCatalogoStock(usuario).ShowDialog();
+        }
+
         private void lblBienvenido_Click(object sender, EventArgs e)
         {
 

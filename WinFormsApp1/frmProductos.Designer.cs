@@ -61,6 +61,7 @@ namespace CapaVista
             dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvProductos.MultiSelect = false;
             dgvProductos.RowEnter += dgvProductos_RowEnter;
+            dgvProductos.CellClick += dgvProductos_CellClick;
             //
             // lblCategoria
             //

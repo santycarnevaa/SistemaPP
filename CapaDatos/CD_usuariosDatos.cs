@@ -418,6 +418,28 @@ namespace CapaDatos
             }
         }
 
+        // Rol de un usuario activo a partir de su ID (0 si no existe o está inactivo).
+        public int ObtenerRolPorId(int idUsuario)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT IdRol FROM dbo.Usuarios WHERE IdUsuario = @IdUsuario AND Activo = 1", conexion);
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    return resultado == null || resultado == DBNull.Value ? 0 : Convert.ToInt32(resultado);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.ObtenerRolPorId", ex);
+                return 0;
+            }
+        }
+
         public int ObtenerRolUsuario(string usuario)
         {
             try

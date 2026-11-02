@@ -11,6 +11,7 @@ namespace CapaLogica
         StockCriticoNegativo,
         PuntoReposicionInvalido,
         UsuarioInvalido,
+        SinPermiso,
         ErrorBaseDatos
     }
 }

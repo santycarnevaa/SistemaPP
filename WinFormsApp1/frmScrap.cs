@@ -24,9 +24,9 @@ namespace CapaVista
         {
             idUsuario = servicioUsuarios.ObtenerIdUsuario(usuario);
 
-            cmbProducto.DataSource = servicioProductos.ObtenerProductos();
             cmbProducto.DisplayMember = "Nombre";
             cmbProducto.ValueMember = "ID_Codigo";
+            cmbProducto.DataSource = servicioProductos.ObtenerProductos();
             cmbProducto.SelectedIndex = -1;
 
             dtpHasta.Value = DateTime.Today;

@@ -385,6 +385,15 @@ namespace CapaLogica
             return usuarioDatos.ObtenerUsuariosGrilla();
         }
 
+        // Los permisos del catálogo se validan en la capa lógica (no solo ocultando botones).
+        public bool EsAdministradorPorId(int idUsuario)
+        {
+            if (idUsuario <= 0)
+                return false;
+
+            return usuarioDatos.ObtenerRolPorId(idUsuario) == 2;
+        }
+
         public int ObtenerRolUsuario(string usuario)
         {
             if (string.IsNullOrWhiteSpace(usuario))

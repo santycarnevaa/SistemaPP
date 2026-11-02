@@ -32,6 +32,7 @@
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             lblBienvenido = new Label();
+            btnCatalogoStock = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -71,7 +72,21 @@
             lblBienvenido.TabIndex = 84;
             lblBienvenido.Text = "...";
             lblBienvenido.Click += lblBienvenido_Click;
-            // 
+            //
+            // btnCatalogoStock
+            //
+            btnCatalogoStock.BackColor = Color.FromArgb(8, 10, 13);
+            btnCatalogoStock.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCatalogoStock.ForeColor = Color.White;
+            btnCatalogoStock.Anchor = AnchorStyles.None;
+            btnCatalogoStock.Location = new Point(271, 206);
+            btnCatalogoStock.Name = "btnCatalogoStock";
+            btnCatalogoStock.Size = new Size(258, 37);
+            btnCatalogoStock.TabIndex = 85;
+            btnCatalogoStock.Text = "Catálogo y Stock";
+            btnCatalogoStock.UseVisualStyleBackColor = false;
+            btnCatalogoStock.Click += btnCatalogoStock_Click;
+            //
             // frmUsuario
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -79,6 +94,7 @@
             BackColor = Color.FromArgb(8, 10, 13);
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCatalogoStock);
             Controls.Add(lblBienvenido);
             Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
@@ -98,5 +114,6 @@
         private PictureBox pictureBox2;
         private PictureBox pictureBox1;
         private Label lblBienvenido;
+        private Button btnCatalogoStock;
     }
 }
