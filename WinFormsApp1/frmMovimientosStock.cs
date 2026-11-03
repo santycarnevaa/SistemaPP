@@ -63,6 +63,8 @@ namespace CapaVista
                 if (dgvKardex.Columns[columna] != null)
                     dgvKardex.Columns[columna].Visible = false;
             }
+
+            AjusteVentana.AjustarAGrilla(this, dgvKardex);
         }
 
         private void btnRegistrar_Click(object sender, EventArgs e)
@@ -107,7 +109,7 @@ namespace CapaVista
             }
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

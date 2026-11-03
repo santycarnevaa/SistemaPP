@@ -17,6 +17,7 @@ namespace CapaVista
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMovimientosStock));
             lblProducto = new Label();
             cmbProducto = new ComboBox();
             lblTipoMovimiento = new Label();
@@ -30,8 +31,9 @@ namespace CapaVista
             lblHasta = new Label();
             dtpHasta = new DateTimePicker();
             btnFiltrar = new Button();
-            btnVolver = new Button();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvKardex).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             //
             // lblProducto
@@ -162,19 +164,19 @@ namespace CapaVista
             btnFiltrar.Text = "Filtrar Kardex";
             btnFiltrar.UseVisualStyleBackColor = false;
             btnFiltrar.Click += btnFiltrar_Click;
-            //
-            // btnVolver
-            //
-            btnVolver.BackColor = Color.FromArgb(40, 40, 45);
-            btnVolver.FlatStyle = FlatStyle.Flat;
-            btnVolver.ForeColor = Color.White;
-            btnVolver.Location = new Point(12, 520);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(140, 30);
-            btnVolver.TabIndex = 13;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = false;
-            btnVolver.Click += btnVolver_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(849, 6);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 13;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             //
             // frmMovimientosStock
             //
@@ -195,12 +197,15 @@ namespace CapaVista
             Controls.Add(dtpHasta);
             Controls.Add(btnFiltrar);
             Controls.Add(dgvKardex);
-            Controls.Add(btnVolver);
+            Controls.Add(pictureBox2);
             Name = "frmMovimientosStock";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Movimientos de Stock";
             Load += frmMovimientosStock_Load;
             ((System.ComponentModel.ISupportInitialize)dgvKardex).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -220,6 +225,6 @@ namespace CapaVista
         private Label lblHasta;
         private DateTimePicker dtpHasta;
         private Button btnFiltrar;
-        private Button btnVolver;
+        private PictureBox pictureBox2;
     }
 }

@@ -58,7 +58,7 @@ namespace CapaVista
             new frmReportesProductos().ShowDialog();
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

@@ -181,6 +181,7 @@
             Controls.Add(txt2);
             Controls.Add(txt1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmCodigo";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmCodigo";

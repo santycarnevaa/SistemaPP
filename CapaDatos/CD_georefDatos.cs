@@ -210,9 +210,7 @@ namespace CapaDatos
             string codigoPostal,
             string depto,
             string piso,
-            string provincia,
-            string partido,
-            string localidad,
+            string idLocalidad,
             decimal? latitud,
             decimal? longitud,
             string direccionOriginal,
@@ -230,9 +228,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
                     cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
                     cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", string.IsNullOrWhiteSpace(partido) ? DBNull.Value : partido);
-                    cmd.Parameters.AddWithValue("@Localidad", string.IsNullOrWhiteSpace(localidad) ? DBNull.Value : localidad);
+                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
                     cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
@@ -257,9 +253,7 @@ namespace CapaDatos
             string codigoPostal,
             string depto,
             string piso,
-            string provincia,
-            string partido,
-            string localidad,
+            string idLocalidad,
             decimal? latitud,
             decimal? longitud,
             string direccionOriginal,
@@ -278,9 +272,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
                     cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
                     cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", string.IsNullOrWhiteSpace(partido) ? DBNull.Value : partido);
-                    cmd.Parameters.AddWithValue("@Localidad", string.IsNullOrWhiteSpace(localidad) ? DBNull.Value : localidad);
+                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
                     cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);

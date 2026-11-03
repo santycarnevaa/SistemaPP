@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CapaLogica;
+using Entidades;
 
 namespace CapaVista
 {
@@ -23,6 +25,19 @@ namespace CapaVista
         private void frmUsuario_Load(object sender, EventArgs e)
         {
             lblBienvenido.Text = "Bienvenido, " + usuario;
+
+            // el catálogo y stock es solo para el rol ventas, el resto de los roles ve el panel sin ese botón
+            btnCatalogoStock.Visible = EsRolVentas();
+        }
+
+        private bool EsRolVentas()
+        {
+            CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
+
+            int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
+            rol rolDelUsuario = servicioUsuarios.ListarRoles().FirstOrDefault(r => r.IdRol == idRol);
+
+            return rolDelUsuario != null && rolDelUsuario.NombreRol.Equals("ventas", StringComparison.OrdinalIgnoreCase);
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

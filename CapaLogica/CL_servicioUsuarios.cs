@@ -26,6 +26,7 @@ namespace CapaLogica
             string provincia,
             string partido,
             string localidad,
+            string idLocalidad,
 
             string nombre,
             string apellido,
@@ -39,6 +40,9 @@ namespace CapaLogica
         {
             if (string.IsNullOrWhiteSpace(usuario))
                 return resultadoRegistroUsuario.UsuarioVacio;
+
+            // sin espacios al principio ni al final, porque la contraseña se guarda mezclada con el usuario
+            usuario = usuario.Trim();
 
             if (string.IsNullOrWhiteSpace(nombre))
                 return resultadoRegistroUsuario.NombreVacio;
@@ -70,7 +74,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(partido))
                 return resultadoRegistroUsuario.PartidoVacio;
 
-            if (string.IsNullOrWhiteSpace(localidad))
+            if (string.IsNullOrWhiteSpace(localidad) || string.IsNullOrWhiteSpace(idLocalidad))
                 return resultadoRegistroUsuario.LocalidadVacia;
 
             if (idRol <= 0)
@@ -112,9 +116,7 @@ namespace CapaLogica
                 codigoPostal,
                 depto,
                 piso,
-                provincia,
-                partido,
-                localidad,
+                idLocalidad,
                 null,
                 null,
                 direccionOriginal,
@@ -164,6 +166,7 @@ namespace CapaLogica
             string provincia,
             string partido,
             string localidad,
+            string idLocalidad,
 
             string correo,
             int idRol)
@@ -198,7 +201,7 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(partido))
                 return false;
 
-            if (string.IsNullOrWhiteSpace(localidad))
+            if (string.IsNullOrWhiteSpace(localidad) || string.IsNullOrWhiteSpace(idLocalidad))
                 return false;
 
             if (string.IsNullOrWhiteSpace(correo))
@@ -227,9 +230,7 @@ namespace CapaLogica
                 codigoPostal,
                 depto,
                 piso,
-                provincia,
-                partido,
-                localidad,
+                idLocalidad,
                 null,
                 null,
                 direccionOriginal,
@@ -410,6 +411,51 @@ namespace CapaLogica
         public List<rol> ListarRoles()
         {
             return usuarioDatos.ListarRoles();
+        }
+
+        // Devuelve un mensaje de error, o texto vacío si el rol se agregó bien.
+        public string AgregarRol(string nombreRol)
+        {
+            if (string.IsNullOrWhiteSpace(nombreRol))
+                return "Ingrese el nombre del rol.";
+
+            nombreRol = nombreRol.Trim();
+
+            if (nombreRol.Length > 50)
+                return "El nombre del rol no puede tener más de 50 caracteres.";
+
+            if (usuarioDatos.ListarRoles().Any(r => r.NombreRol.Equals(nombreRol, StringComparison.OrdinalIgnoreCase)))
+                return "Ya existe un rol con ese nombre.";
+
+            if (!usuarioDatos.AgregarRol(nombreRol))
+                return "No se pudo agregar el rol. Intente nuevamente.";
+
+            return "";
+        }
+
+        // Igual que AgregarRol: devuelve un mensaje de error, o texto vacío si salió bien.
+        public string ModificarRol(int idRol, string nombreRol)
+        {
+            if (idRol <= 0)
+                return "Seleccione un rol.";
+
+            if (string.IsNullOrWhiteSpace(nombreRol))
+                return "Ingrese el nombre del rol.";
+
+            nombreRol = nombreRol.Trim();
+
+            if (nombreRol.Length > 50)
+                return "El nombre del rol no puede tener más de 50 caracteres.";
+
+            return usuarioDatos.ModificarRol(idRol, nombreRol);
+        }
+
+        public string EliminarRol(int idRol)
+        {
+            if (idRol <= 0)
+                return "Seleccione un rol.";
+
+            return usuarioDatos.EliminarRol(idRol);
         }
     }
 }

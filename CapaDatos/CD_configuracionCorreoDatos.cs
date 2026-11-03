@@ -41,8 +41,9 @@ namespace CapaDatos
 
                 cmd.Parameters.AddWithValue("@CorreoRemitente", correoRemitente);
                 cmd.Parameters.AddWithValue("@DiasRotacion", diasRotacion);
-                cmd.Parameters.AddWithValue("@PasswordCifrada", (object)passwordCifrada ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IV", (object)iv ?? DBNull.Value);
+                // Con tipo explícito: un null sin tipo viaja como texto y SQL Server no lo convierte a binario
+                cmd.Parameters.Add("@PasswordCifrada", SqlDbType.VarBinary, -1).Value = (object)passwordCifrada ?? DBNull.Value;
+                cmd.Parameters.Add("@IV", SqlDbType.VarBinary, 16).Value = (object)iv ?? DBNull.Value;
 
                 cmd.ExecuteNonQuery();
                 return true;

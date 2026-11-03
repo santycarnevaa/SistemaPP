@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Scripts de base de datos viejos (el actual es BaseDeDatos.sql)
+SistemaUsuariosDB.sql
+Grupo1_CatalogoStockAuditoria.sql
+backup_base_anterior/
+
+# Credenciales del correo (contraseña de aplicación): no se suben al repositorio
+mailsettings.json

@@ -94,6 +94,7 @@
             Controls.Add(label9);
             Controls.Add(pnlPreguntas);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmPregUsuario";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Configuracion";

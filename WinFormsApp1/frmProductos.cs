@@ -93,6 +93,8 @@ namespace CapaVista
             if (dgvProductos.Columns["Habilitado"] != null)
                 dgvProductos.Columns["Habilitado"].Visible = false;
 
+            AjusteVentana.AjustarAGrilla(this, dgvProductos);
+
             DeseleccionarGrilla();
             cargandoGrilla = false;
         }
@@ -224,7 +226,7 @@ namespace CapaVista
             dtpFechaVencimiento.Enabled = chkTieneVencimiento.Checked && !soloLectura;
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

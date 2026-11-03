@@ -80,9 +80,11 @@ namespace CapaVista
 
             if (dgvAuditoria.Columns["FK_Usuario"] != null)
                 dgvAuditoria.Columns["FK_Usuario"].Visible = false;
+
+            AjusteVentana.AjustarAGrilla(this, dgvAuditoria);
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

@@ -212,6 +212,7 @@
             Font = new Font("Segoe UI", 12F);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Margin = new Padding(4);
             Name = "frmPreguntas";
             ShowIcon = false;

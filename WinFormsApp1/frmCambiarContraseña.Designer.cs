@@ -172,6 +172,7 @@
             Controls.Add(btnSiguiente);
             Controls.Add(lblRequisitos);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmCambiarContraseña";
             StartPosition = FormStartPosition.CenterScreen;
             Load += frmCambiarContraseña_Load;

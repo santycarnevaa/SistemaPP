@@ -111,6 +111,7 @@
             Controls.Add(btnPreg);
             Controls.Add(btnCatalogoStock);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmAdmin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConfigAdmin";

@@ -110,26 +110,7 @@ namespace CapaVista
 
         private void AbrirPantallaPrincipal(string usuario)
         {
-            int idRol = servicioUsuarios.ObtenerRolUsuario(usuario);
-
-            if (idRol == 2)
-            {
-                frmAdmin frm = new frmAdmin(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
-            else if (idRol == 1)
-            {
-                frmUsuario frm = new frmUsuario(usuario);
-                this.Hide();
-                frm.ShowDialog();
-                this.Close();
-            }
-            else
-            {
-                new MensajeError("No se pudo identificar el rol del usuario.").Mostrar();
-            }
+            Navegacion.AbrirPantallaPrincipal(this, usuario);
         }
 
         private void txt1_TextChanged(object sender, EventArgs e)

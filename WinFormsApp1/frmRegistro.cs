@@ -358,6 +358,7 @@ namespace CapaVista
                     cmbProvincia.Text,
                     cmbPartido.Text,
                     cmbLocalidad.Text,
+                    Convert.ToString(cmbLocalidad.SelectedValue),
                     txtNombre.Text,
                     txtApellido.Text,
                     txtDni.Text,
@@ -368,12 +369,16 @@ namespace CapaVista
                     idRol
                 );
 
-                new MensajeInformacion(servicioUsuarios.ObtenerMensajeRegistro(resultado)).Mostrar();
-
                 if (resultado == resultadoRegistroUsuario.Ok)
                 {
+                    // si llegó acá, el correo con la contraseña temporal ya se envió
+                    new MensajeExito("Usuario registrado correctamente.\nEl correo se ha enviado correctamente a " + txtCorreo.Text.Trim() + ".").Mostrar();
                     actualizargrilla();
                     VolverEstadoNormal();
+                }
+                else
+                {
+                    new MensajeInformacion(servicioUsuarios.ObtenerMensajeRegistro(resultado)).Mostrar();
                 }
             }
             catch (Exception ex)
@@ -389,7 +394,7 @@ namespace CapaVista
 
             DgvPrueba.DataSource = servicioUsuarios.BuscarUsuariosParaGrilla(texto, filtro);
 
-            configurargrilla(DgvPrueba);
+            FormatearGrilla();
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
@@ -477,6 +482,7 @@ namespace CapaVista
                     cmbProvincia.Text,
                     cmbPartido.Text,
                     cmbLocalidad.Text,
+                    Convert.ToString(cmbLocalidad.SelectedValue),
                     txtCorreo.Text,
                     idRol
                 );
@@ -651,46 +657,54 @@ namespace CapaVista
                 DgvPrueba.DataSource = null;
                 DgvPrueba.DataSource = servicioUsuarios.ObtenerUsuariosParaGrilla();
 
-                configurargrilla(DgvPrueba);
-
-                OcultarColumna("IdPersona");
-                OcultarColumna("IdDireccion");
-                OcultarColumna("IdRol");
-                OcultarColumna("Activo");
-                OcultarColumna("FechaNacimiento");
-                OcultarColumna("CodigoPostal");
-                OcultarColumna("Depto");
-                OcultarColumna("Piso");
-                OcultarColumna("Provincia");
-                OcultarColumna("Partido");
-                OcultarColumna("Localidad");
-
-                CambiarTitulo("IdUsuario", "ID");
-                CambiarTitulo("Telefono", "Teléfono");
-                CambiarTitulo("Estado", "Estado");
-
-                if (DgvPrueba.Columns["IdUsuario"] != null)
-                    DgvPrueba.Columns["IdUsuario"].DisplayIndex = 0;
-
-                if (DgvPrueba.Columns["Nombre"] != null)
-                    DgvPrueba.Columns["Nombre"].DisplayIndex = 1;
-
-                if (DgvPrueba.Columns["DNI"] != null)
-                    DgvPrueba.Columns["DNI"].DisplayIndex = 2;
-
-                if (DgvPrueba.Columns["Usuario"] != null)
-                    DgvPrueba.Columns["Usuario"].DisplayIndex = 3;
-
-                if (DgvPrueba.Columns["Correo"] != null)
-                    DgvPrueba.Columns["Correo"].DisplayIndex = 4;
-
-                if (DgvPrueba.Columns["Estado"] != null)
-                    DgvPrueba.Columns["Estado"].DisplayIndex = 5;
+                FormatearGrilla();
             }
             catch (Exception ex)
             {
                 new MensajeError("Error al cargar usuarios en la grilla: " + ex.Message).Mostrar();
             }
+        }
+
+        // Estilo, columnas ocultas y orden de la grilla, para usarlo tanto al listar como al buscar
+        private void FormatearGrilla()
+        {
+            configurargrilla(DgvPrueba);
+
+            OcultarColumna("IdPersona");
+            OcultarColumna("IdDireccion");
+            OcultarColumna("IdRol");
+            OcultarColumna("Activo");
+            OcultarColumna("FechaNacimiento");
+            OcultarColumna("CodigoPostal");
+            OcultarColumna("Depto");
+            OcultarColumna("Piso");
+            OcultarColumna("Provincia");
+            OcultarColumna("Partido");
+            OcultarColumna("Localidad");
+
+            CambiarTitulo("IdUsuario", "ID");
+            CambiarTitulo("Telefono", "Teléfono");
+            CambiarTitulo("Estado", "Estado");
+
+            if (DgvPrueba.Columns["IdUsuario"] != null)
+                DgvPrueba.Columns["IdUsuario"].DisplayIndex = 0;
+
+            if (DgvPrueba.Columns["Nombre"] != null)
+                DgvPrueba.Columns["Nombre"].DisplayIndex = 1;
+
+            if (DgvPrueba.Columns["DNI"] != null)
+                DgvPrueba.Columns["DNI"].DisplayIndex = 2;
+
+            if (DgvPrueba.Columns["Usuario"] != null)
+                DgvPrueba.Columns["Usuario"].DisplayIndex = 3;
+
+            if (DgvPrueba.Columns["Correo"] != null)
+                DgvPrueba.Columns["Correo"].DisplayIndex = 4;
+
+            if (DgvPrueba.Columns["Estado"] != null)
+                DgvPrueba.Columns["Estado"].DisplayIndex = 5;
+
+            AjusteVentana.AjustarAGrilla(this, DgvPrueba);
         }
 
         private void OcultarColumna(string nombre)

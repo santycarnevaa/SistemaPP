@@ -662,6 +662,7 @@
             Controls.Add(groupBox1);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmRegistro";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";

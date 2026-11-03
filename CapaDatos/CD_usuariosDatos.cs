@@ -19,9 +19,7 @@ namespace CapaDatos
             string codigoPostal,
             string depto,
             string piso,
-            string provincia,
-            string partido,
-            string localidad,
+            string idLocalidad,
             decimal? latitud,
             decimal? longitud,
             string direccionOriginal,
@@ -51,9 +49,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
                     cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
                     cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", string.IsNullOrWhiteSpace(partido) ? DBNull.Value : partido);
-                    cmd.Parameters.AddWithValue("@Localidad", string.IsNullOrWhiteSpace(localidad) ? DBNull.Value : localidad);
+                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
                     cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
@@ -124,6 +120,84 @@ namespace CapaDatos
             }
 
             return roles;
+        }
+
+        public bool AgregarRol(string nombreRol)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SP_AgregarRol", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@NombreRol", nombreRol);
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    return resultado != null && Convert.ToInt32(resultado) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.AgregarRol", ex);
+                return false;
+            }
+        }
+
+        // Devuelve texto vacío si salió bien, o el mensaje que dio la base (por ejemplo, "ya existe un rol")
+        public string ModificarRol(int idRol, string nombreRol)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SP_ModificarRol", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdRol", idRol);
+                    cmd.Parameters.AddWithValue("@NombreRol", nombreRol);
+
+                    cmd.ExecuteNonQuery();
+                    return "";
+                }
+            }
+            catch (SqlException ex) when (ex.Number == 50000)
+            {
+                // 50000 es el número de los errores que lanza el procedimiento con RAISERROR
+                return ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.ModificarRol", ex);
+                return "No se pudo modificar el rol. Intente nuevamente.";
+            }
+        }
+
+        public string EliminarRol(int idRol)
+        {
+            try
+            {
+                using (SqlConnection conexion = conectar())
+                {
+                    SqlCommand cmd = new SqlCommand("SP_EliminarRol", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdRol", idRol);
+
+                    cmd.ExecuteNonQuery();
+                    return "";
+                }
+            }
+            catch (SqlException ex) when (ex.Number == 50000)
+            {
+                return ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Logger.RegistrarError("CD_usuariosDatos.EliminarRol", ex);
+                return "No se pudo dar de baja el rol. Intente nuevamente.";
+            }
         }
 
         public int BuscarUsuarioPorNombreUser(string usuario)
@@ -446,7 +520,7 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerRolUsuario", conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerRolPorUsuario", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@Usuario", usuario);
@@ -476,9 +550,7 @@ namespace CapaDatos
             string codigoPostal,
             string depto,
             string piso,
-            string provincia,
-            string partido,
-            string localidad,
+            string idLocalidad,
             string direccionOriginal,
             string direccionNormalizada,
             DateTime fechaNacimiento,
@@ -505,9 +577,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
                     cmd.Parameters.AddWithValue("@Depto", depto);
                     cmd.Parameters.AddWithValue("@Piso", piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", partido);
-                    cmd.Parameters.AddWithValue("@Localidad", localidad);
+                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
                     cmd.Parameters.AddWithValue("@Latitud", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Longitud", DBNull.Value);
                     cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
@@ -570,9 +640,7 @@ namespace CapaDatos
             string codigoPostal,
             string depto,
             string piso,
-            string provincia,
-            string partido,
-            string localidad,
+            string idLocalidad,
             decimal? latitud,
             decimal? longitud,
             string direccionOriginal,
@@ -601,9 +669,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
                     cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
                     cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@Provincia", provincia);
-                    cmd.Parameters.AddWithValue("@Partido", partido);
-                    cmd.Parameters.AddWithValue("@Localidad", localidad);
+                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
                     cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
@@ -655,7 +721,7 @@ namespace CapaDatos
             {
                 using (SqlConnection conexion = conectar())
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUsuariosGrilla", conexion);
+                    SqlCommand cmd = new SqlCommand("dbo.SP_BuscarUsuariosGrilla", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlDataReader reader = cmd.ExecuteReader();

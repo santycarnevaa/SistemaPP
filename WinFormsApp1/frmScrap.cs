@@ -52,6 +52,8 @@ namespace CapaVista
                     dgvScrap.Columns[columna].Visible = false;
             }
 
+            AjusteVentana.AjustarAGrilla(this, dgvScrap);
+
             int unidades = registros.Sum(r => r.Cantidad);
             decimal total = registros.Sum(r => r.Costo_Valorizado);
             lblTotalPeriodo.Text = $"Total del período: {unidades} unidades — costo valorizado: {total:C}";
@@ -94,7 +96,7 @@ namespace CapaVista
             }
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

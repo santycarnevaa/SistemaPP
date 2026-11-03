@@ -84,6 +84,7 @@
             Controls.Add(btnContraseña);
             Controls.Add(btnPreg);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmUserConfig";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmConfig";

@@ -17,6 +17,7 @@ namespace CapaVista
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmScrap));
             lblProducto = new Label();
             cmbProducto = new ComboBox();
             lblCantidad = new Label();
@@ -31,8 +32,9 @@ namespace CapaVista
             dtpHasta = new DateTimePicker();
             btnFiltrar = new Button();
             lblTotalPeriodo = new Label();
-            btnVolver = new Button();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvScrap).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             //
             // lblProducto
@@ -170,19 +172,19 @@ namespace CapaVista
             lblTotalPeriodo.Size = new Size(170, 15);
             lblTotalPeriodo.TabIndex = 13;
             lblTotalPeriodo.Text = "Costo valorizado total: $0";
-            //
-            // btnVolver
-            //
-            btnVolver.BackColor = Color.FromArgb(40, 40, 45);
-            btnVolver.FlatStyle = FlatStyle.Flat;
-            btnVolver.ForeColor = Color.White;
-            btnVolver.Location = new Point(12, 505);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(140, 30);
-            btnVolver.TabIndex = 14;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = false;
-            btnVolver.Click += btnVolver_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(847, 6);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 14;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             //
             // frmScrap
             //
@@ -204,12 +206,15 @@ namespace CapaVista
             Controls.Add(btnFiltrar);
             Controls.Add(lblTotalPeriodo);
             Controls.Add(dgvScrap);
-            Controls.Add(btnVolver);
+            Controls.Add(pictureBox2);
             Name = "frmScrap";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Registros de Scrap";
             Load += frmScrap_Load;
             ((System.ComponentModel.ISupportInitialize)dgvScrap).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -230,6 +235,6 @@ namespace CapaVista
         private DateTimePicker dtpHasta;
         private Button btnFiltrar;
         private Label lblTotalPeriodo;
-        private Button btnVolver;
+        private PictureBox pictureBox2;
     }
 }

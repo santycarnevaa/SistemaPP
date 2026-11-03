@@ -17,6 +17,8 @@ namespace CapaLogica
             if (string.IsNullOrWhiteSpace(password))
                 return resultadoLogin.PasswordVacia;
 
+            usuario = usuario.Trim();
+
             bool existeUsuario = usuarioDatos.ExisteUsuario(usuario);
 
             if (!existeUsuario)

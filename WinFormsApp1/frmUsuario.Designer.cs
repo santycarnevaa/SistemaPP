@@ -99,6 +99,7 @@
             Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmUsuario";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Usuario";

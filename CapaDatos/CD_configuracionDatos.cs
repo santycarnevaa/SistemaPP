@@ -67,7 +67,14 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@NoRepetirPasswords", config.noRepetirPasswords);
                     cmd.Parameters.AddWithValue("@ValidarDatosPersonales", config.validarDatosPersonales);
 
-                    cmd.ExecuteNonQuery();
+                    // Si algo sale mal adentro del procedimiento, no lanza una excepción sino que
+                    // devuelve una fila con una columna "Error": hay que leerla para no dar por guardado algo que falló
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() && reader.GetName(0) == "Error")
+                            throw new Exception(reader[0].ToString());
+                    }
+
                     return true;
                 }
             }

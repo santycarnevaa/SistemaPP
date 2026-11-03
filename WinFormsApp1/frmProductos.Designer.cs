@@ -17,6 +17,7 @@ namespace CapaVista
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProductos));
             dgvProductos = new DataGridView();
             lblCategoria = new Label();
             cmbCategoria = new ComboBox();
@@ -46,8 +47,9 @@ namespace CapaVista
             btnGuardar = new Button();
             btnBaja = new Button();
             btnCancelar = new Button();
-            btnVolver = new Button();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             //
             // dgvProductos
@@ -323,19 +325,19 @@ namespace CapaVista
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
             btnCancelar.Click += btnCancelar_Click;
-            //
-            // btnVolver
-            //
-            btnVolver.BackColor = Color.FromArgb(40, 40, 45);
-            btnVolver.FlatStyle = FlatStyle.Flat;
-            btnVolver.ForeColor = Color.White;
-            btnVolver.Location = new Point(12, 560);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(140, 30);
-            btnVolver.TabIndex = 29;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = false;
-            btnVolver.Click += btnVolver_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(941, 6);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 29;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             //
             // frmProductos
             //
@@ -372,12 +374,15 @@ namespace CapaVista
             Controls.Add(btnGuardar);
             Controls.Add(btnBaja);
             Controls.Add(btnCancelar);
-            Controls.Add(btnVolver);
+            Controls.Add(pictureBox2);
             Name = "frmProductos";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Productos";
             Load += frmProductos_Load;
             ((System.ComponentModel.ISupportInitialize)dgvProductos).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -413,6 +418,6 @@ namespace CapaVista
         private Button btnGuardar;
         private Button btnBaja;
         private Button btnCancelar;
-        private Button btnVolver;
+        private PictureBox pictureBox2;
     }
 }

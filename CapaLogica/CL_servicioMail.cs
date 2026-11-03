@@ -118,7 +118,7 @@ namespace CapaLogica
 
             <div class='code-box'>
                 <div class='code-label'>Tu contraseña temporal</div>
-                <div class='code-value'>{passwordTemporal}</div>
+                <div class='code-value'>{System.Net.WebUtility.HtmlEncode(passwordTemporal)}</div>
             </div>
 
             <p class='text'>
@@ -141,8 +141,9 @@ namespace CapaLogica
                 enviarMail.sendMail(correo, asunto, mensaje, from, passwordAplicacion);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CL_servicioMail.enviar", ex);
                 return false;
             }
         }
@@ -281,8 +282,9 @@ namespace CapaLogica
                 enviarMail.sendMail(correo, asunto, mensaje, from, passwordAplicacion);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.RegistrarError("CL_servicioMail.enviar", ex);
                 return false;
             }
         }

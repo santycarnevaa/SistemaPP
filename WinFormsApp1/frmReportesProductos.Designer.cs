@@ -17,15 +17,17 @@ namespace CapaVista
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReportesProductos));
             lblReporte = new Label();
             cmbReporte = new ComboBox();
             lblDias = new Label();
             numDias = new NumericUpDown();
             btnGenerar = new Button();
             dgvReporte = new DataGridView();
-            btnVolver = new Button();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)numDias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvReporte).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             //
             // lblReporte
@@ -97,19 +99,19 @@ namespace CapaVista
             dgvReporte.AllowUserToAddRows = false;
             dgvReporte.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReporte.MultiSelect = false;
-            //
-            // btnVolver
-            //
-            btnVolver.BackColor = Color.FromArgb(40, 40, 45);
-            btnVolver.FlatStyle = FlatStyle.Flat;
-            btnVolver.ForeColor = Color.White;
-            btnVolver.Location = new Point(12, 520);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(140, 30);
-            btnVolver.TabIndex = 6;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = false;
-            btnVolver.Click += btnVolver_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.ImageLocation = "";
+            pictureBox2.Location = new Point(749, 6);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 6;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             //
             // frmReportesProductos
             //
@@ -123,13 +125,16 @@ namespace CapaVista
             Controls.Add(numDias);
             Controls.Add(btnGenerar);
             Controls.Add(dgvReporte);
-            Controls.Add(btnVolver);
+            Controls.Add(pictureBox2);
             Name = "frmReportesProductos";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Reportes de Productos";
             Load += frmReportesProductos_Load;
             ((System.ComponentModel.ISupportInitialize)numDias).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvReporte).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -142,6 +147,6 @@ namespace CapaVista
         private NumericUpDown numDias;
         private Button btnGenerar;
         private DataGridView dgvReporte;
-        private Button btnVolver;
+        private PictureBox pictureBox2;
     }
 }
