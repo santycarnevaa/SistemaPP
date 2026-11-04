@@ -30,7 +30,6 @@ namespace CapaVista
             dtpDesde = new DateTimePicker();
             lblHasta = new Label();
             dtpHasta = new DateTimePicker();
-            btnFiltrar = new Button();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvKardex).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -151,19 +150,6 @@ namespace CapaVista
             dtpHasta.Name = "dtpHasta";
             dtpHasta.Size = new Size(160, 23);
             dtpHasta.TabIndex = 11;
-            //
-            // btnFiltrar
-            //
-            btnFiltrar.BackColor = Color.RoyalBlue;
-            btnFiltrar.FlatStyle = FlatStyle.Flat;
-            btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(360, 86);
-            btnFiltrar.Name = "btnFiltrar";
-            btnFiltrar.Size = new Size(140, 27);
-            btnFiltrar.TabIndex = 12;
-            btnFiltrar.Text = "Filtrar Kardex";
-            btnFiltrar.UseVisualStyleBackColor = false;
-            btnFiltrar.Click += btnFiltrar_Click;
             // 
             // pictureBox2
             // 
@@ -195,7 +181,6 @@ namespace CapaVista
             Controls.Add(dtpDesde);
             Controls.Add(lblHasta);
             Controls.Add(dtpHasta);
-            Controls.Add(btnFiltrar);
             Controls.Add(dgvKardex);
             Controls.Add(pictureBox2);
             Name = "frmMovimientosStock";
@@ -224,7 +209,6 @@ namespace CapaVista
         private DateTimePicker dtpDesde;
         private Label lblHasta;
         private DateTimePicker dtpHasta;
-        private Button btnFiltrar;
         private PictureBox pictureBox2;
     }
 }

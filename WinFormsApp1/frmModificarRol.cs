@@ -12,6 +12,7 @@ namespace CapaVista
         public frmModificarRol(int idRol, string nombreActual)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.idRol = idRol;
             txtNombre.Text = nombreActual;
         }
@@ -22,7 +23,7 @@ namespace CapaVista
 
             if (mensaje != "")
             {
-                new MensajeError(mensaje).Mostrar();
+                ErrorCampo.Mostrar(txtNombre, mensaje);
                 return;
             }
 

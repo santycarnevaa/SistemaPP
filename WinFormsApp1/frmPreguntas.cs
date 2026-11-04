@@ -24,6 +24,7 @@ namespace CapaVista
         public frmPreguntas(string usuario, OrigenVerificacion origen = OrigenVerificacion.RecuperarContrasena)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.usuario = usuario;
             this.origen = origen;
         }
@@ -178,7 +179,9 @@ namespace CapaVista
                 txtPreg4.Text = "";
                 txtPreg5.Text = "";
 
-                new MensajeError("Una o más respuestas son incorrectas.").Mostrar();
+                // el mensaje va abajo de la ultima pregunta que se esta mostrando
+                TextBox ultima = new[] { txtPreg5, txtPreg4, txtPreg3, txtPreg2, txtPreg1 }.First(t => t.Visible);
+                ErrorCampo.Mostrar(ultima, "Una o más respuestas son incorrectas.");
             }
         }
 

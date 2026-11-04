@@ -87,7 +87,7 @@
             MaximizeBox = false;
             Name = "frmUserConfig";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "frmConfig";
+            Text = "Mi configuración";
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
         }

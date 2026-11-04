@@ -368,6 +368,7 @@
             dgvRoles.AllowUserToAddRows = false;
             dgvRoles.AllowUserToDeleteRows = false;
             dgvRoles.AllowUserToResizeRows = false;
+            dgvRoles.AllowUserToResizeColumns = false;
             dgvRoles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRoles.BackgroundColor = Color.FromArgb(8, 10, 13);
             dgvRoles.Location = new Point(12, 12);
@@ -538,7 +539,7 @@
             MaximizeBox = false;
             Name = "frmConfigAdmin";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = " ";
+            Text = "Configuración";
             Load += frmConfigAdmin_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             tabConfig.ResumeLayout(false);

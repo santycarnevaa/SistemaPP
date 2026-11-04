@@ -75,6 +75,7 @@ namespace CapaVista
             numDias.TabIndex = 3;
             numDias.Value = new decimal(new int[] { 30, 0, 0, 0 });
             numDias.Enabled = false;
+            numDias.ValueChanged += numDias_ValueChanged;
             //
             // btnGenerar
             //

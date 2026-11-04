@@ -13,6 +13,8 @@ namespace CapaVista
         public frmLogin()
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
+            AcceptButton = btnIniciar;
 
         }
 
@@ -23,9 +25,11 @@ namespace CapaVista
 
         private void lblRecuperar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            ErrorCampo.Limpiar(this);
+
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                new MensajeInformacion("Por favor, ingrese su nombre de usuario para recuperar su cuenta.").Mostrar();
+                ErrorCampo.Mostrar(txtUsuario, "Ingresá tu usuario para recuperar la cuenta.");
                 return;
             }
 
@@ -40,7 +44,7 @@ namespace CapaVista
             {
                 // No decimos "no existe": igual que en el login, evitamos confirmar
                 // o negar si un nombre de usuario está registrado en el sistema.
-                new MensajeError("No se pudo iniciar la recuperación de cuenta. Verificá el usuario ingresado.").Mostrar();
+                ErrorCampo.Mostrar(txtUsuario, "No se pudo iniciar la recuperación. Verificá el usuario.");
                 return;
             }
 
@@ -62,6 +66,8 @@ namespace CapaVista
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
+            ErrorCampo.Limpiar(this);
+
             CL_ServicioLogin servicioLogin = new CL_ServicioLogin();
             resultadoLogin resultado = servicioLogin.Login(txtUsuario.Text, txtContraseña.Text);
 
@@ -93,7 +99,8 @@ namespace CapaVista
                     // Usuario/contraseña vacíos, usuario inexistente, inactivo o contraseña
                     // incorrecta: el mensaje exacto lo decide CL_ServicioLogin, que unifica
                     // los tres últimos casos para no revelar cuáles usuarios existen.
-                    new MensajeError(servicioLogin.ObtenerMensajeResultado(resultado)).Mostrar();
+                    Control campo = resultado == resultadoLogin.UsuarioVacio ? txtUsuario : txtContraseña;
+                    ErrorCampo.Mostrar(campo, servicioLogin.ObtenerMensajeResultado(resultado));
                     break;
             }
         }

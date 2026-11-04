@@ -25,6 +25,7 @@ namespace CapaVista
         public frmConfigAdmin(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.usuario = usuario;
         }
 
@@ -58,7 +59,7 @@ namespace CapaVista
         {
             if (cmbMinCaracteres.SelectedIndex < 0)
             {
-                new MensajeError("Seleccione el mínimo de caracteres.").Mostrar();
+                ErrorCampo.Mostrar(cmbMinCaracteres, "Seleccioná el mínimo de caracteres.");
                 return;
             }
 
@@ -187,7 +188,7 @@ namespace CapaVista
         {
             if (string.IsNullOrWhiteSpace(txtPasswordNueva.Text))
             {
-                new MensajeError("Ingrese la nueva contraseña de aplicación.").Mostrar();
+                ErrorCampo.Mostrar(txtPasswordNueva, "Ingresá la nueva contraseña de aplicación.");
                 return;
             }
 
@@ -227,14 +228,7 @@ namespace CapaVista
 
         private void ConfigurarGrillaRoles()
         {
-            dgvRoles.EnableHeadersVisualStyles = false;
-            dgvRoles.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            dgvRoles.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvRoles.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.DarkGray;
-            dgvRoles.DefaultCellStyle.BackColor = Color.White;
-            dgvRoles.DefaultCellStyle.ForeColor = Color.Black;
-            dgvRoles.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 120, 215);
-            dgvRoles.DefaultCellStyle.SelectionForeColor = Color.White;
+            EstiloGrilla.Aplicar(dgvRoles);
         }
 
         private void CargarRoles()
@@ -279,7 +273,7 @@ namespace CapaVista
 
             if (mensaje != "")
             {
-                new MensajeError(mensaje).Mostrar();
+                ErrorCampo.Mostrar(txtNuevoRol, mensaje);
                 return;
             }
 

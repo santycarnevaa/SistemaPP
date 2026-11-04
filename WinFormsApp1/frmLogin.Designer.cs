@@ -48,7 +48,7 @@
             btnIniciar.FlatStyle = FlatStyle.Flat;
             btnIniciar.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnIniciar.ForeColor = Color.White;
-            btnIniciar.Location = new Point(125, 165);
+            btnIniciar.Location = new Point(125, 173);
             btnIniciar.Name = "btnIniciar";
             btnIniciar.Size = new Size(149, 24);
             btnIniciar.TabIndex = 0;
@@ -75,7 +75,7 @@
             txtContraseña.Cursor = Cursors.IBeam;
             txtContraseña.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtContraseña.ForeColor = SystemColors.Menu;
-            txtContraseña.Location = new Point(94, 99);
+            txtContraseña.Location = new Point(94, 107);
             txtContraseña.Name = "txtContraseña";
             txtContraseña.PasswordChar = '•';
             txtContraseña.Size = new Size(210, 21);
@@ -88,7 +88,7 @@
             lblRecuperar.AutoSize = true;
             lblRecuperar.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblRecuperar.LinkColor = Color.FromArgb(73, 98, 235);
-            lblRecuperar.Location = new Point(150, 124);
+            lblRecuperar.Location = new Point(150, 146);
             lblRecuperar.Name = "lblRecuperar";
             lblRecuperar.Size = new Size(173, 15);
             lblRecuperar.TabIndex = 3;
@@ -112,7 +112,7 @@
             // 
             pctOjo.Image = (Image)resources.GetObject("pctOjo.Image");
             pctOjo.ImageLocation = "";
-            pctOjo.Location = new Point(307, 99);
+            pctOjo.Location = new Point(307, 107);
             pctOjo.Name = "pctOjo";
             pctOjo.Size = new Size(33, 23);
             pctOjo.SizeMode = PictureBoxSizeMode.Zoom;
@@ -126,7 +126,7 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(94, 82);
+            label1.Location = new Point(94, 90);
             label1.Name = "label1";
             label1.Size = new Size(86, 16);
             label1.TabIndex = 7;
@@ -164,7 +164,7 @@
             MaximizeBox = false;
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "login";
+            Text = "Iniciar sesión";
             Load += frmLogin_Load;
             ((System.ComponentModel.ISupportInitialize)pctOjo).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();

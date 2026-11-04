@@ -30,7 +30,6 @@ namespace CapaVista
             dtpDesde = new DateTimePicker();
             lblHasta = new Label();
             dtpHasta = new DateTimePicker();
-            btnFiltrar = new Button();
             lblTotalPeriodo = new Label();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvScrap).BeginInit();
@@ -126,6 +125,7 @@ namespace CapaVista
             // dtpDesde
             //
             dtpDesde.Format = DateTimePickerFormat.Short;
+            dtpDesde.ShowCheckBox = true;
             dtpDesde.Location = new Point(12, 88);
             dtpDesde.Name = "dtpDesde";
             dtpDesde.Size = new Size(160, 23);
@@ -145,23 +145,11 @@ namespace CapaVista
             // dtpHasta
             //
             dtpHasta.Format = DateTimePickerFormat.Short;
+            dtpHasta.ShowCheckBox = true;
             dtpHasta.Location = new Point(190, 88);
             dtpHasta.Name = "dtpHasta";
             dtpHasta.Size = new Size(160, 23);
             dtpHasta.TabIndex = 11;
-            //
-            // btnFiltrar
-            //
-            btnFiltrar.BackColor = Color.RoyalBlue;
-            btnFiltrar.FlatStyle = FlatStyle.Flat;
-            btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(360, 86);
-            btnFiltrar.Name = "btnFiltrar";
-            btnFiltrar.Size = new Size(140, 27);
-            btnFiltrar.TabIndex = 12;
-            btnFiltrar.Text = "Filtrar período";
-            btnFiltrar.UseVisualStyleBackColor = false;
-            btnFiltrar.Click += btnFiltrar_Click;
             //
             // lblTotalPeriodo
             //
@@ -203,7 +191,6 @@ namespace CapaVista
             Controls.Add(dtpDesde);
             Controls.Add(lblHasta);
             Controls.Add(dtpHasta);
-            Controls.Add(btnFiltrar);
             Controls.Add(lblTotalPeriodo);
             Controls.Add(dgvScrap);
             Controls.Add(pictureBox2);
@@ -233,7 +220,6 @@ namespace CapaVista
         private DateTimePicker dtpDesde;
         private Label lblHasta;
         private DateTimePicker dtpHasta;
-        private Button btnFiltrar;
         private Label lblTotalPeriodo;
         private PictureBox pictureBox2;
     }

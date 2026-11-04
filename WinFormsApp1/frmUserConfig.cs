@@ -19,6 +19,7 @@ namespace CapaVista
         public frmUserConfig(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.usuario = usuario;
         }
 

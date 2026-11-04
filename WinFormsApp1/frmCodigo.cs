@@ -16,6 +16,7 @@ namespace CapaVista
         public frmCodigo(string usuario, OrigenVerificacion origen = OrigenVerificacion.RecuperarContrasena)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
 
             this.usuario = usuario;
             this.origen = origen;
@@ -75,8 +76,6 @@ namespace CapaVista
 
             if (codigoIngresado != codigoGenerado)
             {
-                new MensajeError("Código equivocado").Mostrar();
-
                 txt1.Text = "";
                 txt2.Text = "";
                 txt3.Text = "";
@@ -91,6 +90,7 @@ namespace CapaVista
                 btnSiguiente.Enabled = false;
 
                 txt1.Focus();
+                ErrorCampo.Mostrar(txt1, "El código es incorrecto. Intentá de nuevo.");
                 return;
             }
 

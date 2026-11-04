@@ -17,6 +17,7 @@ namespace CapaVista
         public frmCatalogoStock(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.usuario = usuario;
 
             CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();

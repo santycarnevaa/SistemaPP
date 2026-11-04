@@ -18,6 +18,9 @@ namespace CapaVista
         public frmAuditoria(int? idUsuarioFijo = null)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
+            ComboBuscable.Activar(cmbTabla);
+            ComboBuscable.Activar(cmbUsuario);
             usuarioFijo = idUsuarioFijo;
 
             if (usuarioFijo.HasValue)
@@ -27,7 +30,21 @@ namespace CapaVista
         private void frmAuditoria_Load(object sender, EventArgs e)
         {
             CargarFiltros();
+            // no se puede elegir una fecha posterior a hoy
+            dtpDesde.MaxDate = DateTime.Today;
+            dtpHasta.MaxDate = DateTime.Today;
             dtpHasta.Value = DateTime.Today;
+            Filtrar();
+
+            // el filtrado es automatico: se vuelve a filtrar cada vez que cambia algun filtro
+            cmbTabla.SelectedIndexChanged += CambioFiltro;
+            cmbUsuario.SelectedIndexChanged += CambioFiltro;
+            dtpDesde.ValueChanged += CambioFiltro;
+            dtpHasta.ValueChanged += CambioFiltro;
+        }
+
+        private void CambioFiltro(object sender, EventArgs e)
+        {
             Filtrar();
         }
 
@@ -53,11 +70,6 @@ namespace CapaVista
                 cmbUsuario.SelectedValue = usuarioFijo.Value;
                 cmbUsuario.Enabled = false;
             }
-        }
-
-        private void btnFiltrar_Click(object sender, EventArgs e)
-        {
-            Filtrar();
         }
 
         private void Filtrar()

@@ -86,7 +86,7 @@
             // 
             btnAgregar.BackColor = Color.Green;
             btnAgregar.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            btnAgregar.Location = new Point(859, 223);
+            btnAgregar.Location = new Point(859, 235);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(146, 35);
             btnAgregar.TabIndex = 17;
@@ -122,7 +122,7 @@
             lblFecha.AutoSize = true;
             lblFecha.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             lblFecha.ForeColor = Color.White;
-            lblFecha.Location = new Point(19, 85);
+            lblFecha.Location = new Point(19, 97);
             lblFecha.Name = "lblFecha";
             lblFecha.Size = new Size(190, 20);
             lblFecha.TabIndex = 47;
@@ -136,7 +136,7 @@
             datFecha.CalendarMonthBackground = Color.FromArgb(8, 10, 13);
             datFecha.CalendarTitleBackColor = Color.FromArgb(64, 64, 64);
             datFecha.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold);
-            datFecha.Location = new Point(20, 113);
+            datFecha.Location = new Point(20, 125);
             datFecha.MaxDate = new DateTime(2026, 12, 31, 0, 0, 0, 0);
             datFecha.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             datFecha.Name = "datFecha";
@@ -241,7 +241,7 @@
             btnEliminar.BackColor = Color.Red;
             btnEliminar.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnEliminar.ForeColor = Color.White;
-            btnEliminar.Location = new Point(1011, 233);
+            btnEliminar.Location = new Point(1011, 245);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(146, 25);
             btnEliminar.TabIndex = 20;
@@ -304,7 +304,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(15, 156);
+            label2.Location = new Point(15, 168);
             label2.Name = "label2";
             label2.Size = new Size(61, 20);
             label2.TabIndex = 59;
@@ -317,7 +317,7 @@
             txtCalle.Enabled = false;
             txtCalle.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtCalle.ForeColor = Color.White;
-            txtCalle.Location = new Point(15, 179);
+            txtCalle.Location = new Point(15, 191);
             txtCalle.Name = "txtCalle";
             txtCalle.Size = new Size(147, 26);
             txtCalle.TabIndex = 7;
@@ -327,7 +327,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(169, 156);
+            label3.Location = new Point(169, 168);
             label3.Name = "label3";
             label3.Size = new Size(39, 20);
             label3.TabIndex = 61;
@@ -340,7 +340,7 @@
             txtNumCalle.Enabled = false;
             txtNumCalle.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtNumCalle.ForeColor = Color.White;
-            txtNumCalle.Location = new Point(169, 178);
+            txtNumCalle.Location = new Point(169, 190);
             txtNumCalle.MaxLength = 5;
             txtNumCalle.Name = "txtNumCalle";
             txtNumCalle.Size = new Size(67, 26);
@@ -352,7 +352,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(243, 156);
+            label4.Location = new Point(243, 168);
             label4.Name = "label4";
             label4.Size = new Size(49, 20);
             label4.TabIndex = 63;
@@ -365,7 +365,7 @@
             txtCP.Enabled = false;
             txtCP.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtCP.ForeColor = Color.White;
-            txtCP.Location = new Point(243, 178);
+            txtCP.Location = new Point(243, 190);
             txtCP.MaxLength = 5;
             txtCP.Name = "txtCP";
             txtCP.Size = new Size(67, 26);
@@ -377,7 +377,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label8.ForeColor = Color.White;
-            label8.Location = new Point(317, 156);
+            label8.Location = new Point(317, 168);
             label8.Name = "label8";
             label8.Size = new Size(58, 20);
             label8.TabIndex = 69;
@@ -390,7 +390,7 @@
             txtDepto.Enabled = false;
             txtDepto.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtDepto.ForeColor = Color.White;
-            txtDepto.Location = new Point(317, 178);
+            txtDepto.Location = new Point(317, 190);
             txtDepto.Name = "txtDepto";
             txtDepto.Size = new Size(67, 26);
             txtDepto.TabIndex = 10;
@@ -400,7 +400,7 @@
             label7.AutoSize = true;
             label7.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label7.ForeColor = Color.White;
-            label7.Location = new Point(392, 156);
+            label7.Location = new Point(392, 168);
             label7.Name = "label7";
             label7.Size = new Size(43, 20);
             label7.TabIndex = 71;
@@ -413,7 +413,7 @@
             txtPiso.Enabled = false;
             txtPiso.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtPiso.ForeColor = Color.White;
-            txtPiso.Location = new Point(392, 178);
+            txtPiso.Location = new Point(392, 190);
             txtPiso.MaxLength = 2;
             txtPiso.Name = "txtPiso";
             txtPiso.Size = new Size(67, 26);
@@ -425,7 +425,7 @@
             label9.AutoSize = true;
             label9.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label9.ForeColor = Color.White;
-            label9.Location = new Point(468, 156);
+            label9.Location = new Point(468, 168);
             label9.Name = "label9";
             label9.Size = new Size(93, 20);
             label9.TabIndex = 73;
@@ -436,7 +436,7 @@
             label10.AutoSize = true;
             label10.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label10.ForeColor = Color.White;
-            label10.Location = new Point(723, 156);
+            label10.Location = new Point(723, 168);
             label10.Name = "label10";
             label10.Size = new Size(98, 20);
             label10.TabIndex = 75;
@@ -447,7 +447,7 @@
             label11.AutoSize = true;
             label11.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             label11.ForeColor = Color.White;
-            label11.Location = new Point(596, 156);
+            label11.Location = new Point(596, 168);
             label11.Name = "label11";
             label11.Size = new Size(78, 20);
             label11.TabIndex = 77;
@@ -455,14 +455,14 @@
             // 
             // cmbProvincia
             // 
-            cmbProvincia.Location = new Point(469, 178);
+            cmbProvincia.Location = new Point(469, 190);
             cmbProvincia.Name = "cmbProvincia";
             cmbProvincia.Size = new Size(121, 25);
             cmbProvincia.TabIndex = 12;
             // 
             // cmbLocalidad
             // 
-            cmbLocalidad.Location = new Point(723, 178);
+            cmbLocalidad.Location = new Point(723, 190);
             cmbLocalidad.Name = "cmbLocalidad";
             cmbLocalidad.Size = new Size(121, 25);
             cmbLocalidad.TabIndex = 14;
@@ -470,7 +470,7 @@
             // cmbPartido
             // 
             cmbPartido.BackColor = Color.White;
-            cmbPartido.Location = new Point(596, 178);
+            cmbPartido.Location = new Point(596, 190);
             cmbPartido.Name = "cmbPartido";
             cmbPartido.Size = new Size(121, 25);
             cmbPartido.TabIndex = 13;
@@ -508,7 +508,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             DgvPrueba.DefaultCellStyle = dataGridViewCellStyle2;
             DgvPrueba.GridColor = SystemColors.Menu;
-            DgvPrueba.Location = new Point(23, 343);
+            DgvPrueba.Location = new Point(23, 355);
             DgvPrueba.Name = "DgvPrueba";
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = SystemColors.Control;
@@ -563,7 +563,7 @@
             groupBox1.ForeColor = Color.Gainsboro;
             groupBox1.Location = new Point(23, 6);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(1170, 276);
+            groupBox1.Size = new Size(1170, 288);
             groupBox1.TabIndex = 89;
             groupBox1.TabStop = false;
             groupBox1.Text = "Datos Personales";
@@ -572,7 +572,7 @@
             // 
             btnModificar.BackColor = Color.Green;
             btnModificar.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            btnModificar.Location = new Point(707, 223);
+            btnModificar.Location = new Point(707, 235);
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(146, 35);
             btnModificar.TabIndex = 78;
@@ -584,7 +584,7 @@
             // 
             lblbuscar.AutoSize = true;
             lblbuscar.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            lblbuscar.Location = new Point(23, 285);
+            lblbuscar.Location = new Point(23, 297);
             lblbuscar.Name = "lblbuscar";
             lblbuscar.Size = new Size(81, 28);
             lblbuscar.TabIndex = 90;
@@ -595,7 +595,7 @@
             // 
             txtboxbuscar.BackColor = Color.FromArgb(8, 10, 13);
             txtboxbuscar.ForeColor = SystemColors.Window;
-            txtboxbuscar.Location = new Point(110, 290);
+            txtboxbuscar.Location = new Point(110, 302);
             txtboxbuscar.Name = "txtboxbuscar";
             txtboxbuscar.PlaceholderText = "Nombre, apellido, usuario, DNI...";
             txtboxbuscar.Size = new Size(419, 23);
@@ -605,7 +605,7 @@
             // 
             filtroscb.FormattingEnabled = true;
             filtroscb.Items.AddRange(new object[] { "Todos", "Activos", "Inactivos", "Administrador", "Usuario" });
-            filtroscb.Location = new Point(771, 290);
+            filtroscb.Location = new Point(771, 302);
             filtroscb.Name = "filtroscb";
             filtroscb.Size = new Size(121, 23);
             filtroscb.TabIndex = 92;
@@ -614,7 +614,7 @@
             // 
             lblfiltros.AutoSize = true;
             lblfiltros.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            lblfiltros.Location = new Point(689, 285);
+            lblfiltros.Location = new Point(689, 297);
             lblfiltros.Name = "lblfiltros";
             lblfiltros.Size = new Size(76, 28);
             lblfiltros.TabIndex = 93;
@@ -624,7 +624,7 @@
             // 
             btnbuscar.Font = new Font("Segoe UI", 11F);
             btnbuscar.ForeColor = Color.Black;
-            btnbuscar.Location = new Point(535, 288);
+            btnbuscar.Location = new Point(535, 300);
             btnbuscar.Name = "btnbuscar";
             btnbuscar.Size = new Size(93, 25);
             btnbuscar.TabIndex = 94;
@@ -637,7 +637,7 @@
             btnLimpiar.FlatStyle = FlatStyle.System;
             btnLimpiar.Font = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.World);
             btnLimpiar.ForeColor = Color.Red;
-            btnLimpiar.Location = new Point(634, 288);
+            btnLimpiar.Location = new Point(634, 300);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(21, 25);
             btnLimpiar.TabIndex = 95;
@@ -650,7 +650,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(1234, 697);
+            ClientSize = new Size(1234, 709);
             Controls.Add(btnLimpiar);
             Controls.Add(btnbuscar);
             Controls.Add(lblfiltros);
@@ -665,7 +665,7 @@
             MaximizeBox = false;
             Name = "frmRegistro";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Registro de usuarios";
             Load += frmRegistro_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)DgvPrueba).EndInit();

@@ -47,7 +47,7 @@
             btnSiguiente.FlatStyle = FlatStyle.Flat;
             btnSiguiente.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
             btnSiguiente.ForeColor = Color.White;
-            btnSiguiente.Location = new Point(122, 112);
+            btnSiguiente.Location = new Point(122, 128);
             btnSiguiente.Name = "btnSiguiente";
             btnSiguiente.Size = new Size(97, 28);
             btnSiguiente.TabIndex = 18;
@@ -171,7 +171,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(348, 169);
+            ClientSize = new Size(348, 185);
             Controls.Add(label1);
             Controls.Add(pictureBox2);
             Controls.Add(btnSiguiente);
@@ -184,7 +184,7 @@
             MaximizeBox = false;
             Name = "frmCodigo";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "frmCodigo";
+            Text = "Código de verificación";
             Load += frmCodigo_Load_1;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);

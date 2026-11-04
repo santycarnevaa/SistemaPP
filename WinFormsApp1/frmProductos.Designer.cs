@@ -18,324 +18,135 @@ namespace CapaVista
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProductos));
-            dgvProductos = new DataGridView();
-            lblCategoria = new Label();
-            cmbCategoria = new ComboBox();
-            lblMarca = new Label();
-            cmbMarca = new ComboBox();
-            lblNombre = new Label();
-            txtNombre = new TextBox();
-            lblPrecioCompra = new Label();
-            txtPrecioCompra = new TextBox();
-            lblPrecioVenta = new Label();
-            txtPrecioVenta = new TextBox();
-            lblStockCritico = new Label();
-            txtStockCritico = new TextBox();
-            lblStockMinimo = new Label();
-            txtStockMinimo = new TextBox();
-            lblStockIdeal = new Label();
-            txtStockIdeal = new TextBox();
-            lblStockMaximo = new Label();
-            txtStockMaximo = new TextBox();
-            lblPuntoReposicion = new Label();
-            txtPuntoReposicion = new TextBox();
-            lblNumeroLote = new Label();
-            txtNumeroLote = new TextBox();
-            chkTieneVencimiento = new CheckBox();
-            dtpFechaVencimiento = new DateTimePicker();
+            lblTitulo = new Label();
             btnNuevo = new Button();
-            btnGuardar = new Button();
-            btnBaja = new Button();
-            btnCancelar = new Button();
+            lblFiltroCategoria = new Label();
+            cmbFiltroCategoria = new ComboBox();
+            lblFiltroMarca = new Label();
+            cmbFiltroMarca = new ComboBox();
+            chkMostrarBaja = new CheckBox();
+            dgvProductos = new DataGridView();
+            lblRegistros = new Label();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             //
-            // dgvProductos
+            // lblTitulo
             //
-            dgvProductos.Location = new Point(12, 12);
-            dgvProductos.Name = "dgvProductos";
-            dgvProductos.Size = new Size(630, 540);
-            dgvProductos.TabIndex = 0;
-            dgvProductos.ReadOnly = true;
-            dgvProductos.AllowUserToAddRows = false;
-            dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProductos.MultiSelect = false;
-            dgvProductos.RowEnter += dgvProductos_RowEnter;
-            dgvProductos.CellClick += dgvProductos_CellClick;
-            //
-            // lblCategoria
-            //
-            lblCategoria.AutoSize = true;
-            lblCategoria.ForeColor = Color.White;
-            lblCategoria.Location = new Point(660, 15);
-            lblCategoria.Name = "lblCategoria";
-            lblCategoria.Size = new Size(70, 15);
-            lblCategoria.TabIndex = 1;
-            lblCategoria.Text = "Categoría";
-            //
-            // cmbCategoria
-            //
-            cmbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbCategoria.Location = new Point(660, 33);
-            cmbCategoria.Name = "cmbCategoria";
-            cmbCategoria.Size = new Size(300, 23);
-            cmbCategoria.TabIndex = 2;
-            //
-            // lblMarca
-            //
-            lblMarca.AutoSize = true;
-            lblMarca.ForeColor = Color.White;
-            lblMarca.Location = new Point(660, 65);
-            lblMarca.Name = "lblMarca";
-            lblMarca.Size = new Size(46, 15);
-            lblMarca.TabIndex = 3;
-            lblMarca.Text = "Marca";
-            //
-            // cmbMarca
-            //
-            cmbMarca.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbMarca.Location = new Point(660, 83);
-            cmbMarca.Name = "cmbMarca";
-            cmbMarca.Size = new Size(300, 23);
-            cmbMarca.TabIndex = 4;
-            //
-            // lblNombre
-            //
-            lblNombre.AutoSize = true;
-            lblNombre.ForeColor = Color.White;
-            lblNombre.Location = new Point(660, 115);
-            lblNombre.Name = "lblNombre";
-            lblNombre.Size = new Size(58, 15);
-            lblNombre.TabIndex = 5;
-            lblNombre.Text = "Nombre";
-            //
-            // txtNombre
-            //
-            txtNombre.Location = new Point(660, 133);
-            txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(300, 23);
-            txtNombre.TabIndex = 6;
-            //
-            // lblPrecioCompra
-            //
-            lblPrecioCompra.AutoSize = true;
-            lblPrecioCompra.ForeColor = Color.White;
-            lblPrecioCompra.Location = new Point(660, 165);
-            lblPrecioCompra.Name = "lblPrecioCompra";
-            lblPrecioCompra.Size = new Size(91, 15);
-            lblPrecioCompra.TabIndex = 7;
-            lblPrecioCompra.Text = "Precio de compra";
-            //
-            // txtPrecioCompra
-            //
-            txtPrecioCompra.Location = new Point(660, 183);
-            txtPrecioCompra.Name = "txtPrecioCompra";
-            txtPrecioCompra.Size = new Size(140, 23);
-            txtPrecioCompra.TabIndex = 8;
-            //
-            // lblPrecioVenta
-            //
-            lblPrecioVenta.AutoSize = true;
-            lblPrecioVenta.ForeColor = Color.White;
-            lblPrecioVenta.Location = new Point(820, 165);
-            lblPrecioVenta.Name = "lblPrecioVenta";
-            lblPrecioVenta.Size = new Size(79, 15);
-            lblPrecioVenta.TabIndex = 9;
-            lblPrecioVenta.Text = "Precio de venta";
-            //
-            // txtPrecioVenta
-            //
-            txtPrecioVenta.Location = new Point(820, 183);
-            txtPrecioVenta.Name = "txtPrecioVenta";
-            txtPrecioVenta.Size = new Size(140, 23);
-            txtPrecioVenta.TabIndex = 10;
-            //
-            // lblStockCritico
-            //
-            lblStockCritico.AutoSize = true;
-            lblStockCritico.ForeColor = Color.White;
-            lblStockCritico.Location = new Point(660, 215);
-            lblStockCritico.Name = "lblStockCritico";
-            lblStockCritico.Size = new Size(79, 15);
-            lblStockCritico.TabIndex = 11;
-            lblStockCritico.Text = "Stock crítico";
-            //
-            // txtStockCritico
-            //
-            txtStockCritico.Location = new Point(660, 233);
-            txtStockCritico.Name = "txtStockCritico";
-            txtStockCritico.Size = new Size(140, 23);
-            txtStockCritico.TabIndex = 12;
-            //
-            // lblStockMinimo
-            //
-            lblStockMinimo.AutoSize = true;
-            lblStockMinimo.ForeColor = Color.White;
-            lblStockMinimo.Location = new Point(820, 215);
-            lblStockMinimo.Name = "lblStockMinimo";
-            lblStockMinimo.Size = new Size(82, 15);
-            lblStockMinimo.TabIndex = 13;
-            lblStockMinimo.Text = "Stock mínimo";
-            //
-            // txtStockMinimo
-            //
-            txtStockMinimo.Location = new Point(820, 233);
-            txtStockMinimo.Name = "txtStockMinimo";
-            txtStockMinimo.Size = new Size(140, 23);
-            txtStockMinimo.TabIndex = 14;
-            //
-            // lblStockIdeal
-            //
-            lblStockIdeal.AutoSize = true;
-            lblStockIdeal.ForeColor = Color.White;
-            lblStockIdeal.Location = new Point(660, 265);
-            lblStockIdeal.Name = "lblStockIdeal";
-            lblStockIdeal.Size = new Size(70, 15);
-            lblStockIdeal.TabIndex = 15;
-            lblStockIdeal.Text = "Stock ideal";
-            //
-            // txtStockIdeal
-            //
-            txtStockIdeal.Location = new Point(660, 283);
-            txtStockIdeal.Name = "txtStockIdeal";
-            txtStockIdeal.Size = new Size(140, 23);
-            txtStockIdeal.TabIndex = 16;
-            //
-            // lblStockMaximo
-            //
-            lblStockMaximo.AutoSize = true;
-            lblStockMaximo.ForeColor = Color.White;
-            lblStockMaximo.Location = new Point(820, 265);
-            lblStockMaximo.Name = "lblStockMaximo";
-            lblStockMaximo.Size = new Size(86, 15);
-            lblStockMaximo.TabIndex = 17;
-            lblStockMaximo.Text = "Stock máximo";
-            //
-            // txtStockMaximo
-            //
-            txtStockMaximo.Location = new Point(820, 283);
-            txtStockMaximo.Name = "txtStockMaximo";
-            txtStockMaximo.Size = new Size(140, 23);
-            txtStockMaximo.TabIndex = 18;
-            //
-            // lblPuntoReposicion
-            //
-            lblPuntoReposicion.AutoSize = true;
-            lblPuntoReposicion.ForeColor = Color.White;
-            lblPuntoReposicion.Location = new Point(660, 315);
-            lblPuntoReposicion.Name = "lblPuntoReposicion";
-            lblPuntoReposicion.Size = new Size(97, 15);
-            lblPuntoReposicion.TabIndex = 19;
-            lblPuntoReposicion.Text = "Punto de reposición";
-            //
-            // txtPuntoReposicion
-            //
-            txtPuntoReposicion.Location = new Point(660, 333);
-            txtPuntoReposicion.Name = "txtPuntoReposicion";
-            txtPuntoReposicion.Size = new Size(140, 23);
-            txtPuntoReposicion.TabIndex = 20;
-            //
-            // lblNumeroLote
-            //
-            lblNumeroLote.AutoSize = true;
-            lblNumeroLote.ForeColor = Color.White;
-            lblNumeroLote.Location = new Point(820, 315);
-            lblNumeroLote.Name = "lblNumeroLote";
-            lblNumeroLote.Size = new Size(85, 15);
-            lblNumeroLote.TabIndex = 21;
-            lblNumeroLote.Text = "Número de lote";
-            //
-            // txtNumeroLote
-            //
-            txtNumeroLote.Location = new Point(820, 333);
-            txtNumeroLote.Name = "txtNumeroLote";
-            txtNumeroLote.Size = new Size(140, 23);
-            txtNumeroLote.TabIndex = 22;
-            //
-            // chkTieneVencimiento
-            //
-            chkTieneVencimiento.AutoSize = true;
-            chkTieneVencimiento.ForeColor = Color.White;
-            chkTieneVencimiento.Location = new Point(660, 365);
-            chkTieneVencimiento.Name = "chkTieneVencimiento";
-            chkTieneVencimiento.Size = new Size(127, 19);
-            chkTieneVencimiento.TabIndex = 23;
-            chkTieneVencimiento.Text = "Tiene vencimiento";
-            chkTieneVencimiento.CheckedChanged += chkTieneVencimiento_CheckedChanged;
-            //
-            // dtpFechaVencimiento
-            //
-            dtpFechaVencimiento.Enabled = false;
-            dtpFechaVencimiento.Format = DateTimePickerFormat.Short;
-            dtpFechaVencimiento.Location = new Point(660, 390);
-            dtpFechaVencimiento.Name = "dtpFechaVencimiento";
-            dtpFechaVencimiento.Size = new Size(200, 23);
-            dtpFechaVencimiento.TabIndex = 24;
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.White;
+            lblTitulo.Location = new Point(16, 16);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(120, 30);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "Productos";
             //
             // btnNuevo
             //
             btnNuevo.BackColor = Color.RoyalBlue;
             btnNuevo.FlatStyle = FlatStyle.Flat;
             btnNuevo.ForeColor = Color.White;
-            btnNuevo.Location = new Point(660, 480);
+            btnNuevo.Location = new Point(724, 16);
             btnNuevo.Name = "btnNuevo";
-            btnNuevo.Size = new Size(140, 34);
-            btnNuevo.TabIndex = 25;
-            btnNuevo.Text = "Nuevo";
+            btnNuevo.Size = new Size(160, 34);
+            btnNuevo.TabIndex = 1;
+            btnNuevo.Text = "+ Nuevo producto";
             btnNuevo.UseVisualStyleBackColor = false;
             btnNuevo.Click += btnNuevo_Click;
             //
-            // btnGuardar
+            // lblFiltroCategoria
             //
-            btnGuardar.BackColor = Color.Green;
-            btnGuardar.FlatStyle = FlatStyle.Flat;
-            btnGuardar.ForeColor = Color.White;
-            btnGuardar.Location = new Point(820, 480);
-            btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(140, 34);
-            btnGuardar.TabIndex = 26;
-            btnGuardar.Text = "Guardar";
-            btnGuardar.UseVisualStyleBackColor = false;
-            btnGuardar.Click += btnGuardar_Click;
+            lblFiltroCategoria.AutoSize = true;
+            lblFiltroCategoria.ForeColor = Color.White;
+            lblFiltroCategoria.Location = new Point(16, 73);
+            lblFiltroCategoria.Name = "lblFiltroCategoria";
+            lblFiltroCategoria.Size = new Size(61, 15);
+            lblFiltroCategoria.TabIndex = 2;
+            lblFiltroCategoria.Text = "Categoría:";
             //
-            // btnBaja
+            // cmbFiltroCategoria
             //
-            btnBaja.BackColor = Color.Red;
-            btnBaja.FlatStyle = FlatStyle.Flat;
-            btnBaja.ForeColor = Color.White;
-            btnBaja.Location = new Point(660, 520);
-            btnBaja.Name = "btnBaja";
-            btnBaja.Size = new Size(140, 34);
-            btnBaja.TabIndex = 27;
-            btnBaja.Text = "Dar de baja";
-            btnBaja.UseVisualStyleBackColor = false;
-            btnBaja.Click += btnBaja_Click;
+            cmbFiltroCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroCategoria.Location = new Point(85, 70);
+            cmbFiltroCategoria.Name = "cmbFiltroCategoria";
+            cmbFiltroCategoria.Size = new Size(210, 23);
+            cmbFiltroCategoria.TabIndex = 3;
             //
-            // btnCancelar
+            // lblFiltroMarca
             //
-            btnCancelar.BackColor = Color.Gray;
-            btnCancelar.FlatStyle = FlatStyle.Flat;
-            btnCancelar.ForeColor = Color.White;
-            btnCancelar.Location = new Point(820, 520);
-            btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(140, 34);
-            btnCancelar.TabIndex = 28;
-            btnCancelar.Text = "Cancelar";
-            btnCancelar.UseVisualStyleBackColor = false;
-            btnCancelar.Click += btnCancelar_Click;
-            // 
+            lblFiltroMarca.AutoSize = true;
+            lblFiltroMarca.ForeColor = Color.White;
+            lblFiltroMarca.Location = new Point(315, 73);
+            lblFiltroMarca.Name = "lblFiltroMarca";
+            lblFiltroMarca.Size = new Size(43, 15);
+            lblFiltroMarca.TabIndex = 4;
+            lblFiltroMarca.Text = "Marca:";
+            //
+            // cmbFiltroMarca
+            //
+            cmbFiltroMarca.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroMarca.Location = new Point(365, 70);
+            cmbFiltroMarca.Name = "cmbFiltroMarca";
+            cmbFiltroMarca.Size = new Size(210, 23);
+            cmbFiltroMarca.TabIndex = 5;
+            //
+            // chkMostrarBaja
+            //
+            chkMostrarBaja.AutoSize = true;
+            chkMostrarBaja.ForeColor = Color.White;
+            chkMostrarBaja.Location = new Point(600, 72);
+            chkMostrarBaja.Name = "chkMostrarBaja";
+            chkMostrarBaja.Size = new Size(143, 19);
+            chkMostrarBaja.TabIndex = 6;
+            chkMostrarBaja.Text = "Mostrar dados de baja";
+            //
+            // dgvProductos
+            //
+            dgvProductos.AllowUserToAddRows = false;
+            dgvProductos.AllowUserToDeleteRows = false;
+            dgvProductos.AllowUserToResizeColumns = false;
+            dgvProductos.AllowUserToResizeRows = false;
+            dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProductos.BackgroundColor = Color.White;
+            dgvProductos.BorderStyle = BorderStyle.None;
+            dgvProductos.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvProductos.ColumnHeadersHeight = 32;
+            dgvProductos.Location = new Point(16, 110);
+            dgvProductos.MultiSelect = false;
+            dgvProductos.Name = "dgvProductos";
+            dgvProductos.ReadOnly = true;
+            dgvProductos.RowHeadersVisible = false;
+            dgvProductos.RowTemplate.Height = 30;
+            dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvProductos.Size = new Size(908, 410);
+            dgvProductos.TabIndex = 7;
+            dgvProductos.CellClick += dgvProductos_CellClick;
+            dgvProductos.CellFormatting += dgvProductos_CellFormatting;
+            dgvProductos.CellMouseMove += dgvProductos_CellMouseMove;
+            //
+            // lblRegistros
+            //
+            lblRegistros.AutoSize = true;
+            lblRegistros.ForeColor = Color.White;
+            lblRegistros.Location = new Point(16, 530);
+            lblRegistros.Name = "lblRegistros";
+            lblRegistros.Size = new Size(66, 15);
+            lblRegistros.TabIndex = 8;
+            lblRegistros.Text = "Registros: 0";
+            //
             // pictureBox2
-            // 
+            //
             pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
             pictureBox2.ImageLocation = "";
-            pictureBox2.Location = new Point(941, 6);
+            pictureBox2.Location = new Point(901, 21);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(23, 23);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox2.TabIndex = 29;
+            pictureBox2.TabIndex = 9;
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
             //
@@ -344,43 +155,24 @@ namespace CapaVista
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(976, 605);
-            Controls.Add(dgvProductos);
-            Controls.Add(lblCategoria);
-            Controls.Add(cmbCategoria);
-            Controls.Add(lblMarca);
-            Controls.Add(cmbMarca);
-            Controls.Add(lblNombre);
-            Controls.Add(txtNombre);
-            Controls.Add(lblPrecioCompra);
-            Controls.Add(txtPrecioCompra);
-            Controls.Add(lblPrecioVenta);
-            Controls.Add(txtPrecioVenta);
-            Controls.Add(lblStockCritico);
-            Controls.Add(txtStockCritico);
-            Controls.Add(lblStockMinimo);
-            Controls.Add(txtStockMinimo);
-            Controls.Add(lblStockIdeal);
-            Controls.Add(txtStockIdeal);
-            Controls.Add(lblStockMaximo);
-            Controls.Add(txtStockMaximo);
-            Controls.Add(lblPuntoReposicion);
-            Controls.Add(txtPuntoReposicion);
-            Controls.Add(lblNumeroLote);
-            Controls.Add(txtNumeroLote);
-            Controls.Add(chkTieneVencimiento);
-            Controls.Add(dtpFechaVencimiento);
+            ClientSize = new Size(940, 558);
+            Controls.Add(lblTitulo);
             Controls.Add(btnNuevo);
-            Controls.Add(btnGuardar);
-            Controls.Add(btnBaja);
-            Controls.Add(btnCancelar);
+            Controls.Add(lblFiltroCategoria);
+            Controls.Add(cmbFiltroCategoria);
+            Controls.Add(lblFiltroMarca);
+            Controls.Add(cmbFiltroMarca);
+            Controls.Add(chkMostrarBaja);
+            Controls.Add(dgvProductos);
+            Controls.Add(lblRegistros);
             Controls.Add(pictureBox2);
-            Name = "frmProductos";
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            Name = "frmProductos";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Productos";
             Load += frmProductos_Load;
+            Shown += frmProductos_Shown;
             ((System.ComponentModel.ISupportInitialize)dgvProductos).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
@@ -389,35 +181,15 @@ namespace CapaVista
 
         #endregion
 
-        private DataGridView dgvProductos;
-        private Label lblCategoria;
-        private ComboBox cmbCategoria;
-        private Label lblMarca;
-        private ComboBox cmbMarca;
-        private Label lblNombre;
-        private TextBox txtNombre;
-        private Label lblPrecioCompra;
-        private TextBox txtPrecioCompra;
-        private Label lblPrecioVenta;
-        private TextBox txtPrecioVenta;
-        private Label lblStockCritico;
-        private TextBox txtStockCritico;
-        private Label lblStockMinimo;
-        private TextBox txtStockMinimo;
-        private Label lblStockIdeal;
-        private TextBox txtStockIdeal;
-        private Label lblStockMaximo;
-        private TextBox txtStockMaximo;
-        private Label lblPuntoReposicion;
-        private TextBox txtPuntoReposicion;
-        private Label lblNumeroLote;
-        private TextBox txtNumeroLote;
-        private CheckBox chkTieneVencimiento;
-        private DateTimePicker dtpFechaVencimiento;
+        private Label lblTitulo;
         private Button btnNuevo;
-        private Button btnGuardar;
-        private Button btnBaja;
-        private Button btnCancelar;
+        private Label lblFiltroCategoria;
+        private ComboBox cmbFiltroCategoria;
+        private Label lblFiltroMarca;
+        private ComboBox cmbFiltroMarca;
+        private CheckBox chkMostrarBaja;
+        private DataGridView dgvProductos;
+        private Label lblRegistros;
         private PictureBox pictureBox2;
     }
 }

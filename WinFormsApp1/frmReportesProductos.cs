@@ -11,6 +11,7 @@ namespace CapaVista
         public frmReportesProductos()
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
         }
 
         private void frmReportesProductos_Load(object sender, EventArgs e)
@@ -21,6 +22,15 @@ namespace CapaVista
         private void cmbReporte_SelectedIndexChanged(object sender, EventArgs e)
         {
             numDias.Enabled = cmbReporte.SelectedIndex == 1; // "Productos próximos a vencer"
+
+            // el reporte se genera solo al elegirlo
+            btnGenerar_Click(sender, e);
+        }
+
+        private void numDias_ValueChanged(object sender, EventArgs e)
+        {
+            if (cmbReporte.SelectedIndex == 1)
+                btnGenerar_Click(sender, e);
         }
 
         private void btnGenerar_Click(object sender, EventArgs e)

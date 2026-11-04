@@ -114,7 +114,7 @@
             MaximizeBox = false;
             Name = "frmAdmin";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ConfigAdmin";
+            Text = "Panel del administrador";
             Load += frmAdmin_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);

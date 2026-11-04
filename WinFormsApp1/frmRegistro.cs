@@ -12,9 +12,9 @@ namespace CapaVista
         private CL_servicioGeoref servicioGeoref = new CL_servicioGeoref();
         private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
 
-        private Color colorVerde = Color.Green;
-        private Color colorGris = Color.Gray;
-        private Color colorRojo = Color.Red;
+        private Color colorVerde = EstiloSistema.Verde;
+        private Color colorGris = EstiloSistema.Gris;
+        private Color colorRojo = EstiloSistema.Rojo;
         private Color colorAzul = Color.RoyalBlue;
 
         private bool hayCambios = false;
@@ -27,6 +27,10 @@ namespace CapaVista
         public frmRegistro(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
+            ComboBuscable.Activar(cmbProvincia);
+            ComboBuscable.Activar(cmbPartido);
+            ComboBuscable.Activar(cmbLocalidad);
             this.usuario = usuario;
 
             btnbuscar.Click += btnbuscar_Click;
@@ -34,7 +38,7 @@ namespace CapaVista
             filtroscb.SelectedIndexChanged += filtroscb_SelectedIndexChanged;
             txtboxbuscar.KeyDown += txtboxbuscar_KeyDown;
 
-            configurargrilla(DgvPrueba);
+            EstiloGrilla.Aplicar(DgvPrueba);
 
             this.Load -= frmRegistro_Load;
             this.Load += frmRegistro_Load;
@@ -343,7 +347,7 @@ namespace CapaVista
 
             if (idRol == 0)
             {
-                new MensajeError("Seleccione un rol válido.").Mostrar();
+                ErrorCampo.Mostrar(cmbRol, "Seleccioná un rol válido.");
                 return;
             }
 
@@ -378,7 +382,7 @@ namespace CapaVista
                 }
                 else
                 {
-                    new MensajeInformacion(servicioUsuarios.ObtenerMensajeRegistro(resultado)).Mostrar();
+                    MostrarErrorRegistro(resultado);
                 }
             }
             catch (Exception ex)
@@ -459,7 +463,7 @@ namespace CapaVista
 
             if (idRol == 0)
             {
-                new MensajeError("Seleccione un rol válido.").Mostrar();
+                ErrorCampo.Mostrar(cmbRol, "Seleccioná un rol válido.");
                 return;
             }
 
@@ -542,58 +546,87 @@ namespace CapaVista
 
         private bool ValidarCamposRegistro()
         {
+            ErrorCampo.Limpiar(this);
+
+            bool ok = true;
+
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                new MensajeError("Debe completar todos los campos obligatorios.").Mostrar();
-                return false;
+                ErrorCampo.Mostrar(txtUsuario, "Obligatorio.");
+                ok = false;
             }
 
-            return ValidarCamposComunes();
+            return ValidarCamposComunes() && ok;
         }
 
         private bool ValidarCamposModificacion()
         {
+            ErrorCampo.Limpiar(this);
             return ValidarCamposComunes();
         }
 
         // Validaciones comunes a alta y modificación de usuario (T15): antes
         // estaban duplicadas, y la modificación ni siquiera validaba DNI ni
         // teléfono. Usuario (solo se edita en el alta) se valida aparte.
+        // Marca todos los campos que estén mal, cada uno con su texto abajo.
         private bool ValidarCamposComunes()
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
-                string.IsNullOrWhiteSpace(txtApellido.Text) ||
-                string.IsNullOrWhiteSpace(txtDni.Text) ||
-                string.IsNullOrWhiteSpace(txtTelefono.Text) ||
-                string.IsNullOrWhiteSpace(txtCorreo.Text) ||
-                string.IsNullOrWhiteSpace(txtCalle.Text) ||
-                string.IsNullOrWhiteSpace(txtNumCalle.Text) ||
-                string.IsNullOrWhiteSpace(txtCP.Text) ||
-                string.IsNullOrWhiteSpace(cmbProvincia.Text) ||
-                string.IsNullOrWhiteSpace(cmbPartido.Text) ||
-                string.IsNullOrWhiteSpace(cmbLocalidad.Text) ||
-                string.IsNullOrWhiteSpace(cmbRol.Text))
+            bool ok = true;
+
+            foreach (TextBox caja in new[] { txtNombre, txtApellido, txtDni, txtTelefono, txtCorreo, txtCalle, txtNumCalle, txtCP })
             {
-                new MensajeError("Debe completar todos los campos obligatorios.").Mostrar();
-                return false;
+                if (string.IsNullOrWhiteSpace(caja.Text))
+                {
+                    ErrorCampo.Mostrar(caja, "Obligatorio.");
+                    ok = false;
+                }
             }
 
-            if (!Regex.IsMatch(txtDni.Text.Trim(), @"^\d{7,8}$"))
+            foreach (ComboBox combo in new[] { cmbProvincia, cmbPartido, cmbLocalidad, cmbRol })
             {
-                new MensajeError("El DNI debe tener 7 u 8 dígitos numéricos.").Mostrar();
-                return false;
+                if (combo.SelectedIndex < 0)
+                {
+                    ErrorCampo.Mostrar(combo, "Elegí una opción.");
+                    ok = false;
+                }
             }
 
-            if (!Regex.IsMatch(txtTelefono.Text.Trim(), @"^\d{8,15}$"))
+            if (!string.IsNullOrWhiteSpace(txtDni.Text) && !Regex.IsMatch(txtDni.Text.Trim(), @"^\d{7,8}$"))
             {
-                new MensajeError("El teléfono debe tener entre 8 y 15 dígitos numéricos.").Mostrar();
-                return false;
+                ErrorCampo.Mostrar(txtDni, "Debe tener 7 u 8 números.");
+                ok = false;
             }
 
-            if (!ValidarEdad())
-                return false;
+            if (!string.IsNullOrWhiteSpace(txtTelefono.Text) && !Regex.IsMatch(txtTelefono.Text.Trim(), @"^\d{8,15}$"))
+            {
+                ErrorCampo.Mostrar(txtTelefono, "Entre 8 y 15 números.");
+                ok = false;
+            }
 
-            return true;
+            return ValidarEdad() && ok;
+        }
+
+        // Los errores que devuelve la lógica y tienen un campo van abajo de ese campo
+        private void MostrarErrorRegistro(resultadoRegistroUsuario resultado)
+        {
+            string mensaje = servicioUsuarios.ObtenerMensajeRegistro(resultado);
+
+            switch (resultado)
+            {
+                case resultadoRegistroUsuario.UsuarioYaExiste:
+                    ErrorCampo.Mostrar(txtUsuario, mensaje);
+                    break;
+                case resultadoRegistroUsuario.CorreoYaExiste:
+                case resultadoRegistroUsuario.CorreoInvalido:
+                    ErrorCampo.Mostrar(txtCorreo, mensaje);
+                    break;
+                case resultadoRegistroUsuario.DniYaExiste:
+                    ErrorCampo.Mostrar(txtDni, mensaje);
+                    break;
+                default:
+                    new MensajeInformacion(mensaje).Mostrar();
+                    break;
+            }
         }
 
         private bool ValidarEdad()
@@ -608,46 +641,11 @@ namespace CapaVista
 
             if (edad < 16)
             {
-                new MensajeError("El usuario debe tener al menos 16 años.").Mostrar();
+                ErrorCampo.Mostrar(datFecha, "Debe tener al menos 16 años.");
                 return false;
             }
 
             return true;
-        }
-
-        private void configurargrilla(DataGridView dgv)
-        {
-            dgv.MultiSelect = false;
-            dgv.ReadOnly = true;
-            dgv.AllowUserToAddRows = false;
-            dgv.RowHeadersVisible = false;
-
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 9, FontStyle.Bold);
-            dgv.DefaultCellStyle.Font = new Font("Century Gothic", 11, FontStyle.Bold);
-
-            dgv.EnableHeadersVisualStyles = false;
-            dgv.BorderStyle = BorderStyle.None;
-            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dgv.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dgv.GridColor = Color.Black;
-
-            dgv.BackgroundColor = Color.FromArgb(8, 10, 12);
-
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkGray;
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-
-            dgv.DefaultCellStyle.BackColor = Color.White;
-            dgv.DefaultCellStyle.ForeColor = Color.Black;
-
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White;
-
-            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.DarkGray;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 120, 215);
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White;
-
-            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
         private void actualizargrilla()
@@ -668,8 +666,6 @@ namespace CapaVista
         // Estilo, columnas ocultas y orden de la grilla, para usarlo tanto al listar como al buscar
         private void FormatearGrilla()
         {
-            configurargrilla(DgvPrueba);
-
             OcultarColumna("IdPersona");
             OcultarColumna("IdDireccion");
             OcultarColumna("IdRol");

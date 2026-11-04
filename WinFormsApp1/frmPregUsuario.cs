@@ -22,10 +22,12 @@ namespace CapaVista
         private CL_servicioUsuarios servicioUsuarios = new CL_servicioUsuarios();
         private string usuario;
         private bool esPrimerLogin;
+        private bool salidaConfirmada;
 
         public frmPregUsuario(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
             this.usuario = usuario;
             this.Load += frmPregUsuario_Load;
         }
@@ -51,14 +53,19 @@ namespace CapaVista
                 return;
             }
 
+            bool completas = true;
+
             for (int i = 0; i < controlesRespuesta.Count; i++)
             {
                 if (string.IsNullOrWhiteSpace(controlesRespuesta[i].Text))
                 {
-                    new MensajeAdvertencia("Respondé todas las preguntas antes de continuar.").Mostrar();
-                    return;
+                    ErrorCampo.Mostrar(controlesRespuesta[i], "Respondé esta pregunta.");
+                    completas = false;
                 }
             }
+
+            if (!completas)
+                return;
 
             Dictionary<int, string> respuestas = new Dictionary<int, string>();
 
@@ -74,6 +81,7 @@ namespace CapaVista
             }
 
             new MensajeExito("Respuestas guardadas correctamente.").Mostrar();
+            salidaConfirmada = true;
 
             if (esPrimerLogin)
             {
@@ -92,9 +100,30 @@ namespace CapaVista
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            if (!ConfirmarSalida())
+                return;
+
             AbrirPantallaPrincipal(usuario);
             this.Hide();
             this.Close();
+        }
+
+        // Si se cierra con la X, tambien se pregunta antes de perder lo que se escribio
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && !salidaConfirmada && !ConfirmarSalida())
+                e.Cancel = true;
+
+            base.OnFormClosing(e);
+        }
+
+        private bool ConfirmarSalida()
+        {
+            if (!new MensajeConfirmacion("¿Desea salir? Las respuestas que no guardó se van a perder.").Confirmado())
+                return false;
+
+            salidaConfirmada = true;
+            return true;
         }
 
         // A pesar del nombre, ya no elige preguntas al azar: trae las 15 completas y arma
@@ -142,6 +171,8 @@ namespace CapaVista
                 pnlPreguntas.Controls.Add(txtRespuesta);
                 controlesRespuesta.Add(txtRespuesta);
             }
+
+            EstiloSistema.AplicarControles(pnlPreguntas);
         }
 
         // Abre frmAdmin o frmUsuario según el rol, una vez terminado este paso.

@@ -19,29 +19,33 @@ namespace CapaVista
         public frmCambiarContraseña(string usuario)
         {
             InitializeComponent();
+            EstiloSistema.Aplicar(this);
+            Text = "Cambiar contraseña";
             this.usuario = usuario;
         }
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
+            ErrorCampo.Limpiar(this);
+
             string nuevaContra = txtNuevaContra.Text;
             string confirmarContra = txtConfirmarContra.Text;
 
             if (string.IsNullOrWhiteSpace(nuevaContra))
             {
-                new MensajeError("Ingrese una nueva contraseña.").Mostrar();
+                ErrorCampo.Mostrar(txtNuevaContra, "Ingresá una nueva contraseña.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(confirmarContra))
             {
-                new MensajeError("Confirme la nueva contraseña.").Mostrar();
+                ErrorCampo.Mostrar(txtConfirmarContra, "Confirmá la nueva contraseña.");
                 return;
             }
 
             if (nuevaContra != confirmarContra)
             {
-                new MensajeError("Las contraseñas no coinciden.").Mostrar();
+                ErrorCampo.Mostrar(txtConfirmarContra, "Las contraseñas no coinciden.");
                 return;
             }
 
@@ -51,7 +55,7 @@ namespace CapaVista
 
                 if (requisitosIncumplidos.Count > 0)
                 {
-                    new MensajeError("La contraseña no cumple los requisitos:\n\n- " + string.Join("\n- ", requisitosIncumplidos)).Mostrar();
+                    ErrorCampo.Mostrar(txtNuevaContra, "No cumple: " + string.Join(", ", requisitosIncumplidos));
                     return;
                 }
 
@@ -67,7 +71,7 @@ namespace CapaVista
                 }
                 else
                 {
-                    new MensajeError("No se pudo cambiar la contraseña. Puede que ya se haya usado antes.").Mostrar();
+                    ErrorCampo.Mostrar(txtConfirmarContra, "No se pudo cambiar. Puede que ya se haya usado antes.");
                 }
             }
             catch (Exception ex)

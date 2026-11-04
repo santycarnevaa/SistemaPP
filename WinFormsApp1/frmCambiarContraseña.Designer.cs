@@ -60,7 +60,7 @@
             btnSiguiente.FlatStyle = FlatStyle.Flat;
             btnSiguiente.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnSiguiente.ForeColor = Color.White;
-            btnSiguiente.Location = new Point(210, 240);
+            btnSiguiente.Location = new Point(210, 270);
             btnSiguiente.Name = "btnSiguiente";
             btnSiguiente.Size = new Size(135, 34);
             btnSiguiente.TabIndex = 13;
@@ -100,7 +100,7 @@
             txtConfirmarContra.BorderStyle = BorderStyle.FixedSingle;
             txtConfirmarContra.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             txtConfirmarContra.ForeColor = Color.White;
-            txtConfirmarContra.Location = new Point(167, 189);
+            txtConfirmarContra.Location = new Point(167, 199);
             txtConfirmarContra.Multiline = true;
             txtConfirmarContra.Name = "txtConfirmarContra";
             txtConfirmarContra.PasswordChar = '•';
@@ -114,7 +114,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(167, 166);
+            label2.Location = new Point(167, 176);
             label2.Name = "label2";
             label2.Size = new Size(189, 16);
             label2.TabIndex = 17;
@@ -148,7 +148,7 @@
             //
             pctOjoConfirmar.Image = (Image)resources.GetObject("pctOjoConfirmar.Image");
             pctOjoConfirmar.ImageLocation = "";
-            pctOjoConfirmar.Location = new Point(398, 194);
+            pctOjoConfirmar.Location = new Point(398, 204);
             pctOjoConfirmar.Name = "pctOjoConfirmar";
             pctOjoConfirmar.Size = new Size(23, 23);
             pctOjoConfirmar.SizeMode = PictureBoxSizeMode.Zoom;
@@ -161,7 +161,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(8, 10, 13);
-            ClientSize = new Size(556, 300);
+            ClientSize = new Size(556, 318);
             Controls.Add(pctOjoConfirmar);
             Controls.Add(pctOjoNueva);
             Controls.Add(pictureBox2);

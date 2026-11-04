@@ -11,6 +11,12 @@ namespace CapaVista
     {
         public static void AjustarAGrilla(Form ventana, DataGridView grilla)
         {
+            EstiloGrilla.Aplicar(grilla);
+
+            // los nombres de las columnas vienen de la base con guion bajo, en pantalla se muestran con espacios
+            foreach (DataGridViewColumn columna in grilla.Columns)
+                columna.HeaderText = columna.HeaderText.Replace('_', ' ');
+
             // calculo el ancho que necesita cada columna segun lo que tiene adentro
             grilla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             grilla.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
@@ -26,9 +32,14 @@ namespace CapaVista
                 return;
 
             // le sumo el rectangulo del costado y los bordes de la grilla
-            int anchoGrilla = anchoColumnas + SystemInformation.VerticalScrollBarWidth + 2;
+            int anchoGrilla = anchoColumnas + 2;
             if (grilla.RowHeadersVisible)
                 anchoGrilla += grilla.RowHeadersWidth;
+
+            // la barra de la derecha solo ocupa lugar si las filas no entran en la grilla
+            int altoFilas = grilla.ColumnHeadersHeight + grilla.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            if (altoFilas > grilla.Height)
+                anchoGrilla += SystemInformation.VerticalScrollBarWidth;
 
             int diferencia = anchoGrilla - grilla.Width;
             int borde = ventana.Width - ventana.ClientSize.Width;
@@ -40,10 +51,12 @@ namespace CapaVista
                 .Where(c => !(c.Anchor.HasFlag(AnchorStyles.Right) && !c.Anchor.HasFlag(AnchorStyles.Left)))
                 .ToList();
 
-            // lo que hay a la derecha de la grilla se corre lo mismo que ella
+            // lo que hay a la derecha de la grilla, a su misma altura, se corre lo mismo que ella
+            // (lo que esta arriba, como los filtros, se queda donde esta para que no se corte)
             int derechaGrilla = grilla.Right;
             var aLaDerecha = controles
-                .Where(c => c != grilla && c.Left >= derechaGrilla)
+                .Where(c => c != grilla && c.Left >= derechaGrilla
+                            && c.Top < grilla.Bottom && c.Bottom > grilla.Top)
                 .ToList();
 
             int margen = ventana.ClientSize.Width - controles.Max(c => c.Right);
@@ -59,7 +72,16 @@ namespace CapaVista
                 anchoGrilla -= exceso;
                 diferencia -= exceso;
                 nuevoAncho = anchoMaximo;
+            }
 
+            // si la grilla es mas angosta que la ventana (por los filtros de arriba), ocupa todo el ancho
+            int anchoLibre = nuevoAncho - margen - grilla.Left;
+            bool sobraEspacio = aLaDerecha.Count == 0 && anchoGrilla < anchoLibre;
+            if (sobraEspacio)
+                anchoGrilla = anchoLibre;
+
+            if (!entraEnPantalla || sobraEspacio)
+            {
                 foreach (DataGridViewColumn columna in grilla.Columns)
                     columna.FillWeight = Math.Max(columna.Width, 1);
 

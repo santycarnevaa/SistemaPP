@@ -22,9 +22,9 @@ namespace CapaDatos
                     object resultado = cmd.ExecuteScalar();
 
                     if (resultado == null)
-                        return false;
+                        return false;// 
 
-                    string mensaje = resultado.ToString();
+                    string mensaje = resultado.ToString();//
 
                     return mensaje.Contains("correctamente");
                 }
@@ -99,9 +99,9 @@ namespace CapaDatos
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
 
-                    object result = cmd.ExecuteScalar();
+                    object resultado = cmd.ExecuteScalar();
 
-                    return result != null ? result.ToString() : string.Empty;
+                    return resultado != null ? resultado.ToString() : string.Empty;
                 }
             }
             catch (Exception ex)

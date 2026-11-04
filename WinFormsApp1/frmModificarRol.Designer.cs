@@ -129,7 +129,7 @@ namespace CapaVista
             MinimizeBox = false;
             Name = "frmModificarRol";
             StartPosition = FormStartPosition.CenterParent;
-            Text = " ";
+            Text = "Modificar rol";
             grbPermisos.ResumeLayout(false);
             grbPermisos.PerformLayout();
             ResumeLayout(false);

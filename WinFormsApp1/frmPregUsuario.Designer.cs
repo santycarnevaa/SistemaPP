@@ -97,7 +97,7 @@
             MaximizeBox = false;
             Name = "frmPregUsuario";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Configuracion";
+            Text = "Preguntas de seguridad";
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();

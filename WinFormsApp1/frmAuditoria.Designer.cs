@@ -26,7 +26,6 @@ namespace CapaVista
             dtpDesde = new DateTimePicker();
             lblHasta = new Label();
             dtpHasta = new DateTimePicker();
-            btnFiltrar = new Button();
             dgvAuditoria = new DataGridView();
             pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dgvAuditoria).BeginInit();
@@ -106,19 +105,6 @@ namespace CapaVista
             dtpHasta.Size = new Size(130, 23);
             dtpHasta.TabIndex = 5;
             //
-            // btnFiltrar
-            //
-            btnFiltrar.BackColor = Color.RoyalBlue;
-            btnFiltrar.FlatStyle = FlatStyle.Flat;
-            btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(675, 31);
-            btnFiltrar.Name = "btnFiltrar";
-            btnFiltrar.Size = new Size(120, 27);
-            btnFiltrar.TabIndex = 6;
-            btnFiltrar.Text = "Filtrar";
-            btnFiltrar.UseVisualStyleBackColor = false;
-            btnFiltrar.Click += btnFiltrar_Click;
-            //
             // dgvAuditoria
             //
             dgvAuditoria.Location = new Point(12, 75);
@@ -157,7 +143,6 @@ namespace CapaVista
             Controls.Add(dtpDesde);
             Controls.Add(lblHasta);
             Controls.Add(dtpHasta);
-            Controls.Add(btnFiltrar);
             Controls.Add(dgvAuditoria);
             Controls.Add(pictureBox2);
             Name = "frmAuditoria";
@@ -182,7 +167,6 @@ namespace CapaVista
         private DateTimePicker dtpDesde;
         private Label lblHasta;
         private DateTimePicker dtpHasta;
-        private Button btnFiltrar;
         private DataGridView dgvAuditoria;
         private PictureBox pictureBox2;
     }
