@@ -1,6 +1,6 @@
 namespace Entidades
 {
-    // Tabla de otro grupo (maestro de catálogo). Acá solo se lee para combos.
+    // tabla de otro grupo (catalogo), aca solo se lee para los combos
     public class Marca
     {
         public int IdMarca { get; set; }

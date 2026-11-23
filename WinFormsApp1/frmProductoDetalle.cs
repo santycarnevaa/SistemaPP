@@ -5,8 +5,8 @@ using Entidades;
 
 namespace CapaVista
 {
-    // Ventana para dar de alta, modificar o solo consultar un producto.
-    // Si no recibe producto es un alta. Devuelve OK cuando se guardo algo.
+    // ventana para dar de alta, modificar o solo ver un producto
+    // si no recibe producto es un alta. devuelve ok cuando se guardo algo
     public partial class frmProductoDetalle : Form
     {
         private readonly int idUsuario;
@@ -73,8 +73,8 @@ namespace CapaVista
             }
         }
 
-        // El vencimiento se elige de hoy en adelante. Si el producto ya esta vencido se deja ver
-        // su fecha, pero para guardarlo hay que corregirla (se controla al validar).
+        // el vencimiento se elige de hoy en adelante. si el producto ya esta vencido se deja ver
+        // la fecha pero para guardarlo hay que cambiarla (se controla al validar)
         private void LimitarVencimiento()
         {
             DateTime minimo = DateTime.Today;
@@ -142,7 +142,7 @@ namespace CapaVista
             Close();
         }
 
-        // Dice qué campo falta o está mal con un texto abajo del campo.
+        // dice que campo falta o esta mal con un texto abajo del campo
         private bool LeerEntero(TextBox caja, out int valor)
         {
             valor = 0;
@@ -162,7 +162,7 @@ namespace CapaVista
             return true;
         }
 
-        // Sin separador de miles: con cultura es-AR "100.50" se leería como 10050, así que se rechaza.
+        // sin separador de miles: con cultura es-ar "100.50" se leeria como 10050, por eso se rechaza
         private bool LeerPrecio(TextBox caja, out decimal valor)
         {
             valor = 0;

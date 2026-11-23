@@ -7,23 +7,20 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_georefDatos : CD_conexion
+    public class CD_georefDatos : CD_ejecutarConsultasSP
     {
         public bool guardarProvincia(string idProvincia, string nombre)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdProvincia", SqlDbType.VarChar, 10) { Value = idProvincia },
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 100) { Value = nombre }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_GuardarProvincia", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdProvincia", idProvincia);
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_GuardarProvincia", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -34,20 +31,17 @@ namespace CapaDatos
 
         public bool guardarPartido(string idPartido, string nombre, string idProvincia)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdPartido", SqlDbType.VarChar, 20) { Value = idPartido },
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 100) { Value = nombre },
+                new SqlParameter("@IdProvincia", SqlDbType.VarChar, 10) { Value = idProvincia }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_GuardarPartido", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdPartido", idPartido);
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@IdProvincia", idProvincia);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_GuardarPartido", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -58,20 +52,17 @@ namespace CapaDatos
 
         public bool guardarLocalidad(string idLocalidad, string nombre, string idPartido)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 150) { Value = nombre },
+                new SqlParameter("@IdPartido", SqlDbType.VarChar, 20) { Value = idPartido }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_GuardarLocalidad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@IdPartido", idPartido);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_GuardarLocalidad", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -86,23 +77,15 @@ namespace CapaDatos
 
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerProvincias", null);
+
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerProvincias", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    lista.Add(new Provincia
                     {
-                        lista.Add(new Provincia
-                        {
-                            IdProvincia = reader["IdProvincia"].ToString(),
-                            Nombre = reader["Nombre"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdProvincia = fila["IdProvincia"].ToString(),
+                        Nombre = fila["Nombre"].ToString()
+                    });
                 }
             }
             catch (Exception ex)
@@ -117,27 +100,23 @@ namespace CapaDatos
         {
             List<Partido> lista = new List<Partido>();
 
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdProvincia", SqlDbType.VarChar, 10) { Value = idProvincia }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerPartidosPorProvincia", parametros);
+
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerPartidosPorProvincia", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdProvincia", idProvincia);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    lista.Add(new Partido
                     {
-                        lista.Add(new Partido
-                        {
-                            IdPartido = reader["IdPartido"].ToString(),
-                            Nombre = reader["Nombre"].ToString(),
-                            IdProvincia = reader["IdProvincia"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdPartido = fila["IdPartido"].ToString(),
+                        Nombre = fila["Nombre"].ToString(),
+                        IdProvincia = fila["IdProvincia"].ToString()
+                    });
                 }
             }
             catch (Exception ex)
@@ -152,27 +131,23 @@ namespace CapaDatos
         {
             List<Localidad> lista = new List<Localidad>();
 
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdPartido", SqlDbType.VarChar, 20) { Value = idPartido }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerLocalidadesPorPartido", parametros);
+
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerLocalidadesPorPartido", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdPartido", idPartido);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    lista.Add(new Localidad
                     {
-                        lista.Add(new Localidad
-                        {
-                            IdLocalidad = reader["IdLocalidad"].ToString(),
-                            Nombre = reader["Nombre"].ToString(),
-                            IdPartido = reader["IdPartido"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdLocalidad = fila["IdLocalidad"].ToString(),
+                        Nombre = fila["Nombre"].ToString(),
+                        IdPartido = fila["IdPartido"].ToString()
+                    });
                 }
             }
             catch (Exception ex)
@@ -187,15 +162,9 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_HayDatosGeograficosCargados", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_HayDatosGeograficosCargados", null));
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToBoolean(resultado);
-                }
+                return resultado != null && Convert.ToBoolean(resultado);
             }
             catch (Exception ex)
             {
@@ -216,28 +185,25 @@ namespace CapaDatos
             string direccionOriginal,
             string direccionNormalizada)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Calle", SqlDbType.VarChar, 150) { Value = calle },
+                new SqlParameter("@Numero", SqlDbType.VarChar, 20) { Value = ValorONulo(numero) },
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = ValorONulo(codigoPostal) },
+                new SqlParameter("@Depto", SqlDbType.VarChar, 20) { Value = ValorONulo(depto) },
+                new SqlParameter("@Piso", SqlDbType.VarChar, 20) { Value = ValorONulo(piso) },
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Latitud", SqlDbType.Decimal) { Precision = 10, Scale = 7, Value = (object?)latitud ?? DBNull.Value },
+                new SqlParameter("@Longitud", SqlDbType.Decimal) { Precision = 10, Scale = 7, Value = (object?)longitud ?? DBNull.Value },
+                new SqlParameter("@DireccionOriginal", SqlDbType.VarChar, 250) { Value = ValorONulo(direccionOriginal) },
+                new SqlParameter("@DireccionNormalizada", SqlDbType.VarChar, 250) { Value = ValorONulo(direccionNormalizada) }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_GuardarDireccion", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_GuardarDireccion", parametros));
 
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", string.IsNullOrWhiteSpace(numero) ? DBNull.Value : numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
-                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", string.IsNullOrWhiteSpace(direccionNormalizada) ? DBNull.Value : direccionNormalizada);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? Convert.ToInt32(resultado) : -1;
-                }
+                return resultado != null ? Convert.ToInt32(resultado) : -1;
             }
             catch (Exception ex)
             {
@@ -259,32 +225,29 @@ namespace CapaDatos
             string direccionOriginal,
             string direccionNormalizada)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdDireccion", SqlDbType.Int) { Value = idDireccion },
+                new SqlParameter("@Calle", SqlDbType.VarChar, 150) { Value = calle },
+                new SqlParameter("@Numero", SqlDbType.VarChar, 20) { Value = ValorONulo(numero) },
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = ValorONulo(codigoPostal) },
+                new SqlParameter("@Depto", SqlDbType.VarChar, 20) { Value = ValorONulo(depto) },
+                new SqlParameter("@Piso", SqlDbType.VarChar, 20) { Value = ValorONulo(piso) },
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Latitud", SqlDbType.Decimal) { Precision = 10, Scale = 7, Value = (object?)latitud ?? DBNull.Value },
+                new SqlParameter("@Longitud", SqlDbType.Decimal) { Precision = 10, Scale = 7, Value = (object?)longitud ?? DBNull.Value },
+                new SqlParameter("@DireccionOriginal", SqlDbType.VarChar, 250) { Value = ValorONulo(direccionOriginal) },
+                new SqlParameter("@DireccionNormalizada", SqlDbType.VarChar, 250) { Value = ValorONulo(direccionNormalizada) }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ActualizarDireccion", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ActualizarDireccion", parametros));
 
-                    cmd.Parameters.AddWithValue("@IdDireccion", idDireccion);
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", string.IsNullOrWhiteSpace(numero) ? DBNull.Value : numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
-                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", string.IsNullOrWhiteSpace(direccionNormalizada) ? DBNull.Value : direccionNormalizada);
+                if (resultado != null)
+                    return Convert.ToInt32(resultado) > 0;
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    if (resultado != null)
-                        return Convert.ToInt32(resultado) > 0;
-
-                    return true;
-                }
+                return true;
             }
             catch (Exception ex)
             {

@@ -5,104 +5,84 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    // Acceso a datos de preguntas y respuestas de seguridad.
-    public class CD_preguntasDatos : CD_conexion
+    // datos de las preguntas y respuestas de seguridad
+    public class CD_preguntasDatos : CD_ejecutarConsultasSP
     {
-        // Trae las 15 preguntas del sistema, sin filtrar por usuario.
-        // Se usa para mostrarle a un usuario el pool completo la primera vez que tiene que responderlas.
+        // trae las 15 preguntas del sistema, sin filtrar por usuario
+        // se usa para mostrarle todas al usuario la primera vez que las tiene que responder
         public List<PreguntaSeguridad> ObtenerPreguntasDisponibles()
         {
-            List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
-
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ListarPreguntasSeguridad", null);
+
+                List<PreguntaSeguridad> preguntas = new List<PreguntaSeguridad>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ListarPreguntasSeguridad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    preguntas.Add(new PreguntaSeguridad
                     {
-                        preguntas.Add(new PreguntaSeguridad
-                        {
-                            IdPregunta = Convert.ToInt32(reader["IdPregunta"]),
-                            Pregunta = reader["Pregunta"].ToString(),
-                            RespuestaHash = string.Empty
-                        });
-                    }
-
-                    reader.Close();
+                        IdPregunta = Convert.ToInt32(fila["IdPregunta"]),
+                        Pregunta = fila["Pregunta"].ToString(),
+                        RespuestaHash = string.Empty
+                    });
                 }
+
+                return preguntas;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_preguntasDatos.ObtenerPreguntasDisponibles", ex);
                 return new List<PreguntaSeguridad>();
             }
-
-            return preguntas;
         }
 
-        // Trae únicamente las preguntas que ESE usuario ya respondió, junto con el hash guardado
-        // de cada respuesta. El filtro por usuario lo hace el SP (WHERE IdUsuario = @IdUsuario);
-        // se usa en la recuperación de contraseña, para saber qué preguntarle a cada quien.
+        // trae solo las preguntas que ya respondio ese usuario con el hash de cada respuesta.
+        // el filtro por usuario lo hace el sp. se usa para recuperar la contraseña
         public List<PreguntaSeguridad> obtenerPreguntasUsuario(int idUsuario)
         {
-            List<PreguntaSeguridad> lista = new List<PreguntaSeguridad>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerPreguntasUsuario", parametros);
+
+                List<PreguntaSeguridad> lista = new List<PreguntaSeguridad>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerPreguntasUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    // no se carga el idusuario porque el sp ya filtro por usuario
+                    lista.Add(new PreguntaSeguridad
                     {
-                        // El objeto no incluye IdUsuario: el filtro por usuario ya se aplicó
-                        // en el SP, así que no hace falta cargarlo acá.
-                        lista.Add(new PreguntaSeguridad
-                        {
-                            IdPregunta = Convert.ToInt32(reader["IdPregunta"]),
-                            Pregunta = reader["Pregunta"].ToString(),
-                            RespuestaHash = reader["RespuestaHash"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdPregunta = Convert.ToInt32(fila["IdPregunta"]),
+                        Pregunta = fila["Pregunta"].ToString(),
+                        RespuestaHash = fila["RespuestaHash"].ToString()
+                    });
                 }
+
+                return lista;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error SQL al listar preguntas de seguridad: " + ex.Message, ex);
             }
-            return lista;
         }
 
-        // Guarda la respuesta (ya hasheada por la capa de lógica) de un usuario a una pregunta puntual.
+        // guarda la respuesta (ya hasheada en la capa logica) de un usuario a una pregunta
         public bool InsertarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@IdPregunta", SqlDbType.Int) { Value = idPregunta },
+                new SqlParameter("@RespuestaHash", SqlDbType.VarChar, 256) { Value = respuestaHash }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_GuardarRespuestasSeguridad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@IdPregunta", idPregunta);
-                    cmd.Parameters.AddWithValue("@RespuestaHash", respuestaHash);
-
-                    cmd.ExecuteNonQuery();
-
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_GuardarRespuestasSeguridad", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -110,25 +90,22 @@ namespace CapaDatos
             }
         }
 
-        // Compara, directamente en la base, si el hash pasado por parámetro coincide con el
-        // que ya está guardado para esa pregunta de ese usuario.
+        // compara en la base si el hash coincide con el que esta guardado
+        // para esa pregunta y ese usuario
         public bool VerificarRespuestaUsuario(int idUsuario, int idPregunta, string respuestaHash)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@IdPregunta", SqlDbType.Int) { Value = idPregunta },
+                new SqlParameter("@RespuestaHash", SqlDbType.VarChar, 256) { Value = respuestaHash }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_VerificarRespuestaSeguridad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_VerificarRespuestaSeguridad", parametros));
 
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@IdPregunta", idPregunta);
-                    cmd.Parameters.AddWithValue("@RespuestaHash", respuestaHash);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToBoolean(resultado);
-                }
+                return resultado != null && Convert.ToBoolean(resultado);
             }
             catch (Exception ex)
             {
@@ -137,8 +114,8 @@ namespace CapaDatos
             }
         }
 
-        // Indica si el usuario ya respondió al menos una pregunta de seguridad
-        // (para saber si puede usar la recuperación de contraseña por preguntas).
+        // dice si el usuario ya respondio alguna pregunta
+        // (para saber si puede recuperar la contraseña con preguntas)
         public bool UsuarioTienePreguntas(int idUsuario)
         {
             try

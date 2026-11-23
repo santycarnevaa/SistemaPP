@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Deja escribir en el combo para buscar una opcion de la lista
+    // deja escribir en el combo para buscar una opcion de la lista
     public static class ComboBuscable
     {
         public static void Activar(ComboBox combo)
@@ -12,7 +12,7 @@ namespace CapaVista
             combo.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             combo.AutoCompleteSource = AutoCompleteSource.ListItems;
 
-            // deshabilitado, Windows lo pinta de blanco si es de escritura; asi se ve como los demas
+            // deshabilitado, windows lo pinta de blanco si es de escritura, asi se ve como los demas
             combo.EnabledChanged += (s, e) =>
             {
                 combo.DropDownStyle = combo.Enabled ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;

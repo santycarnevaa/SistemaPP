@@ -2,9 +2,9 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Clase base de todos los mensajes que se le muestran al usuario. Cada tipo de
-    // mensaje (error, éxito, advertencia, información, confirmación) hereda de acá y
-    // define su propio título e ícono; todos comparten la misma forma de mostrarse.
+    // clase base de todos los mensajes que se le muestran al usuario. cada tipo
+    // (error, exito, advertencia, informacion, confirmacion) hereda de aca y
+    // pone su titulo y su icono, todos se muestran de la misma forma
     public abstract class MensajeSistema
     {
         protected abstract string Titulo { get; }

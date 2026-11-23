@@ -5,105 +5,81 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_scrapDatos : CD_conexion
+    public class CD_scrapDatos : CD_ejecutarConsultasSP
     {
         public List<RegistroScrap> ObtenerScrap(DateTime? desde, DateTime? hasta)
         {
-            List<RegistroScrap> registros = new List<RegistroScrap>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Desde", SqlDbType.DateTime) { Value = (object?)desde ?? DBNull.Value },
+                new SqlParameter("@Hasta", SqlDbType.DateTime) { Value = (object?)hasta ?? DBNull.Value }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerScrap", parametros);
+
+                List<RegistroScrap> registros = new List<RegistroScrap>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerScrap", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@Desde", desde.HasValue ? desde.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Hasta", hasta.HasValue ? hasta.Value : DBNull.Value);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    registros.Add(new RegistroScrap
                     {
-                        registros.Add(new RegistroScrap
-                        {
-                            ID = Convert.ToInt32(reader["ID"]),
-                            FK_Producto = Convert.ToInt32(reader["FK_Producto"]),
-                            FK_Usuario = Convert.ToInt32(reader["FK_Usuario"]),
-                            Cantidad = Convert.ToInt32(reader["Cantidad"]),
-                            Motivo = reader["Motivo"].ToString(),
-                            Costo_Valorizado = Convert.ToDecimal(reader["Costo_Valorizado"]),
-                            Fecha = Convert.ToDateTime(reader["Fecha"]),
-                            Producto = reader["Producto"].ToString(),
-                            Usuario = reader["Usuario"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        ID = Convert.ToInt32(fila["ID"]),
+                        FK_Producto = Convert.ToInt32(fila["FK_Producto"]),
+                        FK_Usuario = Convert.ToInt32(fila["FK_Usuario"]),
+                        Cantidad = Convert.ToInt32(fila["Cantidad"]),
+                        Motivo = fila["Motivo"].ToString(),
+                        Costo_Valorizado = Convert.ToDecimal(fila["Costo_Valorizado"]),
+                        Fecha = Convert.ToDateTime(fila["Fecha"]),
+                        Producto = fila["Producto"].ToString(),
+                        Usuario = fila["Usuario"].ToString()
+                    });
                 }
+
+                return registros;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_scrapDatos.ObtenerScrap", ex);
                 return new List<RegistroScrap>();
             }
-
-            return registros;
         }
 
-        // Igual que InsertarMovimiento: devuelve null si salió bien, o el mensaje
-        // de error del SP (por ejemplo "no hay stock suficiente").
+        // igual que insertarmovimiento: devuelve null si salio bien o el error
+        // que mando el sp (por ej si no hay stock suficiente)
         public string InsertarScrap(RegistroScrap s, out int stockResultante, out decimal costoValorizado)
         {
             stockResultante = -1;
             costoValorizado = 0;
 
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@FK_Producto", SqlDbType.Int) { Value = s.FK_Producto },
+                new SqlParameter("@FK_Usuario", SqlDbType.Int) { Value = s.FK_Usuario },
+                new SqlParameter("@Cantidad", SqlDbType.Int) { Value = s.Cantidad },
+                new SqlParameter("@Motivo", SqlDbType.VarChar, 200) { Value = s.Motivo }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_InsertarScrap", parametros);
+
+                if (tabla.Rows.Count > 0)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_InsertarScrap", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (tabla.Columns.Contains("Error"))
+                        return tabla.Rows[0]["Error"].ToString();
 
-                    cmd.Parameters.AddWithValue("@FK_Producto", s.FK_Producto);
-                    cmd.Parameters.AddWithValue("@FK_Usuario", s.FK_Usuario);
-                    cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
-                    cmd.Parameters.AddWithValue("@Motivo", s.Motivo);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        if (HasColumn(reader, "Error"))
-                        {
-                            string error = reader["Error"].ToString();
-                            reader.Close();
-                            return error;
-                        }
-
-                        stockResultante = Convert.ToInt32(reader["Stock_Resultante"]);
-                        costoValorizado = Convert.ToDecimal(reader["Costo_Valorizado"]);
-                    }
-
-                    reader.Close();
-                    return null;
+                    stockResultante = Convert.ToInt32(tabla.Rows[0]["Stock_Resultante"]);
+                    costoValorizado = Convert.ToDecimal(tabla.Rows[0]["Costo_Valorizado"]);
                 }
+
+                return null;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_scrapDatos.InsertarScrap", ex);
                 return "Error de base de datos al registrar el scrap.";
             }
-        }
-
-        private bool HasColumn(SqlDataReader reader, string nombreColumna)
-        {
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetName(i) == nombreColumna)
-                    return true;
-            }
-            return false;
         }
     }
 }

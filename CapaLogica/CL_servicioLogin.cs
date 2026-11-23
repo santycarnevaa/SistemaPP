@@ -117,9 +117,9 @@ namespace CapaLogica
                 case resultadoLogin.PasswordVacia:
                     return "Ingrese la contraseña.";
 
-                // Unificado a propósito: si cada caso tuviera su propio mensaje, alguien
-                // podría probar nombres de usuario al azar y, por el mensaje que recibe,
-                // deducir cuáles existen en el sistema (enumeración de usuarios).
+                // esto esta junto a proposito: si cada caso tuviera su mensaje alguien
+                // podria probar usuarios al azar y por el mensaje darse cuenta
+                // cuales existen en el sistema
                 case resultadoLogin.UsuarioNoExiste:
                 case resultadoLogin.UsuarioInactivo:
                 case resultadoLogin.PasswordIncorrecta:

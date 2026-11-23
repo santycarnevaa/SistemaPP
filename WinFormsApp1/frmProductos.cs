@@ -8,7 +8,7 @@ using Entidades;
 
 namespace CapaVista
 {
-    // Listado de productos. El alta, la modificacion y la consulta se hacen en frmProductoDetalle.
+    // listado de productos. el alta, la modificacion y la consulta se hacen en frmproductodetalle
     public partial class frmProductos : Form
     {
         private readonly string usuario;
@@ -104,7 +104,7 @@ namespace CapaVista
             return columna;
         }
 
-        // Los iconos son letras de la fuente de iconos de Windows
+        // los iconos son letras de la fuente de iconos de windows
         private void AgregarColumnaIcono(string nombre, string descripcion, Color color)
         {
             DataGridViewTextBoxColumn columna = new DataGridViewTextBoxColumn
@@ -212,7 +212,7 @@ namespace CapaVista
             }
         }
 
-        // Dice si en esa celda hay un icono que se pueda usar
+        // dice si en esa celda hay un icono que se pueda usar
         private bool HayIcono(int fila, int columna)
         {
             Producto p = ProductoDeFila(fila);

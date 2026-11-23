@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CapaDatos;
@@ -275,13 +274,13 @@ namespace CapaLogica
             return Regex.IsMatch(correo, patron);
         }
 
-        // DNI argentino: 7 u 8 dígitos, sin puntos.
+        // dni argentino: 7 u 8 digitos, sin puntos
         private bool DniValido(string dni)
         {
             return !string.IsNullOrWhiteSpace(dni) && Regex.IsMatch(dni.Trim(), @"^\d{7,8}$");
         }
 
-        // Teléfono: solo dígitos, con o sin código de área (entre 8 y 15 dígitos).
+        // telefono: solo numeros, con o sin codigo de area (entre 8 y 15 digitos)
         private bool TelefonoValido(string telefono)
         {
             return !string.IsNullOrWhiteSpace(telefono) && Regex.IsMatch(telefono.Trim(), @"^\d{8,15}$");
@@ -386,7 +385,7 @@ namespace CapaLogica
             return usuarioDatos.ObtenerUsuariosGrilla();
         }
 
-        // Los permisos del catálogo se validan en la capa lógica (no solo ocultando botones).
+        // los permisos del catalogo se validan en la logica (no solo escondiendo botones)
         public bool EsAdministradorPorId(int idUsuario)
         {
             if (idUsuario <= 0)
@@ -403,7 +402,7 @@ namespace CapaLogica
             return usuarioDatos.ObtenerRolUsuario(usuario);
         }
 
-        public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
+        public List<UsuarioGrilla> BuscarUsuariosParaGrilla(string texto, string filtro)
         {
             return usuarioDatos.BuscarUsuariosParaGrilla(texto, filtro);
         }
@@ -413,7 +412,7 @@ namespace CapaLogica
             return usuarioDatos.ListarRoles();
         }
 
-        // Devuelve un mensaje de error, o texto vacío si el rol se agregó bien.
+        // devuelve un mensaje de error, o vacio si el rol se agrego bien
         public string AgregarRol(string nombreRol)
         {
             if (string.IsNullOrWhiteSpace(nombreRol))
@@ -433,7 +432,7 @@ namespace CapaLogica
             return "";
         }
 
-        // Igual que AgregarRol: devuelve un mensaje de error, o texto vacío si salió bien.
+        // igual que agregarrol: devuelve un mensaje de error, o vacio si salio bien
         public string ModificarRol(int idRol, string nombreRol)
         {
             if (idRol <= 0)

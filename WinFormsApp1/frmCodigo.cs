@@ -96,8 +96,8 @@ namespace CapaVista
 
             if (origen == OrigenVerificacion.ConfirmacionLogin)
             {
-                // Login estándar con 2FA (T09): el código solo confirma la
-                // identidad, no hace falta pasar por las preguntas de seguridad.
+                // login normal con 2fa (t09): el codigo solo confirma quien es,
+                // no hace falta pasar por las preguntas de seguridad
                 AbrirPantallaPrincipal(usuario);
                 return;
             }

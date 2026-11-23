@@ -3,8 +3,8 @@ using CapaLogica;
 
 namespace CapaVista
 {
-    // Abre el panel que le corresponde a cada usuario según su rol.
-    // Antes este código estaba repetido en el login, el código 2FA, el cambio de contraseña y las preguntas.
+    // abre el panel que le toca a cada usuario segun su rol
+    // antes esto estaba repetido en el login, el codigo 2fa, el cambio de contraseña y las preguntas
     public static class Navegacion
     {
         public static void AbrirPantallaPrincipal(Form actual, string usuario)
@@ -22,8 +22,8 @@ namespace CapaVista
             }
             else if (idRol > 0)
             {
-                // cualquier otro rol (Usuario, ventas, etc.) entra al panel de usuario,
-                // y frmUsuario decide qué botones muestra según el rol
+                // cualquier otro rol (usuario, ventas, etc) entra al panel de usuario
+                // y frmusuario decide que botones muestra segun el rol
                 frmUsuario frm = new frmUsuario(usuario);
                 actual.Hide();
                 frm.ShowDialog();

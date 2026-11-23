@@ -5,42 +5,31 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_configuracionDatos : CD_conexion
+    public class CD_configuracionDatos : CD_ejecutarConsultasSP
     {
         public configuracionSistema obtenerConfiguracion()
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ObtenerConfiguracion", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerConfiguracion", null);
 
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        configuracionSistema config = new configuracionSistema
-                        {
-                            idConfiguracion = Convert.ToInt32(reader["IdPolitica"]),
-                            minCaracteres = Convert.ToInt32(reader["MinCaracteres"]),
-                            cantPreguntas = Convert.ToInt32(reader["CantPreguntas"]),
-                            requiereMayusculas = Convert.ToBoolean(reader["RequiereMayusculas"]),
-                            requiereMinusculas = Convert.ToBoolean(reader["RequiereMinusculas"]),
-                            requiereNumeros = Convert.ToBoolean(reader["RequiereNumeros"]),
-                            requiereEspeciales = Convert.ToBoolean(reader["RequiereEspeciales"]),
-                            requiere2FA = Convert.ToBoolean(reader["Requiere2FA"]),
-                            noRepetirPasswords = Convert.ToBoolean(reader["NoRepetirPasswords"]),
-                            validarDatosPersonales = Convert.ToBoolean(reader["ValidarDatosPersonales"])
-                        };
-
-                        reader.Close();
-                        return config;
-                    }
-
-                    reader.Close();
+                if (tabla.Rows.Count == 0)
                     return null;
-                }
+
+                DataRow fila = tabla.Rows[0];
+                return new configuracionSistema
+                {
+                    idConfiguracion = Convert.ToInt32(fila["IdPolitica"]),
+                    minCaracteres = Convert.ToInt32(fila["MinCaracteres"]),
+                    cantPreguntas = Convert.ToInt32(fila["CantPreguntas"]),
+                    requiereMayusculas = Convert.ToBoolean(fila["RequiereMayusculas"]),
+                    requiereMinusculas = Convert.ToBoolean(fila["RequiereMinusculas"]),
+                    requiereNumeros = Convert.ToBoolean(fila["RequiereNumeros"]),
+                    requiereEspeciales = Convert.ToBoolean(fila["RequiereEspeciales"]),
+                    requiere2FA = Convert.ToBoolean(fila["Requiere2FA"]),
+                    noRepetirPasswords = Convert.ToBoolean(fila["NoRepetirPasswords"]),
+                    validarDatosPersonales = Convert.ToBoolean(fila["ValidarDatosPersonales"])
+                };
             }
             catch (Exception ex)
             {
@@ -51,32 +40,29 @@ namespace CapaDatos
 
         public bool actualizarConfiguracion(configuracionSistema config)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@MinCaracteres", SqlDbType.Int) { Value = config.minCaracteres },
+                new SqlParameter("@CantPreguntas", SqlDbType.Int) { Value = config.cantPreguntas },
+                new SqlParameter("@RequiereMayusculas", SqlDbType.Bit) { Value = config.requiereMayusculas },
+                new SqlParameter("@RequiereMinusculas", SqlDbType.Bit) { Value = config.requiereMinusculas },
+                new SqlParameter("@RequiereNumeros", SqlDbType.Bit) { Value = config.requiereNumeros },
+                new SqlParameter("@RequiereEspeciales", SqlDbType.Bit) { Value = config.requiereEspeciales },
+                new SqlParameter("@Requiere2FA", SqlDbType.Bit) { Value = config.requiere2FA },
+                new SqlParameter("@NoRepetirPasswords", SqlDbType.Bit) { Value = config.noRepetirPasswords },
+                new SqlParameter("@ValidarDatosPersonales", SqlDbType.Bit) { Value = config.validarDatosPersonales }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ActualizarPoliticasSeguridad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@MinCaracteres", config.minCaracteres);
-                    cmd.Parameters.AddWithValue("@CantPreguntas", config.cantPreguntas);
-                    cmd.Parameters.AddWithValue("@RequiereMayusculas", config.requiereMayusculas);
-                    cmd.Parameters.AddWithValue("@RequiereMinusculas", config.requiereMinusculas);
-                    cmd.Parameters.AddWithValue("@RequiereNumeros", config.requiereNumeros);
-                    cmd.Parameters.AddWithValue("@RequiereEspeciales", config.requiereEspeciales);
-                    cmd.Parameters.AddWithValue("@Requiere2FA", config.requiere2FA);
-                    cmd.Parameters.AddWithValue("@NoRepetirPasswords", config.noRepetirPasswords);
-                    cmd.Parameters.AddWithValue("@ValidarDatosPersonales", config.validarDatosPersonales);
+                DataTable tabla = EjecutarConsulta("dbo.SP_ActualizarPoliticasSeguridad", parametros);
 
-                    // Si algo sale mal adentro del procedimiento, no lanza una excepción sino que
-                    // devuelve una fila con una columna "Error": hay que leerla para no dar por guardado algo que falló
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read() && reader.GetName(0) == "Error")
-                            throw new Exception(reader[0].ToString());
-                    }
+                // si algo falla adentro del sp no tira excepcion, devuelve una fila con la columna error.
+                // hay que revisarla para no dar por guardado algo que fallo
+                if (tabla.Rows.Count > 0 && tabla.Columns[0].ColumnName == "Error")
+                    throw new Exception(tabla.Rows[0][0].ToString());
 
-                    return true;
-                }
+                return true;
             }
             catch (Exception ex)
             {

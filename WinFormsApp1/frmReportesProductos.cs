@@ -21,7 +21,7 @@ namespace CapaVista
 
         private void cmbReporte_SelectedIndexChanged(object sender, EventArgs e)
         {
-            numDias.Enabled = cmbReporte.SelectedIndex == 1; // "Productos próximos a vencer"
+            numDias.Enabled = cmbReporte.SelectedIndex == 1; // "productos proximos a vencer"
 
             // el reporte se genera solo al elegirlo
             btnGenerar_Click(sender, e);
@@ -52,9 +52,11 @@ namespace CapaVista
                     break;
                 case 2:
                     dgvReporte.DataSource = servicioProductos.ReporteStockPorCategoria();
+                    dgvReporte.Columns["Nombre"].HeaderText = "Categoria";
                     break;
                 case 3:
                     dgvReporte.DataSource = servicioProductos.ReporteStockPorMarca();
+                    dgvReporte.Columns["Nombre"].HeaderText = "Marca";
                     break;
             }
 

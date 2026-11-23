@@ -11,9 +11,9 @@ namespace CapaLogica
 
         private static readonly string[] TiposMovimientoValidos = { "Ingreso", "Egreso", "Ajuste" };
 
-        // Devuelve (true, null) si salió bien, o (false, mensaje) si se rechazó
-        // — ya sea por una validación de acá o por una regla que aplicó el SP
-        // (por ejemplo, que el stock quedaría negativo).
+        // devuelve (true, null) si salio bien o (false, mensaje) si se rechazo,
+        // ya sea por una validacion de aca o por una regla del sp
+        // (por ej si el stock queda negativo)
         public (bool Exito, string Mensaje) RegistrarMovimiento(int idProducto, string tipoMovimiento, int cantidad, int idUsuario, string tipoDocOrigen = null, int? idDocOrigen = null)
         {
             if (idUsuario <= 0)
@@ -25,11 +25,11 @@ namespace CapaLogica
             if (!TiposMovimientoValidos.Contains(tipoMovimiento))
                 return (false, "Tipo de movimiento inválido.");
 
-            // Corregir el stock a mano (Ajuste) es una tarea del administrador.
+            // corregir el stock a mano (ajuste) lo hace solo el admin
             if (tipoMovimiento == "Ajuste" && !servicioUsuarios.EsAdministradorPorId(idUsuario))
                 return (false, "Solo un administrador puede registrar ajustes de stock.");
 
-            // Ingreso y Egreso llevan cantidad positiva; el Ajuste lleva signo (+ suma, - resta).
+            // ingreso y egreso van con cantidad positiva, el ajuste lleva signo (+ suma, - resta)
             if (tipoMovimiento == "Ajuste" ? cantidad == 0 : cantidad <= 0)
                 return (false, tipoMovimiento == "Ajuste"
                     ? "La cantidad del ajuste no puede ser cero (usá un signo negativo para restar)."
@@ -45,7 +45,7 @@ namespace CapaLogica
                 ID_Documento_Origen = idDocOrigen
             };
 
-            // El SP actualiza el stock y deja la auditoría en la misma transacción.
+            // el sp actualiza el stock y guarda la auditoria en la misma transaccion
             string error = movimientosDatos.InsertarMovimiento(movimiento, out _);
 
             if (error != null)

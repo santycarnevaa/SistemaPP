@@ -150,10 +150,9 @@ namespace CapaLogica
             return contraDatos.CambiarContra(idUsuario, hash, config.noRepetirPasswords);
         }
 
-        // Recuperación de contraseña (T10): en vez de dejar que el usuario elija
-        // una nueva contraseña directamente, se genera una temporal, se guarda
-        // hasheada y se le envía por correo. Tiene que volver a iniciar sesión
-        // con ella.
+        // recuperar contraseña (t10): en vez de que el usuario elija una nueva
+        // se genera una temporal, se guarda hasheada y se le manda por mail.
+        // despues tiene que volver a entrar con esa
         public bool GenerarYEnviarPasswordTemporal(string usuario)
         {
             if (string.IsNullOrWhiteSpace(usuario))

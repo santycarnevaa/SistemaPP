@@ -13,7 +13,7 @@ namespace Entidades
         public string Tipo_Documento_Origen { get; set; }
         public int? ID_Documento_Origen { get; set; }
 
-        // Datos de lectura que arma el SP del kardex (no son columnas de la tabla).
+        // datos que arma el sp del kardex para mostrar (no son columnas de la tabla)
         public string Producto { get; set; }
         public string Usuario { get; set; }
         public int Stock_Posterior { get; set; }

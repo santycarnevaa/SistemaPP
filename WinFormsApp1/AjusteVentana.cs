@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Ajusta el ancho de la ventana al de la grilla, asi no hace falta
+    // ajusta el ancho de la ventana al de la grilla asi no hace falta
     // mover la barra de abajo para ver todas las columnas
     public static class AjusteVentana
     {

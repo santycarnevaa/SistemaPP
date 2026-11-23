@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Estilo comun de las grillas, para que todas las pantallas se vean iguales
+    // estilo de las grillas para que todas las pantallas se vean iguales
     public static class EstiloGrilla
     {
         private static readonly Color FondoGrilla = Color.FromArgb(16, 20, 26);

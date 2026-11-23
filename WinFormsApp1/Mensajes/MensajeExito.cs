@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Para confirmar que una operación (guardar, registrar, actualizar) salió bien.
+    // para avisar que algo (guardar, registrar, actualizar) salio bien
     public class MensajeExito : MensajeSistema
     {
         protected override string Titulo => "Éxito";

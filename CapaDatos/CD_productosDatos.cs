@@ -5,59 +5,37 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_productosDatos : CD_conexion
+    public class CD_productosDatos : CD_ejecutarConsultasSP
     {
         public List<Producto> ObtenerProductos(bool soloHabilitados = true)
         {
-            List<Producto> productos = new List<Producto>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@SoloHabilitados", SqlDbType.Bit) { Value = soloHabilitados }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerProductos", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@SoloHabilitados", soloHabilitados);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        productos.Add(MapearProducto(reader));
-                    }
-
-                    reader.Close();
-                }
+                return ConvertirAProductos(EjecutarConsulta("dbo.SP_ObtenerProductos", parametros));
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.ObtenerProductos", ex);
                 return new List<Producto>();
             }
-
-            return productos;
         }
 
         public Producto ObtenerProductoPorId(int idCodigo)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@ID_Codigo", SqlDbType.Int) { Value = idCodigo }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerProductoPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID_Codigo", idCodigo);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    Producto producto = null;
-
-                    if (reader.Read())
-                        producto = MapearProducto(reader);
-
-                    reader.Close();
-                    return producto;
-                }
+                List<Producto> productos = ConvertirAProductos(EjecutarConsulta("dbo.SP_ObtenerProductoPorId", parametros));
+                return productos.Count > 0 ? productos[0] : null;
             }
             catch (Exception ex)
             {
@@ -68,66 +46,32 @@ namespace CapaDatos
 
         public List<Producto> BuscarProductos(string texto, int? idCategoria, int? idMarca)
         {
-            List<Producto> productos = new List<Producto>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Texto", SqlDbType.VarChar, 150) { Value = ValorONulo(texto) },
+                new SqlParameter("@FK_Categoria", SqlDbType.Int) { Value = (object?)idCategoria ?? DBNull.Value },
+                new SqlParameter("@FK_Marca", SqlDbType.Int) { Value = (object?)idMarca ?? DBNull.Value }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_BuscarProductos", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@Texto", string.IsNullOrWhiteSpace(texto) ? DBNull.Value : texto);
-                    cmd.Parameters.AddWithValue("@FK_Categoria", idCategoria.HasValue ? idCategoria.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@FK_Marca", idMarca.HasValue ? idMarca.Value : DBNull.Value);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        productos.Add(MapearProducto(reader));
-                    }
-
-                    reader.Close();
-                }
+                return ConvertirAProductos(EjecutarConsulta("dbo.SP_BuscarProductos", parametros));
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.BuscarProductos", ex);
                 return new List<Producto>();
             }
-
-            return productos;
         }
 
-        // El SP deja la fila de auditoría en la misma transacción que el alta.
+        // el sp guarda la auditoria en la misma transaccion que el alta
         public int InsertarProducto(Producto p, int idUsuario)
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_InsertarProducto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_InsertarProducto", ParametrosProducto(p, idUsuario).ToArray()));
 
-                    cmd.Parameters.AddWithValue("@FK_Categoria", p.FK_Categoria);
-                    cmd.Parameters.AddWithValue("@FK_Marca", p.FK_Marca);
-                    cmd.Parameters.AddWithValue("@Nombre", p.Nombre);
-                    cmd.Parameters.AddWithValue("@Precio_Compra", p.Precio_Compra);
-                    cmd.Parameters.AddWithValue("@Precio_Venta", p.Precio_Venta);
-                    cmd.Parameters.AddWithValue("@Stock_Critico", p.Stock_Critico);
-                    cmd.Parameters.AddWithValue("@Stock_Minimo", p.Stock_Minimo);
-                    cmd.Parameters.AddWithValue("@Stock_Ideal", p.Stock_Ideal);
-                    cmd.Parameters.AddWithValue("@Stock_Maximo", p.Stock_Maximo);
-                    cmd.Parameters.AddWithValue("@Punto_Reposicion", p.Punto_Reposicion);
-                    cmd.Parameters.AddWithValue("@Numero_Lote", string.IsNullOrWhiteSpace(p.Numero_Lote) ? DBNull.Value : p.Numero_Lote);
-                    cmd.Parameters.AddWithValue("@Fecha_Vencimiento", p.Fecha_Vencimiento.HasValue ? p.Fecha_Vencimiento.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? Convert.ToInt32(resultado) : -1;
-                }
+                return resultado != null ? Convert.ToInt32(resultado) : -1;
             }
             catch (Exception ex)
             {
@@ -138,33 +82,15 @@ namespace CapaDatos
 
         public bool ActualizarProducto(Producto p, int idUsuario)
         {
+            List<SqlParameter> parametros = ParametrosProducto(p, idUsuario);
+            parametros.Add(new SqlParameter("@ID_Codigo", SqlDbType.Int) { Value = p.ID_Codigo });
+            parametros.Add(new SqlParameter("@Estado", SqlDbType.VarChar, 30) { Value = p.Estado });
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarProducto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ActualizarProducto", parametros.ToArray()));
 
-                    cmd.Parameters.AddWithValue("@ID_Codigo", p.ID_Codigo);
-                    cmd.Parameters.AddWithValue("@FK_Categoria", p.FK_Categoria);
-                    cmd.Parameters.AddWithValue("@FK_Marca", p.FK_Marca);
-                    cmd.Parameters.AddWithValue("@Nombre", p.Nombre);
-                    cmd.Parameters.AddWithValue("@Precio_Compra", p.Precio_Compra);
-                    cmd.Parameters.AddWithValue("@Precio_Venta", p.Precio_Venta);
-                    cmd.Parameters.AddWithValue("@Stock_Critico", p.Stock_Critico);
-                    cmd.Parameters.AddWithValue("@Stock_Minimo", p.Stock_Minimo);
-                    cmd.Parameters.AddWithValue("@Stock_Ideal", p.Stock_Ideal);
-                    cmd.Parameters.AddWithValue("@Stock_Maximo", p.Stock_Maximo);
-                    cmd.Parameters.AddWithValue("@Punto_Reposicion", p.Punto_Reposicion);
-                    cmd.Parameters.AddWithValue("@Numero_Lote", string.IsNullOrWhiteSpace(p.Numero_Lote) ? DBNull.Value : p.Numero_Lote);
-                    cmd.Parameters.AddWithValue("@Fecha_Vencimiento", p.Fecha_Vencimiento.HasValue ? p.Fecha_Vencimiento.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Estado", p.Estado);
-                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToInt32(resultado) > 0;
-                }
+                return resultado != null && Convert.ToInt32(resultado) > 0;
             }
             catch (Exception ex)
             {
@@ -175,19 +101,17 @@ namespace CapaDatos
 
         public bool DarBajaProducto(int idCodigo, int idUsuario)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@ID_Codigo", SqlDbType.Int) { Value = idCodigo },
+                new SqlParameter("@FK_Usuario", SqlDbType.Int) { Value = idUsuario }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_DarBajaProducto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID_Codigo", idCodigo);
-                    cmd.Parameters.AddWithValue("@FK_Usuario", idUsuario);
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_DarBajaProducto", parametros));
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToInt32(resultado) > 0;
-                }
+                return resultado != null && Convert.ToInt32(resultado) > 0;
             }
             catch (Exception ex)
             {
@@ -198,211 +122,206 @@ namespace CapaDatos
 
         public List<Producto> ObtenerBajoPuntoReposicion()
         {
-            List<Producto> productos = new List<Producto>();
-
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerProductosBajoPuntoReposicion", null);
+
+                List<Producto> productos = new List<Producto>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerProductosBajoPuntoReposicion", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    productos.Add(new Producto
                     {
-                        productos.Add(new Producto
-                        {
-                            ID_Codigo = Convert.ToInt32(reader["ID_Codigo"]),
-                            Nombre = reader["Nombre"].ToString(),
-                            Stock_Actual = Convert.ToInt32(reader["Stock_Actual"]),
-                            Punto_Reposicion = Convert.ToInt32(reader["Punto_Reposicion"])
-                        });
-                    }
-
-                    reader.Close();
+                        ID_Codigo = Convert.ToInt32(fila["ID_Codigo"]),
+                        Nombre = fila["Nombre"].ToString(),
+                        Stock_Actual = Convert.ToInt32(fila["Stock_Actual"]),
+                        Punto_Reposicion = Convert.ToInt32(fila["Punto_Reposicion"])
+                    });
                 }
+
+                return productos;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.ObtenerBajoPuntoReposicion", ex);
                 return new List<Producto>();
             }
-
-            return productos;
         }
 
         public List<Producto> ObtenerProximosAVencer(int diasAnticipacion)
         {
-            List<Producto> productos = new List<Producto>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@DiasAnticipacion", SqlDbType.Int) { Value = diasAnticipacion }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerProductosProximosAVencer", parametros);
+
+                List<Producto> productos = new List<Producto>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerProductosProximosAVencer", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@DiasAnticipacion", diasAnticipacion);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    productos.Add(new Producto
                     {
-                        productos.Add(new Producto
-                        {
-                            ID_Codigo = Convert.ToInt32(reader["ID_Codigo"]),
-                            Nombre = reader["Nombre"].ToString(),
-                            Numero_Lote = reader["Numero_Lote"] == DBNull.Value ? null : reader["Numero_Lote"].ToString(),
-                            Fecha_Vencimiento = reader["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["Fecha_Vencimiento"]),
-                            Stock_Actual = Convert.ToInt32(reader["Stock_Actual"])
-                        });
-                    }
-
-                    reader.Close();
+                        ID_Codigo = Convert.ToInt32(fila["ID_Codigo"]),
+                        Nombre = fila["Nombre"].ToString(),
+                        Numero_Lote = fila["Numero_Lote"] == DBNull.Value ? null : fila["Numero_Lote"].ToString(),
+                        Fecha_Vencimiento = fila["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(fila["Fecha_Vencimiento"]),
+                        Stock_Actual = Convert.ToInt32(fila["Stock_Actual"])
+                    });
                 }
+
+                return productos;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.ObtenerProximosAVencer", ex);
                 return new List<Producto>();
             }
-
-            return productos;
         }
 
-        public DataTable ReporteStockPorCategoria()
+        public List<ReporteStock> ReporteStockPorCategoria()
         {
-            DataTable tabla = new DataTable();
+            return ObtenerReporteStock("dbo.SP_ReporteStockPorCategoria", "Categoria", "CD_productosDatos.ReporteStockPorCategoria");
+        }
 
+        public List<ReporteStock> ReporteStockPorMarca()
+        {
+            return ObtenerReporteStock("dbo.SP_ReporteStockPorMarca", "Marca", "CD_productosDatos.ReporteStockPorMarca");
+        }
+
+        // los dos sp de reportes devuelven las mismas columnas, solo cambia
+        // el nombre de la primera (categoria o marca)
+        private List<ReporteStock> ObtenerReporteStock(string nombreSP, string columnaNombre, string origen)
+        {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ReporteStockPorCategoria", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                DataTable tabla = EjecutarConsulta(nombreSP, null);
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
+                List<ReporteStock> filas = new List<ReporteStock>();
+                foreach (DataRow fila in tabla.Rows)
+                {
+                    filas.Add(new ReporteStock
+                    {
+                        Nombre = fila[columnaNombre].ToString(),
+                        Cantidad_Productos = Convert.ToInt32(fila["Cantidad_Productos"]),
+                        Stock_Total = Convert.ToInt32(fila["Stock_Total"])
+                    });
                 }
+
+                return filas;
             }
             catch (Exception ex)
             {
-                Logger.RegistrarError("CD_productosDatos.ReporteStockPorCategoria", ex);
+                Logger.RegistrarError(origen, ex);
+                return new List<ReporteStock>();
             }
-
-            return tabla;
-        }
-
-        public DataTable ReporteStockPorMarca()
-        {
-            DataTable tabla = new DataTable();
-
-            try
-            {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ReporteStockPorMarca", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.RegistrarError("CD_productosDatos.ReporteStockPorMarca", ex);
-            }
-
-            return tabla;
         }
 
         public List<Categoria> ObtenerCategorias()
         {
-            List<Categoria> categorias = new List<Categoria>();
-
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta(
+                    "SELECT IdCategoria, Nombre FROM dbo.Categorias ORDER BY Nombre",
+                    null, tipo: CommandType.Text);
+
+                List<Categoria> categorias = new List<Categoria>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT IdCategoria, Nombre FROM dbo.Categorias ORDER BY Nombre", conexion);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    categorias.Add(new Categoria
                     {
-                        categorias.Add(new Categoria
-                        {
-                            IdCategoria = Convert.ToInt32(reader["IdCategoria"]),
-                            Nombre = reader["Nombre"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdCategoria = Convert.ToInt32(fila["IdCategoria"]),
+                        Nombre = fila["Nombre"].ToString()
+                    });
                 }
+
+                return categorias;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.ObtenerCategorias", ex);
                 return new List<Categoria>();
             }
-
-            return categorias;
         }
 
         public List<Marca> ObtenerMarcas()
         {
-            List<Marca> marcas = new List<Marca>();
-
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta(
+                    "SELECT IdMarca, Nombre FROM dbo.Marcas ORDER BY Nombre",
+                    null, tipo: CommandType.Text);
+
+                List<Marca> marcas = new List<Marca>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT IdMarca, Nombre FROM dbo.Marcas ORDER BY Nombre", conexion);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    marcas.Add(new Marca
                     {
-                        marcas.Add(new Marca
-                        {
-                            IdMarca = Convert.ToInt32(reader["IdMarca"]),
-                            Nombre = reader["Nombre"].ToString()
-                        });
-                    }
-
-                    reader.Close();
+                        IdMarca = Convert.ToInt32(fila["IdMarca"]),
+                        Nombre = fila["Nombre"].ToString()
+                    });
                 }
+
+                return marcas;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_productosDatos.ObtenerMarcas", ex);
                 return new List<Marca>();
             }
-
-            return marcas;
         }
 
-        private Producto MapearProducto(SqlDataReader reader)
+        // parametros que comparten el sp de insertar y el de actualizar producto
+        private static List<SqlParameter> ParametrosProducto(Producto p, int idUsuario)
         {
-            return new Producto
+            return new List<SqlParameter>
             {
-                ID_Codigo = Convert.ToInt32(reader["ID_Codigo"]),
-                FK_Categoria = Convert.ToInt32(reader["FK_Categoria"]),
-                FK_Marca = Convert.ToInt32(reader["FK_Marca"]),
-                Nombre = reader["Nombre"].ToString(),
-                Precio_Compra = Convert.ToDecimal(reader["Precio_Compra"]),
-                Precio_Venta = Convert.ToDecimal(reader["Precio_Venta"]),
-                Stock_Actual = Convert.ToInt32(reader["Stock_Actual"]),
-                Stock_Critico = Convert.ToInt32(reader["Stock_Critico"]),
-                Stock_Minimo = Convert.ToInt32(reader["Stock_Minimo"]),
-                Stock_Ideal = Convert.ToInt32(reader["Stock_Ideal"]),
-                Stock_Maximo = Convert.ToInt32(reader["Stock_Maximo"]),
-                Punto_Reposicion = Convert.ToInt32(reader["Punto_Reposicion"]),
-                Numero_Lote = reader["Numero_Lote"] == DBNull.Value ? null : reader["Numero_Lote"].ToString(),
-                Fecha_Vencimiento = reader["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["Fecha_Vencimiento"]),
-                Estado = reader["Estado"].ToString(),
-                Habilitado = Convert.ToBoolean(reader["Habilitado"])
+                new SqlParameter("@FK_Categoria", SqlDbType.Int) { Value = p.FK_Categoria },
+                new SqlParameter("@FK_Marca", SqlDbType.Int) { Value = p.FK_Marca },
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 150) { Value = p.Nombre },
+                new SqlParameter("@Precio_Compra", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.Precio_Compra },
+                new SqlParameter("@Precio_Venta", SqlDbType.Decimal) { Precision = 18, Scale = 2, Value = p.Precio_Venta },
+                new SqlParameter("@Stock_Critico", SqlDbType.Int) { Value = p.Stock_Critico },
+                new SqlParameter("@Stock_Minimo", SqlDbType.Int) { Value = p.Stock_Minimo },
+                new SqlParameter("@Stock_Ideal", SqlDbType.Int) { Value = p.Stock_Ideal },
+                new SqlParameter("@Stock_Maximo", SqlDbType.Int) { Value = p.Stock_Maximo },
+                new SqlParameter("@Punto_Reposicion", SqlDbType.Int) { Value = p.Punto_Reposicion },
+                new SqlParameter("@Numero_Lote", SqlDbType.VarChar, 50) { Value = ValorONulo(p.Numero_Lote) },
+                new SqlParameter("@Fecha_Vencimiento", SqlDbType.Date) { Value = (object?)p.Fecha_Vencimiento ?? DBNull.Value },
+                new SqlParameter("@FK_Usuario", SqlDbType.Int) { Value = idUsuario }
             };
+        }
+
+        // pasa las filas de productos a objetos producto
+        private static List<Producto> ConvertirAProductos(DataTable tabla)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            foreach (DataRow fila in tabla.Rows)
+            {
+                productos.Add(new Producto
+                {
+                    ID_Codigo = Convert.ToInt32(fila["ID_Codigo"]),
+                    FK_Categoria = Convert.ToInt32(fila["FK_Categoria"]),
+                    FK_Marca = Convert.ToInt32(fila["FK_Marca"]),
+                    Nombre = fila["Nombre"].ToString(),
+                    Precio_Compra = Convert.ToDecimal(fila["Precio_Compra"]),
+                    Precio_Venta = Convert.ToDecimal(fila["Precio_Venta"]),
+                    Stock_Actual = Convert.ToInt32(fila["Stock_Actual"]),
+                    Stock_Critico = Convert.ToInt32(fila["Stock_Critico"]),
+                    Stock_Minimo = Convert.ToInt32(fila["Stock_Minimo"]),
+                    Stock_Ideal = Convert.ToInt32(fila["Stock_Ideal"]),
+                    Stock_Maximo = Convert.ToInt32(fila["Stock_Maximo"]),
+                    Punto_Reposicion = Convert.ToInt32(fila["Punto_Reposicion"]),
+                    Numero_Lote = fila["Numero_Lote"] == DBNull.Value ? null : fila["Numero_Lote"].ToString(),
+                    Fecha_Vencimiento = fila["Fecha_Vencimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(fila["Fecha_Vencimiento"]),
+                    Estado = fila["Estado"].ToString(),
+                    Habilitado = Convert.ToBoolean(fila["Habilitado"])
+                });
+            }
+
+            return productos;
         }
     }
 }

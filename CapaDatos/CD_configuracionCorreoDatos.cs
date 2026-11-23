@@ -4,50 +4,39 @@ using Microsoft.Data.SqlClient;
 
 namespace CapaDatos
 {
-    public class CD_configuracionCorreoDatos : CD_conexion
+    public class CD_configuracionCorreoDatos : CD_ejecutarConsultasSP
     {
         public ConfiguracionCorreo ObtenerConfiguracionCorreo()
         {
-            using (SqlConnection conexion = conectar())
-            {
-                SqlCommand cmd = new SqlCommand("SP_ObtenerConfiguracionCorreo", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
+            DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerConfiguracionCorreo", null);
 
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    return new ConfiguracionCorreo
-                    {
-                        IdConfiguracionCorreo = Convert.ToInt32(reader["IdConfiguracionCorreo"]),
-                        CorreoRemitente = reader["CorreoRemitente"].ToString(),
-                        PasswordCifrada = (byte[])reader["PasswordCifrada"],
-                        IV = (byte[])reader["IV"],
-                        FechaUltimaRotacion = Convert.ToDateTime(reader["FechaUltimaRotacion"]),
-                        DiasRotacion = Convert.ToInt32(reader["DiasRotacion"])
-                    };
-                }
-
+            if (tabla.Rows.Count == 0)
                 return null;
-            }
+
+            DataRow fila = tabla.Rows[0];
+            return new ConfiguracionCorreo
+            {
+                IdConfiguracionCorreo = Convert.ToInt32(fila["IdConfiguracionCorreo"]),
+                CorreoRemitente = fila["CorreoRemitente"].ToString(),
+                PasswordCifrada = (byte[])fila["PasswordCifrada"],
+                IV = (byte[])fila["IV"],
+                FechaUltimaRotacion = Convert.ToDateTime(fila["FechaUltimaRotacion"]),
+                DiasRotacion = Convert.ToInt32(fila["DiasRotacion"])
+            };
         }
 
         public bool GuardarConfiguracionCorreo(string correoRemitente, int diasRotacion, byte[] passwordCifrada = null, byte[] iv = null)
         {
-            using (SqlConnection conexion = conectar())
+            SqlParameter[] parametros =
             {
-                SqlCommand cmd = new SqlCommand("SP_GuardarConfiguracionCorreo", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
+                new SqlParameter("@CorreoRemitente", SqlDbType.VarChar, 100) { Value = correoRemitente },
+                new SqlParameter("@DiasRotacion", SqlDbType.Int) { Value = diasRotacion },
+                new SqlParameter("@PasswordCifrada", SqlDbType.VarBinary, -1) { Value = (object?)passwordCifrada ?? DBNull.Value },
+                new SqlParameter("@IV", SqlDbType.VarBinary, 16) { Value = (object?)iv ?? DBNull.Value }
+            };
 
-                cmd.Parameters.AddWithValue("@CorreoRemitente", correoRemitente);
-                cmd.Parameters.AddWithValue("@DiasRotacion", diasRotacion);
-                // Con tipo explícito: un null sin tipo viaja como texto y SQL Server no lo convierte a binario
-                cmd.Parameters.Add("@PasswordCifrada", SqlDbType.VarBinary, -1).Value = (object)passwordCifrada ?? DBNull.Value;
-                cmd.Parameters.Add("@IV", SqlDbType.VarBinary, 16).Value = (object)iv ?? DBNull.Value;
-
-                cmd.ExecuteNonQuery();
-                return true;
-            }
+            EjecutarConsulta("dbo.SP_GuardarConfiguracionCorreo", parametros, devuelveDatos: false);
+            return true;
         }
     }
 }

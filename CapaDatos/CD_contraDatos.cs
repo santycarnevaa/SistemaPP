@@ -4,30 +4,23 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_contraDatos : CD_conexion
+    public class CD_contraDatos : CD_ejecutarConsultasSP
     {
         public bool CambiarContra(int idUsuario, string nuevoPasswordHash, bool validarHistorial = true)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@NuevaPasswordHash", SqlDbType.VarChar, 256) { Value = nuevoPasswordHash },
+                new SqlParameter("@ValidarHistorial", SqlDbType.Bit) { Value = validarHistorial }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_CambiarPassword", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                DataTable tabla = EjecutarConsulta("dbo.SP_CambiarPassword", parametros);
 
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@NuevaPasswordHash", nuevoPasswordHash);
-                    cmd.Parameters.AddWithValue("@ValidarHistorial", validarHistorial);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    if (resultado == null)
-                        return false;// 
-
-                    string mensaje = resultado.ToString();//
-
-                    return mensaje.Contains("correctamente");
-                }
+                // el sp devuelve una fila con mensaje si salio bien o con error si fallo
+                return tabla.Rows.Count > 0 && tabla.Rows[0][0] is string mensaje && mensaje.Contains("correctamente");
             }
             catch (Exception ex)
             {
@@ -37,20 +30,18 @@ namespace CapaDatos
 
         public bool insertarPassword(int idUsuario, string passwordHash)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@PasswordHash", SqlDbType.VarChar, 256) { Value = passwordHash }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_InsertarPassword", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-
-                    int filas = cmd.ExecuteNonQuery();
-
-                    return filas > 0;
-                }
+                // el sp tiene set nocount on y no devuelve las filas afectadas,
+                // asi que si no tiro excepcion es porque se guardo
+                EjecutarConsulta("dbo.SP_InsertarPassword", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -60,49 +51,40 @@ namespace CapaDatos
 
         public List<string> obtenerContrasAnteriores(int idUsuario)
         {
-            List<string> passwords = new List<string>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerContrasAnteriores", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerContrasAnteriores", parametros);
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+                List<string> passwords = new List<string>();
+                foreach (DataRow fila in tabla.Rows)
+                    passwords.Add(fila.Field<string>("PasswordHash") ?? string.Empty);
 
-                    while (reader.Read())
-                    {
-                        passwords.Add(reader["PasswordHash"].ToString());
-                    }
-
-                    reader.Close();
-                }
+                return passwords;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_contraDatos.obtenerContrasAnteriores", ex);
                 return new List<string>();
             }
-
-            return passwords;
         }
 
         public string obtenerUltimoPasswordHash(int idUsuario)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerUltimoPasswordHash", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerUltimoPasswordHash", parametros);
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? resultado.ToString() : string.Empty;
-                }
+                return tabla.Rows.Count > 0 ? tabla.Rows[0].Field<string>("PasswordHash") ?? string.Empty : string.Empty;
             }
             catch (Exception ex)
             {
@@ -113,20 +95,18 @@ namespace CapaDatos
 
         public bool verificarLogin(string usuario, string passwordHash)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = usuario },
+                new SqlParameter("@PasswordHash", SqlDbType.VarChar, 256) { Value = passwordHash }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_VerificarLogin", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                DataTable tabla = EjecutarConsulta("dbo.SP_VerificarLogin", parametros);
 
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-
-                    int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
-
-                    return cantidad > 0;
-                }
+                // el sp devuelve una sola celda con el count(*)
+                return tabla.Rows.Count > 0 && tabla.Rows[0].Field<int>(0) > 0;
             }
             catch (Exception ex)
             {
@@ -137,19 +117,16 @@ namespace CapaDatos
 
         public bool actualizarPasswordYPrimerLogin(int idUsuario, string passwordHash)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@PasswordHash", SqlDbType.VarChar, 256) { Value = passwordHash }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarPasswordYPrimerLogin", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_ActualizarPasswordYPrimerLogin", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {

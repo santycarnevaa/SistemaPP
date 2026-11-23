@@ -275,7 +275,7 @@ BEGIN
 END;
 GO
 
--- Devuelve 1 si ya se cargaron las provincias 
+-- devuelve 1 si ya se cargaron las provincias
 CREATE PROCEDURE SP_HayDatosGeograficosCargados
 AS
 BEGIN
@@ -1836,7 +1836,7 @@ INSERT INTO PreguntasSeguridad (Pregunta) VALUES
 ('¿Cuál fue el destino de tu primer viaje?');
 GO
 
--- ¿guarda el valor x defecto
+-- guarda el valor x defecto
 INSERT INTO PoliticasSeguridad DEFAULT VALUES;
 GO
 
@@ -1846,7 +1846,7 @@ INSERT INTO Marcas (Nombre) VALUES ('Genérica'), ('La Serenísima'), ('Arcor');
 GO
 
 -- usuario administrador para poder entrar la primera vez
--- la contraseña se guarda hasheada igual que en la app (SHA256 de usuario + contraseña)
+-- la contraseña se guarda hasheada igual que en la app (sha256 de usuario + contraseña)
 -- no tiene direccion cargada, se puede completar despues desde el sistema
 DECLARE @IdPersona INT;
 DECLARE @IdUsuario INT;
@@ -1856,7 +1856,7 @@ VALUES ('Admin', 'Sistema', '11111111', '1111111111', '1990-01-01');
 
 SET @IdPersona = SCOPE_IDENTITY();
 
--- PrimerLogin en 0 para que no pida cambiar la contraseña al entrar
+-- primerlogin en 0 para que no pida cambiar la contraseña al entrar
 INSERT INTO Usuarios (Usuario, IdPersona, IdRol, Activo, PrimerLogin, Usa2FA, Correo)
 VALUES ('admin', @IdPersona, (SELECT IdRol FROM Roles WHERE NombreRol = 'Administrador'), 1, 0, 0, 'admin@sistema.com');
 

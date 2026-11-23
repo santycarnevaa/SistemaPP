@@ -12,8 +12,8 @@ using Entidades;
 
 namespace CapaVista
 {
-    // Pantalla de primer login: el usuario responde las 15 preguntas de seguridad
-    // completas para poder usarlas después en la recuperación de contraseña.
+    // pantalla del primer login: el usuario responde las 15 preguntas de seguridad
+    // para despues poder usarlas al recuperar la contraseña
     public partial class frmPregUsuario : Form
     {
         private CL_ServicioPreguntasSeguridad servicioPreguntas = new CL_ServicioPreguntasSeguridad();
@@ -34,17 +34,17 @@ namespace CapaVista
 
         private void frmPregUsuario_Load(object sender, EventArgs e)
         {
-            // Si es el primer login, después de responder las preguntas se manda al usuario
-            // a cambiar la contraseña temporal; si no, directo a la pantalla principal.
+            // si es el primer login despues de responder las preguntas se lo manda
+            // a cambiar la contraseña temporal, si no directo a la pantalla principal
             esPrimerLogin = servicioUsuarios.esPrimerLogin(usuario);
             CargarPreguntasAleatorias();
         }
 
-        // Valida que estén todas las respuestas completas, las guarda, y sigue el flujo
-        // según si esto pasó en el primer login o en otro momento.
+        // valida que esten todas las respuestas, las guarda y sigue
+        // segun si esto paso en el primer login o en otro momento
         private void btnEnviar_Click(object sender, EventArgs e)
         {
-            //Mover mensajes a capa logica
+            // mover mensajes a capa logica
             int idUsuario = servicioUsuarios.ObtenerIdUsuario(usuario);
 
             if (idUsuario == -1)
@@ -108,7 +108,7 @@ namespace CapaVista
             this.Close();
         }
 
-        // Si se cierra con la X, tambien se pregunta antes de perder lo que se escribio
+        // si se cierra con la x tambien se pregunta antes de perder lo que se escribio
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && !salidaConfirmada && !ConfirmarSalida())
@@ -126,8 +126,8 @@ namespace CapaVista
             return true;
         }
 
-        // A pesar del nombre, ya no elige preguntas al azar: trae las 15 completas y arma
-        // un par Label+TextBox por cada una, apiladas dentro de un panel con scroll.
+        // aunque se llama asi ya no elige preguntas al azar: trae las 15 y arma
+        // un label y un textbox por cada una, apilados en un panel con scroll
         private void CargarPreguntasAleatorias()
         {
             preguntasSeleccionadas = servicioPreguntas.ObtenerTodasLasPreguntasDisponibles();
@@ -175,7 +175,7 @@ namespace CapaVista
             EstiloSistema.AplicarControles(pnlPreguntas);
         }
 
-        // Abre frmAdmin o frmUsuario según el rol, una vez terminado este paso.
+        // abre frmadmin o frmusuario segun el rol cuando termina este paso
         private void AbrirPantallaPrincipal(string usuario)
         {
             Navegacion.AbrirPantallaPrincipal(this, usuario);

@@ -12,7 +12,7 @@ namespace CapaVista
 
         private readonly CL_servicioAuditoria servicioAuditoria = new CL_servicioAuditoria();
 
-        // Si viene un usuario, la pantalla queda fija en su propia actividad ("Mi actividad").
+        // si viene un usuario la pantalla queda fija en su propia actividad (mi actividad)
         private readonly int? usuarioFijo;
 
         public frmAuditoria(int? idUsuarioFijo = null)
@@ -50,7 +50,7 @@ namespace CapaVista
 
         private void CargarFiltros()
         {
-            // Las tablas salen de lo que realmente quedó auditado (de cualquier módulo).
+            // las tablas salen de lo que de verdad quedo auditado (de cualquier modulo)
             List<string> tablas = new List<string> { OpcionTodas };
             tablas.AddRange(servicioAuditoria.ObtenerTablasAuditadas());
             cmbTabla.DataSource = tablas;

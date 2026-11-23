@@ -25,12 +25,12 @@ namespace CapaVista
         {
             idUsuario = servicioUsuarios.ObtenerIdUsuario(usuario);
 
-            // Los ajustes manuales de stock son solo del administrador (también se valida en Lógica).
+            // los ajustes de stock a mano son solo del admin (tambien se valida en la logica)
             if (!servicioUsuarios.EsAdministradorPorId(idUsuario))
                 cmbTipoMovimiento.Items.Remove("Ajuste");
 
-            // DisplayMember/ValueMember van ANTES del DataSource: si no, al asignarlos el combo
-            // dispara SelectedIndexChanged con un Producto como SelectedValue y la pantalla se cierra.
+            // displaymember y valuemember van antes del datasource, si no al asignarlos el combo
+            // dispara selectedindexchanged con un producto como selectedvalue y la pantalla se cierra
             cmbProducto.DisplayMember = "Nombre";
             cmbProducto.ValueMember = "ID_Codigo";
             cmbProducto.DataSource = servicioProductos.ObtenerProductos();
@@ -95,7 +95,7 @@ namespace CapaVista
             string tipoMovimiento = cmbTipoMovimiento.SelectedItem.ToString();
             bool esAjuste = tipoMovimiento == "Ajuste";
 
-            // Ingreso y Egreso: entero > 0. Ajuste: entero distinto de 0, con signo (+ suma, - resta).
+            // ingreso y egreso: entero mayor a 0. ajuste: entero distinto de 0 con signo (+ suma, - resta)
             if (!int.TryParse(txtCantidad.Text, out int cantidad) || (esAjuste ? cantidad == 0 : cantidad <= 0))
             {
                 ErrorCampo.Mostrar(txtCantidad, esAjuste

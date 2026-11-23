@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Colores y estilo comun de todas las ventanas del sistema
+    // colores y estilo de todas las ventanas del sistema
     public static class EstiloSistema
     {
         public static readonly Color Fondo = Color.FromArgb(11, 14, 19);
@@ -17,14 +17,14 @@ namespace CapaVista
         public static readonly Color Gris = Color.FromArgb(90, 98, 110);
         public static readonly Color Deshabilitado = Color.FromArgb(45, 50, 58);
 
-        // Se llama una vez en el constructor de cada ventana
+        // se llama una vez en el constructor de cada ventana
         public static void Aplicar(Form ventana)
         {
             ventana.BackColor = Fondo;
             AplicarControles(ventana);
         }
 
-        // Recorre los controles, tambien los que estan adentro de paneles y solapas
+        // recorre los controles, tambien los que estan adentro de paneles y solapas
         public static void AplicarControles(Control contenedor)
         {
             foreach (Control control in contenedor.Controls)
@@ -88,7 +88,7 @@ namespace CapaVista
             }
         }
 
-        // Todo en la misma letra, respetando el tamaño que ya tenia cada control
+        // todo con la misma letra, respetando el tamaño que ya tenia cada control
         private static void CambiarFuente(Control control)
         {
             control.Font = new Font("Segoe UI", control.Font.Size, control.Font.Style, control.Font.Unit);
@@ -147,7 +147,7 @@ namespace CapaVista
             solapas.SizeMode = TabSizeMode.Fixed;
             solapas.ItemSize = new Size((solapas.Width - 6) / solapas.TabCount, 30);
 
-            // Windows pinta un marco claro alrededor de las solapas y no deja cambiarle el color,
+            // windows pinta un marco claro alrededor de las solapas y no deja cambiarle el color,
             // asi que se recorta para que no se vea
             solapas.FindForm().Shown += (s, e) =>
             {

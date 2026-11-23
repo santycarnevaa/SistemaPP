@@ -27,7 +27,7 @@ namespace CapaVista
         {
             lblBienvenido.Text = "Bienvenido, " + usuario;
 
-            // el catálogo y stock es solo para el rol ventas, el resto de los roles ve el panel sin ese botón
+            // el catalogo y stock es solo para el rol ventas, los otros roles ven el panel sin ese boton
             btnCatalogoStock.Visible = EsRolVentas();
         }
 
@@ -57,8 +57,8 @@ namespace CapaVista
             this.Close();
         }
 
-        // El usuario común entra al mismo menú que el administrador, pero con permisos acotados
-        // (consulta de productos, movimientos sin ajustes, scrap, reportes y su propia actividad).
+        // el usuario comun entra al mismo menu que el admin pero con menos permisos
+        // (ver productos, movimientos sin ajustes, scrap, reportes y su propia actividad)
         private void btnCatalogoStock_Click(object sender, EventArgs e)
         {
             new frmCatalogoStock(usuario).ShowDialog();

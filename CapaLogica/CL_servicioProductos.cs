@@ -1,4 +1,3 @@
-using System.Data;
 using CapaDatos;
 using Entidades;
 
@@ -44,7 +43,7 @@ namespace CapaLogica
             if (validacion != resultadoProducto.Ok)
                 return validacion;
 
-            // La fila de auditoría la escribe el propio SP, en la misma transacción.
+            // la auditoria la guarda el sp en la misma transaccion
             int idNuevo = productosDatos.InsertarProducto(p, idUsuario);
 
             if (idNuevo <= 0)
@@ -89,12 +88,12 @@ namespace CapaLogica
             return productosDatos.ObtenerProximosAVencer(diasAnticipacion);
         }
 
-        public DataTable ReporteStockPorCategoria()
+        public List<ReporteStock> ReporteStockPorCategoria()
         {
             return productosDatos.ReporteStockPorCategoria();
         }
 
-        public DataTable ReporteStockPorMarca()
+        public List<ReporteStock> ReporteStockPorMarca()
         {
             return productosDatos.ReporteStockPorMarca();
         }

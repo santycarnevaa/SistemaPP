@@ -4,9 +4,10 @@ using Microsoft.Data.SqlClient;
 
 namespace CapaDatos
 {
-    // La cadena de conexión ya no está hardcodeada acá: se lee una sola vez desde
-    // appsettings.json (ubicado junto al .exe) la primera vez que se necesita.
-    public class CD_conexion
+    // la cadena de conexion no esta en el codigo, se lee una sola vez del appsettings.json
+    // que esta al lado del .exe, la primera vez que hace falta
+    // es abstract para que nadie haga new, solo se hereda
+    public abstract class CD_conexion
     {
         private static readonly string cadenaConexion = CargarCadenaConexion();
 

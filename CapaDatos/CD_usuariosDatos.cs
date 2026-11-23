@@ -5,7 +5,7 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_usuariosDatos : CD_conexion
+    public class CD_usuariosDatos : CD_ejecutarConsultasSP
     {
         public int RegistrarUsuarioCompleto(
             string nombre,
@@ -31,40 +31,40 @@ namespace CapaDatos
             int idRol,
             bool usa2FA)
         {
+            SqlParameter[] parametros =
+            {
+                // persona
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 100) { Value = nombre },
+                new SqlParameter("@Apellido", SqlDbType.VarChar, 100) { Value = apellido },
+                new SqlParameter("@DNI", SqlDbType.VarChar, 20) { Value = dni },
+                new SqlParameter("@Telefono", SqlDbType.VarChar, 30) { Value = ValorONulo(telefono) },
+                new SqlParameter("@FechaNacimiento", SqlDbType.Date) { Value = fechaNacimiento },
+
+                // direccion
+                new SqlParameter("@Calle", SqlDbType.VarChar, 100) { Value = calle },
+                new SqlParameter("@Numero", SqlDbType.VarChar, 20) { Value = ValorONulo(numero) },
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = ValorONulo(codigoPostal) },
+                new SqlParameter("@Depto", SqlDbType.VarChar, 20) { Value = ValorONulo(depto) },
+                new SqlParameter("@Piso", SqlDbType.VarChar, 20) { Value = ValorONulo(piso) },
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Latitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = (object?)latitud ?? DBNull.Value },
+                new SqlParameter("@Longitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = (object?)longitud ?? DBNull.Value },
+                new SqlParameter("@DireccionOriginal", SqlDbType.VarChar, 255) { Value = ValorONulo(direccionOriginal) },
+                new SqlParameter("@DireccionNormalizada", SqlDbType.VarChar, 255) { Value = ValorONulo(direccionNormalizada) },
+
+                // usuario
+                new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = usuario },
+                new SqlParameter("@Correo", SqlDbType.VarChar, 100) { Value = correo },
+                new SqlParameter("@PasswordHash", SqlDbType.VarChar, 255) { Value = passwordHash },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol },
+                new SqlParameter("@Usa2FA", SqlDbType.Bit) { Value = usa2FA }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_RegistrarUsuarioCompleto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_RegistrarUsuarioCompleto", parametros));
 
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@Apellido", apellido);
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-                    cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrWhiteSpace(telefono) ? DBNull.Value : telefono);
-                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", string.IsNullOrWhiteSpace(numero) ? DBNull.Value : numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", string.IsNullOrWhiteSpace(codigoPostal) ? DBNull.Value : codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
-                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", string.IsNullOrWhiteSpace(direccionOriginal) ? DBNull.Value : direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", string.IsNullOrWhiteSpace(direccionNormalizada) ? DBNull.Value : direccionNormalizada);
-
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-                    cmd.Parameters.AddWithValue("@Usa2FA", usa2FA);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? Convert.ToInt32(resultado) : -1;
-                }
+                return resultado != null ? Convert.ToInt32(resultado) : -1;
             }
             catch (Exception ex)
             {
@@ -75,19 +75,16 @@ namespace CapaDatos
 
         public bool AsignarRolUsuario(int idUsuario, int idRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_AsignarRolUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
+                EjecutarConsulta("dbo.SP_AsignarRolUsuario", parametros, devuelveDatos: false);
+                return true;
             }
             catch (Exception ex)
             {
@@ -98,25 +95,16 @@ namespace CapaDatos
 
         public List<rol> ListarRoles()
         {
+            DataTable tabla = EjecutarConsulta("dbo.SP_ListarRoles", null);
+
             List<rol> roles = new List<rol>();
-
-            using (SqlConnection conexion = conectar())
+            foreach (DataRow fila in tabla.Rows)
             {
-                SqlCommand cmd = new SqlCommand("SP_ListarRoles", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                roles.Add(new rol
                 {
-                    roles.Add(new rol
-                    {
-                        IdRol = Convert.ToInt32(reader["IdRol"]),
-                        NombreRol = reader["NombreRol"].ToString()
-                    });
-                }
-
-                reader.Close();
+                    IdRol = Convert.ToInt32(fila["IdRol"]),
+                    NombreRol = fila["NombreRol"].ToString()
+                });
             }
 
             return roles;
@@ -124,19 +112,16 @@ namespace CapaDatos
 
         public bool AgregarRol(string nombreRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@NombreRol", SqlDbType.VarChar, 50) { Value = nombreRol }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_AgregarRol", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_AgregarRol", parametros));
 
-                    cmd.Parameters.AddWithValue("@NombreRol", nombreRol);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToInt32(resultado) > 0;
-                }
+                return resultado != null && Convert.ToInt32(resultado) > 0;
             }
             catch (Exception ex)
             {
@@ -145,26 +130,22 @@ namespace CapaDatos
             }
         }
 
-        // Devuelve texto vacío si salió bien, o el mensaje que dio la base (por ejemplo, "ya existe un rol")
+        // devuelve vacio si salio bien o el mensaje de la base (por ej si ya existe el rol)
         public string ModificarRol(int idRol, string nombreRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol },
+                new SqlParameter("@NombreRol", SqlDbType.VarChar, 50) { Value = nombreRol }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ModificarRol", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-                    cmd.Parameters.AddWithValue("@NombreRol", nombreRol);
-
-                    cmd.ExecuteNonQuery();
-                    return "";
-                }
+                EjecutarConsulta("dbo.SP_ModificarRol", parametros, devuelveDatos: false);
+                return "";
             }
-            catch (SqlException ex) when (ex.Number == 50000)
+            catch (Exception ex) when (EsErrorDelSP(ex))
             {
-                // 50000 es el número de los errores que lanza el procedimiento con RAISERROR
                 return ex.Message;
             }
             catch (Exception ex)
@@ -176,20 +157,17 @@ namespace CapaDatos
 
         public string EliminarRol(int idRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_EliminarRol", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-
-                    cmd.ExecuteNonQuery();
-                    return "";
-                }
+                EjecutarConsulta("dbo.SP_EliminarRol", parametros, devuelveDatos: false);
+                return "";
             }
-            catch (SqlException ex) when (ex.Number == 50000)
+            catch (Exception ex) when (EsErrorDelSP(ex))
             {
                 return ex.Message;
             }
@@ -204,15 +182,9 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarUsuarioPorNombreUser", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_BuscarUsuarioPorNombreUser", ParametroUsuario(usuario)));
 
-                    object resultado = cmd.ExecuteScalar();
-                    return resultado != null ? Convert.ToInt32(resultado) : 0;
-                }
+                return resultado != null ? Convert.ToInt32(resultado) : 0;
             }
             catch (Exception ex)
             {
@@ -223,42 +195,34 @@ namespace CapaDatos
 
         public DataTable BuscarUsuarioPorCorreo(string correo)
         {
-            DataTable tabla = new DataTable();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Correo", SqlDbType.VarChar, 100) { Value = correo }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarUsuarioPorCorreo", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
-                }
+                return EjecutarConsulta("dbo.SP_BuscarUsuarioPorCorreo", parametros);
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.BuscarUsuarioPorCorreo", ex);
-                tabla = new DataTable();
+                return new DataTable();
             }
-
-            return tabla;
         }
 
         public string BuscarUsuarioPorId(int idUsuario)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarUsuarioPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_BuscarUsuarioPorId", parametros));
 
-                    object resultado = cmd.ExecuteScalar();
-                    return resultado != null ? resultado.ToString() : string.Empty;
-                }
+                return resultado != null ? resultado.ToString() : string.Empty;
             }
             catch (Exception ex)
             {
@@ -269,98 +233,63 @@ namespace CapaDatos
 
         public DataTable BuscarPersonaPorPartido(string partido)
         {
-            DataTable tabla = new DataTable();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Partido", SqlDbType.VarChar, 100) { Value = partido }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarPersonaPorPartido", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Partido", partido);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
-                }
+                return EjecutarConsulta("dbo.SP_BuscarPersonaPorPartido", parametros);
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorPartido", ex);
+                return new DataTable();
             }
-
-            return tabla;
         }
 
         public DataTable BuscarPersonaPorLocalidad(string localidad)
         {
-            DataTable tabla = new DataTable();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Localidad", SqlDbType.VarChar, 100) { Value = localidad }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarPersonaPorLocalidad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Localidad", localidad);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
-                }
+                return EjecutarConsulta("dbo.SP_BuscarPersonaPorLocalidad", parametros);
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorLocalidad", ex);
+                return new DataTable();
             }
-
-            return tabla;
         }
 
         public DataTable BuscarPersonaPorCP(string codigoPostal)
         {
-            DataTable tabla = new DataTable();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = codigoPostal }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_BuscarPersonaPorCP", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(tabla);
-                }
+                return EjecutarConsulta("dbo.SP_BuscarPersonaPorCP", parametros);
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.BuscarPersonaPorCP", ex);
+                return new DataTable();
             }
-
-            return tabla;
         }
 
         public bool ExisteUsuario(string usuario)
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand(
-                        "SP_ExisteUsuario",
-                        conexion);
-
-                    cmd.CommandType =
-                        CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue(
-                        "@Usuario",
-                        usuario);
-
-                    object resultado =
-                        cmd.ExecuteScalar();
-
-                    return Convert.ToBoolean(resultado);
-                }
+                return Convert.ToBoolean(PrimerValor(EjecutarConsulta("dbo.SP_ExisteUsuario", ParametroUsuario(usuario))));
             }
             catch (Exception ex)
             {
@@ -371,17 +300,14 @@ namespace CapaDatos
 
         public bool ExisteCorreo(string correo)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Correo", SqlDbType.VarChar, 100) { Value = correo }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ExisteCorreo", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-
-                    object resultado = cmd.ExecuteScalar();
-                    return Convert.ToBoolean(resultado);
-                }
+                return Convert.ToBoolean(PrimerValor(EjecutarConsulta("dbo.SP_ExisteCorreo", parametros)));
             }
             catch (Exception ex)
             {
@@ -392,17 +318,14 @@ namespace CapaDatos
 
         public bool ExisteDNI(string dni)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@DNI", SqlDbType.VarChar, 20) { Value = dni }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_ExisteDNI", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-
-                    object resultado = cmd.ExecuteScalar();
-                    return Convert.ToBoolean(resultado);
-                }
+                return Convert.ToBoolean(PrimerValor(EjecutarConsulta("dbo.SP_ExisteDNI", parametros)));
             }
             catch (Exception ex)
             {
@@ -415,16 +338,9 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_UsuarioActivo", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_UsuarioActivo", ParametroUsuario(usuario)));
 
-                    object result = cmd.ExecuteScalar();
-
-                    return result != null && Convert.ToBoolean(result);
-                }
+                return resultado != null && Convert.ToBoolean(resultado);
             }
             catch (Exception ex)
             {
@@ -433,36 +349,23 @@ namespace CapaDatos
             }
         }
 
-        // Nombre, apellido, DNI y fecha de nacimiento reales del usuario, usados
-        // en CL_servicioContras para validar que la contraseña no los contenga.
+        // nombre, apellido, dni y fecha de nacimiento del usuario, se usan
+        // en cl_serviciocontras para que la contraseña no los tenga
         public (string nombre, string apellido, string dni, DateTime? fechaNacimiento) ObtenerDatosPersonalesPorUsuario(string usuario)
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerDatosPersonalesPorUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerDatosPersonalesPorUsuario", ParametroUsuario(usuario));
 
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        string nombre = reader["Nombre"].ToString();
-                        string apellido = reader["Apellido"].ToString();
-                        string dni = reader["DNI"].ToString();
-                        DateTime? fechaNacimiento = reader["FechaNacimiento"] == DBNull.Value
-                            ? (DateTime?)null
-                            : Convert.ToDateTime(reader["FechaNacimiento"]);
-
-                        reader.Close();
-                        return (nombre, apellido, dni, fechaNacimiento);
-                    }
-
-                    reader.Close();
+                if (tabla.Rows.Count == 0)
                     return (string.Empty, string.Empty, string.Empty, null);
-                }
+
+                DataRow fila = tabla.Rows[0];
+                DateTime? fechaNacimiento = fila["FechaNacimiento"] == DBNull.Value
+                    ? (DateTime?)null
+                    : Convert.ToDateTime(fila["FechaNacimiento"]);
+
+                return (fila["Nombre"].ToString(), fila["Apellido"].ToString(), fila["DNI"].ToString(), fechaNacimiento);
             }
             catch (Exception ex)
             {
@@ -475,15 +378,7 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_EsPrimerLogin", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-
-                    object resultado = cmd.ExecuteScalar();
-                    return Convert.ToBoolean(resultado);
-                }
+                return Convert.ToBoolean(PrimerValor(EjecutarConsulta("dbo.SP_EsPrimerLogin", ParametroUsuario(usuario))));
             }
             catch (Exception ex)
             {
@@ -492,20 +387,21 @@ namespace CapaDatos
             }
         }
 
-        // Rol de un usuario activo a partir de su ID (0 si no existe o está inactivo).
+        // rol de un usuario activo por su id (0 si no existe o esta inactivo)
         public int ObtenerRolPorId(int idUsuario)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SELECT IdRol FROM dbo.Usuarios WHERE IdUsuario = @IdUsuario AND Activo = 1", conexion);
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                object? resultado = PrimerValor(EjecutarConsulta(
+                    "SELECT IdRol FROM dbo.Usuarios WHERE IdUsuario = @IdUsuario AND Activo = 1",
+                    parametros, tipo: CommandType.Text));
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado == null || resultado == DBNull.Value ? 0 : Convert.ToInt32(resultado);
-                }
+                return resultado == null || resultado == DBNull.Value ? 0 : Convert.ToInt32(resultado);
             }
             catch (Exception ex)
             {
@@ -518,20 +414,12 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerRolPorUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ObtenerRolPorUsuario", ParametroUsuario(usuario)));
 
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
+                if (resultado == null || resultado == DBNull.Value)
+                    return 0;
 
-                    object resultado = cmd.ExecuteScalar();
-
-                    if (resultado == null || resultado == DBNull.Value)
-                        return 0;
-
-                    return Convert.ToInt32(resultado);
-                }
+                return Convert.ToInt32(resultado);
             }
             catch (Exception ex)
             {
@@ -559,40 +447,37 @@ namespace CapaDatos
             string passwordHash,
             int idRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 100) { Value = nombre },
+                new SqlParameter("@Apellido", SqlDbType.VarChar, 100) { Value = apellido },
+                new SqlParameter("@DNI", SqlDbType.VarChar, 20) { Value = dni },
+                new SqlParameter("@Telefono", SqlDbType.VarChar, 30) { Value = (object?)telefono ?? DBNull.Value },
+                new SqlParameter("@FechaNacimiento", SqlDbType.Date) { Value = fechaNacimiento },
+
+                new SqlParameter("@Calle", SqlDbType.VarChar, 100) { Value = calle },
+                new SqlParameter("@Numero", SqlDbType.VarChar, 20) { Value = (object?)numero ?? DBNull.Value },
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = (object?)codigoPostal ?? DBNull.Value },
+                new SqlParameter("@Depto", SqlDbType.VarChar, 20) { Value = (object?)depto ?? DBNull.Value },
+                new SqlParameter("@Piso", SqlDbType.VarChar, 20) { Value = (object?)piso ?? DBNull.Value },
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Latitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = DBNull.Value },
+                new SqlParameter("@Longitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = DBNull.Value },
+                new SqlParameter("@DireccionOriginal", SqlDbType.VarChar, 255) { Value = (object?)direccionOriginal ?? DBNull.Value },
+                new SqlParameter("@DireccionNormalizada", SqlDbType.VarChar, 255) { Value = (object?)direccionNormalizada ?? DBNull.Value },
+
+                new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = usuario },
+                new SqlParameter("@Correo", SqlDbType.VarChar, 100) { Value = correo },
+                new SqlParameter("@PasswordHash", SqlDbType.VarChar, 255) { Value = passwordHash },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol },
+                new SqlParameter("@Usa2FA", SqlDbType.Bit) { Value = false }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("SP_RegistrarUsuarioCompleto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_RegistrarUsuarioCompleto", parametros));
 
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@Apellido", apellido);
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-                    cmd.Parameters.AddWithValue("@Telefono", telefono);
-                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", depto);
-                    cmd.Parameters.AddWithValue("@Piso", piso);
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Latitud", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", direccionNormalizada);
-
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-                    cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-                    cmd.Parameters.AddWithValue("@Usa2FA", false);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? Convert.ToInt32(resultado) : 0;
-                }
+                return resultado != null ? Convert.ToInt32(resultado) : 0;
             }
             catch (Exception ex)
             {
@@ -603,26 +488,22 @@ namespace CapaDatos
 
         public bool CambiarEstadoUsuario(int idUsuario, bool activo)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarEstadoUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ActualizarEstadoUsuario", parametros));
 
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@Activo", activo);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null &&
-                           Convert.ToInt32(resultado) == 1;
-                }
+                return resultado != null && Convert.ToInt32(resultado) == 1;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.CambiarEstadoUsuario", ex);
-                throw new Exception("Error al cambiar estado del usuario: " + ex.Message);
+                throw new Exception("Error al cambiar estado del usuario: " + ex.Message, ex);
             }
         }
 
@@ -649,39 +530,36 @@ namespace CapaDatos
             string correo,
             int idRol)
         {
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+
+                new SqlParameter("@Nombre", SqlDbType.VarChar, 100) { Value = nombre },
+                new SqlParameter("@Apellido", SqlDbType.VarChar, 100) { Value = apellido },
+                new SqlParameter("@DNI", SqlDbType.VarChar, 20) { Value = dni },
+                new SqlParameter("@Telefono", SqlDbType.VarChar, 30) { Value = (object?)telefono ?? DBNull.Value },
+                new SqlParameter("@FechaNacimiento", SqlDbType.Date) { Value = fechaNacimiento },
+
+                new SqlParameter("@Calle", SqlDbType.VarChar, 100) { Value = calle },
+                new SqlParameter("@Numero", SqlDbType.VarChar, 20) { Value = (object?)numero ?? DBNull.Value },
+                new SqlParameter("@CodigoPostal", SqlDbType.VarChar, 20) { Value = (object?)codigoPostal ?? DBNull.Value },
+                new SqlParameter("@Depto", SqlDbType.VarChar, 20) { Value = ValorONulo(depto) },
+                new SqlParameter("@Piso", SqlDbType.VarChar, 20) { Value = ValorONulo(piso) },
+                new SqlParameter("@IdLocalidad", SqlDbType.VarChar, 30) { Value = idLocalidad },
+                new SqlParameter("@Latitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = (object?)latitud ?? DBNull.Value },
+                new SqlParameter("@Longitud", SqlDbType.Decimal) { Precision = 18, Scale = 10, Value = (object?)longitud ?? DBNull.Value },
+                new SqlParameter("@DireccionOriginal", SqlDbType.VarChar, 255) { Value = (object?)direccionOriginal ?? DBNull.Value },
+                new SqlParameter("@DireccionNormalizada", SqlDbType.VarChar, 255) { Value = (object?)direccionNormalizada ?? DBNull.Value },
+
+                new SqlParameter("@Correo", SqlDbType.VarChar, 100) { Value = correo },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ActualizarDatosUsuario", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ActualizarDatosUsuario", parametros));
 
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@Apellido", apellido);
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-                    cmd.Parameters.AddWithValue("@Telefono", telefono);
-                    cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-
-                    cmd.Parameters.AddWithValue("@Calle", calle);
-                    cmd.Parameters.AddWithValue("@Numero", numero);
-                    cmd.Parameters.AddWithValue("@CodigoPostal", codigoPostal);
-                    cmd.Parameters.AddWithValue("@Depto", string.IsNullOrWhiteSpace(depto) ? DBNull.Value : depto);
-                    cmd.Parameters.AddWithValue("@Piso", string.IsNullOrWhiteSpace(piso) ? DBNull.Value : piso);
-                    cmd.Parameters.AddWithValue("@IdLocalidad", idLocalidad);
-                    cmd.Parameters.AddWithValue("@Latitud", latitud.HasValue ? latitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Longitud", longitud.HasValue ? longitud.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@DireccionOriginal", direccionOriginal);
-                    cmd.Parameters.AddWithValue("@DireccionNormalizada", direccionNormalizada);
-
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-                    cmd.Parameters.AddWithValue("@IdRol", idRol);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null && Convert.ToInt32(resultado) == 1;
-                }
+                return resultado != null && Convert.ToInt32(resultado) == 1;
             }
             catch (Exception ex)
             {
@@ -694,17 +572,9 @@ namespace CapaDatos
         {
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerCorreoPorUsuario", conexion);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                object? resultado = PrimerValor(EjecutarConsulta("dbo.SP_ObtenerCorreoPorUsuario", ParametroUsuario(usuario)));
 
-                    cmd.Parameters.AddWithValue("@Usuario", usuario);
-
-                    object resultado = cmd.ExecuteScalar();
-
-                    return resultado != null ? resultado.ToString() : "";
-                }
+                return resultado != null ? resultado.ToString() : "";
             }
             catch (Exception ex)
             {
@@ -715,101 +585,87 @@ namespace CapaDatos
 
         public List<UsuarioGrilla> ObtenerUsuariosGrilla()
         {
-            List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
-
             try
             {
-                using (SqlConnection conexion = conectar())
-                {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_BuscarUsuariosGrilla", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        lista.Add(new UsuarioGrilla
-                        {
-                            IdUsuario = Convert.ToInt32(reader["IdUsuario"]),
-                            IdPersona = Convert.ToInt32(reader["IdPersona"]),
-                            IdDireccion = reader["IdDireccion"] == DBNull.Value ? 0 : Convert.ToInt32(reader["IdDireccion"]),
-
-                            Nombre = reader["Nombre"].ToString(),
-                            Apellido = reader["Apellido"].ToString(),
-                            DNI = reader["DNI"].ToString(),
-                            Telefono = reader["Telefono"].ToString(),
-
-                            Usuario = reader["Usuario"].ToString(),
-                            Correo = reader["Correo"].ToString(),
-                            IdRol = Convert.ToInt32(reader["IdRol"]),
-                            Rol = reader["Rol"].ToString(),
-
-                            Activo = Convert.ToBoolean(reader["Activo"]),
-                            Estado = reader["Estado"].ToString(),
-
-                            Calle = reader["Calle"].ToString(),
-                            Numero = reader["Numero"].ToString(),
-                            CodigoPostal = reader["CodigoPostal"].ToString(),
-                            Depto = reader["Depto"].ToString(),
-                            Piso = reader["Piso"].ToString(),
-                            Provincia = reader["Provincia"].ToString(),
-                            Partido = reader["Partido"].ToString(),
-                            Localidad = reader["Localidad"].ToString(),
-
-                            FechaNacimiento = Convert.ToDateTime(reader["FechaNacimiento"])
-                        });
-                    }
-
-                    reader.Close();
-                }
+                return ConvertirAUsuariosGrilla(EjecutarConsulta("dbo.SP_BuscarUsuariosGrilla", null));
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_usuariosDatos.ObtenerUsuariosGrilla", ex);
                 throw new Exception("Error SQL al obtener usuarios para la grilla: " + ex.Message, ex);
             }
-
-            return lista;
         }
 
-        public DataTable BuscarUsuariosParaGrilla(string texto, string filtro)
+        public List<UsuarioGrilla> BuscarUsuariosParaGrilla(string texto, string filtro)
         {
-            DataTable tabla = new DataTable();
+            bool? activo = null;
+            int? idRol = null;
 
-            using (SqlConnection conexion = conectar())
+            if (filtro == "Usuarios Activos")
+                activo = true;
+            else if (filtro == "Usuarios Inactivos")
+                activo = false;
+            else if (filtro == "Rol Usuario")
+                idRol = 1;
+            else if (filtro == "Rol Administrador")
+                idRol = 2;
+
+            SqlParameter[] parametros =
             {
-                SqlCommand cmd = new SqlCommand("dbo.SP_BuscarUsuariosGrilla", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
+                new SqlParameter("@Busqueda", SqlDbType.NVarChar, 100) { Value = texto ?? "" },
+                new SqlParameter("@Activo", SqlDbType.Bit) { Value = (object?)activo ?? DBNull.Value },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = (object?)idRol ?? DBNull.Value }
+            };
 
-                bool? activo = null;
-                int? idRol = null;
+            return ConvertirAUsuariosGrilla(EjecutarConsulta("dbo.SP_BuscarUsuariosGrilla", parametros));
+        }
 
-                if (filtro == "Usuarios Activos")
-                    activo = true;
-                else if (filtro == "Usuarios Inactivos")
-                    activo = false;
-                else if (filtro == "Rol Usuario")
-                    idRol = 1;
-                else if (filtro == "Rol Administrador")
-                    idRol = 2;
+        // varios sp reciben solo el usuario (varchar(50))
+        private static SqlParameter[] ParametroUsuario(string usuario)
+        {
+            return new[] { new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = usuario } };
+        }
 
-                cmd.Parameters.AddWithValue("@Busqueda", texto);
+        // pasa las filas de la grilla de usuarios a objetos usuariogrilla
+        private static List<UsuarioGrilla> ConvertirAUsuariosGrilla(DataTable tabla)
+        {
+            List<UsuarioGrilla> lista = new List<UsuarioGrilla>();
 
-                if (activo.HasValue)
-                    cmd.Parameters.AddWithValue("@Activo", activo.Value);
-                else
-                    cmd.Parameters.AddWithValue("@Activo", DBNull.Value);
+            foreach (DataRow fila in tabla.Rows)
+            {
+                lista.Add(new UsuarioGrilla
+                {
+                    IdUsuario = Convert.ToInt32(fila["IdUsuario"]),
+                    IdPersona = Convert.ToInt32(fila["IdPersona"]),
+                    IdDireccion = fila["IdDireccion"] == DBNull.Value ? 0 : Convert.ToInt32(fila["IdDireccion"]),
 
-                if (idRol.HasValue)
-                    cmd.Parameters.AddWithValue("@IdRol", idRol.Value);
-                else
-                    cmd.Parameters.AddWithValue("@IdRol", DBNull.Value);
+                    Nombre = fila["Nombre"].ToString(),
+                    Apellido = fila["Apellido"].ToString(),
+                    DNI = fila["DNI"].ToString(),
+                    Telefono = fila["Telefono"].ToString(),
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(tabla);
+                    Usuario = fila["Usuario"].ToString(),
+                    Correo = fila["Correo"].ToString(),
+                    IdRol = Convert.ToInt32(fila["IdRol"]),
+                    Rol = fila["Rol"].ToString(),
+
+                    Activo = Convert.ToBoolean(fila["Activo"]),
+                    Estado = fila["Estado"].ToString(),
+
+                    Calle = fila["Calle"].ToString(),
+                    Numero = fila["Numero"].ToString(),
+                    CodigoPostal = fila["CodigoPostal"].ToString(),
+                    Depto = fila["Depto"].ToString(),
+                    Piso = fila["Piso"].ToString(),
+                    Provincia = fila["Provincia"].ToString(),
+                    Partido = fila["Partido"].ToString(),
+                    Localidad = fila["Localidad"].ToString(),
+
+                    FechaNacimiento = Convert.ToDateTime(fila["FechaNacimiento"])
+                });
             }
 
-            return tabla;
+            return lista;
         }
     }
 }

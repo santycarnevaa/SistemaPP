@@ -235,10 +235,10 @@ namespace CapaVista
             {
                 this.Cursor = Cursors.WaitCursor;
 
-                // En una instalación limpia las tablas de georreferencia están
-                // vacías; cargarGeorefEnBase() ya se cuida de no volver a pedirle
-                // datos a la API si ya están cargados, así que es seguro llamarla
-                // siempre acá.
+                // si la base esta recien instalada las tablas de georef estan
+                // vacias. cargargeorefenbase() ya se fija de no volver a pedirle
+                // los datos a la api si ya estan cargados, asi que se puede llamar
+                // siempre aca
                 bool georefOk = await servicioGeoref.cargarGeorefEnBase();
 
                 if (!georefOk)
@@ -375,7 +375,7 @@ namespace CapaVista
 
                 if (resultado == resultadoRegistroUsuario.Ok)
                 {
-                    // si llegó acá, el correo con la contraseña temporal ya se envió
+                    // si llego aca el mail con la contraseña temporal ya se mando
                     new MensajeExito("Usuario registrado correctamente.\nEl correo se ha enviado correctamente a " + txtCorreo.Text.Trim() + ".").Mostrar();
                     actualizargrilla();
                     VolverEstadoNormal();
@@ -565,10 +565,10 @@ namespace CapaVista
             return ValidarCamposComunes();
         }
 
-        // Validaciones comunes a alta y modificación de usuario (T15): antes
-        // estaban duplicadas, y la modificación ni siquiera validaba DNI ni
-        // teléfono. Usuario (solo se edita en el alta) se valida aparte.
-        // Marca todos los campos que estén mal, cada uno con su texto abajo.
+        // validaciones del alta y la modificacion de usuario (t15): antes
+        // estaban repetidas y la modificacion ni siquiera validaba dni ni
+        // telefono. el usuario (solo se edita en el alta) se valida aparte.
+        // marca todos los campos que esten mal, cada uno con su texto abajo
         private bool ValidarCamposComunes()
         {
             bool ok = true;
@@ -606,7 +606,7 @@ namespace CapaVista
             return ValidarEdad() && ok;
         }
 
-        // Los errores que devuelve la lógica y tienen un campo van abajo de ese campo
+        // los errores que devuelve la logica y tienen un campo van abajo de ese campo
         private void MostrarErrorRegistro(resultadoRegistroUsuario resultado)
         {
             string mensaje = servicioUsuarios.ObtenerMensajeRegistro(resultado);
@@ -663,7 +663,7 @@ namespace CapaVista
             }
         }
 
-        // Estilo, columnas ocultas y orden de la grilla, para usarlo tanto al listar como al buscar
+        // estilo, columnas ocultas y orden de la grilla, se usa al listar y al buscar
         private void FormatearGrilla()
         {
             OcultarColumna("IdPersona");

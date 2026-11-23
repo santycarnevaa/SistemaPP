@@ -4,8 +4,8 @@ using System.Windows.Forms;
 
 namespace CapaVista
 {
-    // Muestra los errores de validacion como texto abajo del campo, en vez de un cartel.
-    // El texto se borra solo cuando el usuario vuelve a escribir en ese campo.
+    // muestra los errores de validacion como texto abajo del campo en vez de un cartel
+    // el texto se borra solo cuando el usuario vuelve a escribir en ese campo
     public static class ErrorCampo
     {
         private const string Prefijo = "error_";
@@ -39,7 +39,7 @@ namespace CapaVista
             etiqueta.BringToFront();
         }
 
-        // Saca los errores anteriores antes de volver a validar
+        // saca los errores anteriores antes de volver a validar
         public static void Limpiar(Control contenedor)
         {
             foreach (Control control in contenedor.Controls)

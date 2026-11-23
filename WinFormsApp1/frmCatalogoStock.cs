@@ -4,10 +4,10 @@ using CapaLogica;
 
 namespace CapaVista
 {
-    // Menú del grupo 1. Lo abren tanto el administrador como el usuario común: lo que cambia
-    // es lo que puede hacer cada uno dentro de cada pantalla (el administrador edita el
-    // catálogo, hace ajustes y ve toda la auditoría; el usuario consulta, mueve stock y ve
-    // solo su propia actividad).
+    // menu del grupo 1. lo abren el admin y el usuario comun, lo que cambia
+    // es lo que puede hacer cada uno en cada pantalla (el admin edita el
+    // catalogo, hace ajustes y ve toda la auditoria, el usuario consulta, mueve stock y ve
+    // solo lo que hizo el)
     public partial class frmCatalogoStock : Form
     {
         private readonly string usuario;

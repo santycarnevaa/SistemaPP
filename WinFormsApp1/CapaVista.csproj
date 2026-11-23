@@ -6,10 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- la vista solo ve la capa logica, la capa datos no le llega de rebote -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CapaDatos\CapaDatos.csproj" />
     <ProjectReference Include="..\Entidades\Entidades.csproj" />
     <ProjectReference Include="..\Utilidades\Utilidades.csproj" />
 	  <ProjectReference Include="..\CapaLogica\CapaLogica.csproj" />

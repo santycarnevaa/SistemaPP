@@ -2,9 +2,9 @@ using System.IO;
 
 namespace Utilidades
 {
-    // Registro simple de errores en un archivo de texto junto al ejecutable.
-    // Se usa en los catch de la capa de datos que antes tragaban la excepción
-    // en silencio (devolvían false/null/lista vacía sin dejar rastro de qué pasó).
+    // guarda los errores en un txt al lado del exe
+    // se usa en los catch de la capa datos que antes se comian la excepcion
+    // sin avisar (devolvian false, null o lista vacia y no quedaba nada de lo que paso)
     public static class Logger
     {
         private static readonly string rutaLog = Path.Combine(AppContext.BaseDirectory, "errores.log");
@@ -21,8 +21,8 @@ namespace Utilidades
             }
             catch
             {
-                // Si ni siquiera se puede escribir el log, no hay nada más que hacer:
-                // no queremos que registrar un error termine tirando uno nuevo.
+                // si ni siquiera se puede escribir el log no hay nada mas que hacer,
+                // no queremos que guardar un error tire otro error
             }
         }
     }

@@ -49,7 +49,7 @@ namespace CapaVista
             this.Close();
         }
 
-        // GUARDAR solo sirve para las solapas Registro y Seguridad, en las otras no se muestra
+        // guardar solo sirve para las solapas registro y seguridad, en las otras no se muestra
         private void tabConfig_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnGuardar.Visible = tabConfig.SelectedIndex <= 1;
@@ -96,13 +96,13 @@ namespace CapaVista
             }
             catch (Exception ex)
             {
-                // antes una falla de la base cerraba el programa con una excepción sin explicar nada
+                // antes si fallaba la base se cerraba el programa con una excepcion sin decir nada
                 Logger.RegistrarError("frmConfigAdmin.btnGuardar_Click", ex);
                 new MensajeError("No se pudo guardar la configuración. Revisá la conexión con la base de datos e intentá nuevamente.").Mostrar();
             }
         }
 
-        // Los días de rotación se guardan junto con la cuenta de correo del sistema
+        // los dias de rotacion se guardan junto con la cuenta de correo del sistema
         private bool GuardarDiasRotacion()
         {
             ConfiguracionCorreo configCorreo = servicioConfigCorreo.ObtenerConfiguracion();
@@ -158,7 +158,7 @@ namespace CapaVista
                 rb3.Checked = true;
         }
 
-        // Si el valor guardado no es 5, 8 o 15 (por ejemplo, 6), se agrega a la lista para no perderlo
+        // si el valor guardado no es 5, 8 o 15 (por ej 6) se agrega a la lista para no perderlo
         private void SeleccionarMinimoCaracteres(int valor)
         {
             string texto = valor.ToString();
@@ -202,7 +202,7 @@ namespace CapaVista
 
             try
             {
-                // Google muestra la contraseña con espacios, pero se usa sin ellos
+                // google muestra la contraseña con espacios pero se usa sin espacios
                 bool ok = servicioConfigCorreo.RotarCredenciales(
                     configCorreo.CorreoRemitente,
                     txtPasswordNueva.Text.Replace(" ", ""),
@@ -253,7 +253,7 @@ namespace CapaVista
             return dgvRoles.CurrentRow?.DataBoundItem as rol;
         }
 
-        // Modificar y dar de baja solo se pueden usar con un rol seleccionado
+        // modificar y dar de baja solo se pueden usar con un rol seleccionado
         private void ActualizarBotonesRoles()
         {
             bool haySeleccion = dgvRoles.SelectedRows.Count > 0;

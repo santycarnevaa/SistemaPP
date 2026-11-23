@@ -42,8 +42,8 @@ namespace CapaVista
 
             if (!existeUsuario)
             {
-                // No decimos "no existe": igual que en el login, evitamos confirmar
-                // o negar si un nombre de usuario está registrado en el sistema.
+                // no decimos que no existe: igual que en el login, no confirmamos
+                // ni negamos si un usuario esta registrado
                 ErrorCampo.Mostrar(txtUsuario, "No se pudo iniciar la recuperación. Verificá el usuario.");
                 return;
             }
@@ -96,9 +96,9 @@ namespace CapaVista
                     }
                     break;
                 default:
-                    // Usuario/contraseña vacíos, usuario inexistente, inactivo o contraseña
-                    // incorrecta: el mensaje exacto lo decide CL_ServicioLogin, que unifica
-                    // los tres últimos casos para no revelar cuáles usuarios existen.
+                    // usuario o contraseña vacios, usuario que no existe, inactivo o contraseña
+                    // mal: el mensaje lo decide cl_serviciologin, que junta
+                    // los ultimos tres casos para no mostrar que usuarios existen
                     Control campo = resultado == resultadoLogin.UsuarioVacio ? txtUsuario : txtContraseña;
                     ErrorCampo.Mostrar(campo, servicioLogin.ObtenerMensajeResultado(resultado));
                     break;

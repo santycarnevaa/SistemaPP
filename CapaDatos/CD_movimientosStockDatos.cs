@@ -5,110 +5,85 @@ using Utilidades;
 
 namespace CapaDatos
 {
-    public class CD_movimientosStockDatos : CD_conexion
+    public class CD_movimientosStockDatos : CD_ejecutarConsultasSP
     {
         public List<MovimientoStock> ObtenerPorProducto(int idProducto, DateTime? desde, DateTime? hasta)
         {
-            List<MovimientoStock> movimientos = new List<MovimientoStock>();
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@FK_Producto", SqlDbType.Int) { Value = idProducto },
+                new SqlParameter("@Desde", SqlDbType.DateTime) { Value = (object?)desde ?? DBNull.Value },
+                new SqlParameter("@Hasta", SqlDbType.DateTime) { Value = (object?)hasta ?? DBNull.Value }
+            };
 
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_ObtenerMovimientosPorProducto", parametros);
+
+                List<MovimientoStock> movimientos = new List<MovimientoStock>();
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_ObtenerMovimientosPorProducto", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@FK_Producto", idProducto);
-                    cmd.Parameters.AddWithValue("@Desde", desde.HasValue ? desde.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Hasta", hasta.HasValue ? hasta.Value : DBNull.Value);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    movimientos.Add(new MovimientoStock
                     {
-                        movimientos.Add(new MovimientoStock
-                        {
-                            ID = Convert.ToInt32(reader["ID"]),
-                            FK_Producto = Convert.ToInt32(reader["FK_Producto"]),
-                            FK_Usuario = Convert.ToInt32(reader["FK_Usuario"]),
-                            Tipo_Movimiento = reader["Tipo_Movimiento"].ToString(),
-                            Cantidad = Convert.ToInt32(reader["Cantidad"]),
-                            Fecha = Convert.ToDateTime(reader["Fecha"]),
-                            Tipo_Documento_Origen = reader["Tipo_Documento_Origen"] == DBNull.Value ? null : reader["Tipo_Documento_Origen"].ToString(),
-                            ID_Documento_Origen = reader["ID_Documento_Origen"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["ID_Documento_Origen"]),
-                            Producto = reader["Producto"].ToString(),
-                            Usuario = reader["Usuario"].ToString(),
-                            Stock_Posterior = Convert.ToInt32(reader["Stock_Posterior"])
-                        });
-                    }
-
-                    reader.Close();
+                        ID = Convert.ToInt32(fila["ID"]),
+                        FK_Producto = Convert.ToInt32(fila["FK_Producto"]),
+                        FK_Usuario = Convert.ToInt32(fila["FK_Usuario"]),
+                        Tipo_Movimiento = fila["Tipo_Movimiento"].ToString(),
+                        Cantidad = Convert.ToInt32(fila["Cantidad"]),
+                        Fecha = Convert.ToDateTime(fila["Fecha"]),
+                        Tipo_Documento_Origen = fila["Tipo_Documento_Origen"] == DBNull.Value ? null : fila["Tipo_Documento_Origen"].ToString(),
+                        ID_Documento_Origen = fila["ID_Documento_Origen"] == DBNull.Value ? (int?)null : Convert.ToInt32(fila["ID_Documento_Origen"]),
+                        Producto = fila["Producto"].ToString(),
+                        Usuario = fila["Usuario"].ToString(),
+                        Stock_Posterior = Convert.ToInt32(fila["Stock_Posterior"])
+                    });
                 }
+
+                return movimientos;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_movimientosStockDatos.ObtenerPorProducto", ex);
                 return new List<MovimientoStock>();
             }
-
-            return movimientos;
         }
 
-        // Devuelve null si salió todo bien, o el mensaje de error que mandó el SP
-        // (por ejemplo "el movimiento dejaría el stock en negativo") para que la
-        // capa de Lógica se lo pueda mostrar al usuario tal cual.
+        // devuelve null si salio bien o el mensaje de error del sp
+        // (por ej si el stock queda negativo) para que la capa logica lo muestre tal cual
         public string InsertarMovimiento(MovimientoStock m, out int stockResultante)
         {
             stockResultante = -1;
 
+            SqlParameter[] parametros =
+            {
+                new SqlParameter("@FK_Producto", SqlDbType.Int) { Value = m.FK_Producto },
+                new SqlParameter("@FK_Usuario", SqlDbType.Int) { Value = m.FK_Usuario },
+                new SqlParameter("@Tipo_Movimiento", SqlDbType.VarChar, 20) { Value = m.Tipo_Movimiento },
+                new SqlParameter("@Cantidad", SqlDbType.Int) { Value = m.Cantidad },
+                new SqlParameter("@Tipo_Documento_Origen", SqlDbType.VarChar, 50) { Value = ValorONulo(m.Tipo_Documento_Origen) },
+                new SqlParameter("@ID_Documento_Origen", SqlDbType.Int) { Value = (object?)m.ID_Documento_Origen ?? DBNull.Value }
+            };
+
             try
             {
-                using (SqlConnection conexion = conectar())
+                DataTable tabla = EjecutarConsulta("dbo.SP_InsertarMovimientoStock", parametros);
+
+                if (tabla.Rows.Count > 0)
                 {
-                    SqlCommand cmd = new SqlCommand("dbo.SP_InsertarMovimientoStock", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    // si salio bien el sp devuelve id y stock_resultante, si fallo devuelve error
+                    if (tabla.Columns.Contains("Error"))
+                        return tabla.Rows[0]["Error"].ToString();
 
-                    cmd.Parameters.AddWithValue("@FK_Producto", m.FK_Producto);
-                    cmd.Parameters.AddWithValue("@FK_Usuario", m.FK_Usuario);
-                    cmd.Parameters.AddWithValue("@Tipo_Movimiento", m.Tipo_Movimiento);
-                    cmd.Parameters.AddWithValue("@Cantidad", m.Cantidad);
-                    cmd.Parameters.AddWithValue("@Tipo_Documento_Origen", string.IsNullOrWhiteSpace(m.Tipo_Documento_Origen) ? DBNull.Value : m.Tipo_Documento_Origen);
-                    cmd.Parameters.AddWithValue("@ID_Documento_Origen", m.ID_Documento_Origen.HasValue ? m.ID_Documento_Origen.Value : DBNull.Value);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        // El SP devuelve (ID, Stock_Resultante) si salió bien, o (Error) si falló.
-                        if (HasColumn(reader, "Error"))
-                        {
-                            string error = reader["Error"].ToString();
-                            reader.Close();
-                            return error;
-                        }
-
-                        stockResultante = Convert.ToInt32(reader["Stock_Resultante"]);
-                    }
-
-                    reader.Close();
-                    return null;
+                    stockResultante = Convert.ToInt32(tabla.Rows[0]["Stock_Resultante"]);
                 }
+
+                return null;
             }
             catch (Exception ex)
             {
                 Logger.RegistrarError("CD_movimientosStockDatos.InsertarMovimiento", ex);
                 return "Error de base de datos al registrar el movimiento.";
             }
-        }
-
-        private bool HasColumn(SqlDataReader reader, string nombreColumna)
-        {
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetName(i) == nombreColumna)
-                    return true;
-            }
-            return false;
         }
     }
 }

@@ -7,9 +7,9 @@ using Entidades;
 
 namespace CapaVista
 {
-    // Pantalla de recuperación de contraseña: le pide al usuario la cantidad de preguntas
-    // que diga la política configurada (de las que ya respondió antes) y, si acierta todas,
-    // lo deja pasar a cambiar la contraseña.
+    // pantalla de recuperar contraseña: le pide al usuario la cantidad de preguntas
+    // que diga la politica (de las que ya respondio antes) y si acierta todas
+    // lo deja pasar a cambiar la contraseña
     public partial class frmPreguntas : Form
     {
         private string usuario;
@@ -35,9 +35,9 @@ namespace CapaVista
             ingresar();
         }
 
-        // Trae las preguntas que este usuario ya respondió, se queda con la cantidad que
-        // indique la política (1, 3 o 5) y muestra esa cantidad de filas Label+TextBox
-        // (hasta 5 posibles, prearmadas en el diseñador).
+        // trae las preguntas que ya respondio este usuario, se queda con la cantidad
+        // que diga la politica (1, 3 o 5) y muestra esa cantidad de label y textbox
+        // (hasta 5, ya armadas en el diseñador)
         private void CargarPreguntasSegunConfiguracion()
         {
             var config = servicioConfiguracion.ObtenerConfiguracion();
@@ -55,8 +55,8 @@ namespace CapaVista
 
             if (preguntasUsuario.Count < cantidadPreguntas)
             {
-                // Sin preguntas respondidas no hay nada que validar: se avisa y se cierra la
-                // pantalla en vez de dejarla vacía y sin salida.
+                // si no respondio ninguna pregunta no hay nada para validar: se avisa y se cierra
+                // la pantalla en vez de dejarla vacia y sin salida
                 new MensajeError("El usuario no tiene suficientes preguntas de seguridad registradas.").Mostrar();
                 BeginInvoke(new Action(Close));
                 return;
@@ -102,8 +102,8 @@ namespace CapaVista
             }
         }
 
-        // Esconde y limpia las 5 filas de pregunta/respuesta antes de mostrar
-        // solo las que correspondan.
+        // esconde y limpia las 5 filas de pregunta y respuesta antes de mostrar
+        // solo las que hagan falta
         private void OcultarTodasLasPreguntas()
         {
             lblPreg1.Visible = false;
@@ -125,9 +125,9 @@ namespace CapaVista
             txtPreg5.Text = "";
         }
 
-        // Junta lo que se escribió en las filas visibles y lo manda a validar contra los
-        // hashes guardados. Si está todo bien, sigue a cambiar la contraseña; si no,
-        // limpia los campos y avisa.
+        // junta lo que se escribio en las filas que se ven y lo manda a validar con los
+        // hashes guardados. si esta todo bien sigue a cambiar la contraseña, si no
+        // limpia los campos y avisa
         private void btnIngresar_Click(object sender, EventArgs e)
         {
             if (preguntasUsuario.Count == 0)
@@ -159,8 +159,8 @@ namespace CapaVista
             {
                 if (origen == OrigenVerificacion.RecuperarContrasena)
                 {
-                    // T10: la recuperación ya no deja elegir la contraseña acá
-                    // directo; se genera una temporal y se manda por correo.
+                    // t10: al recuperar ya no se deja elegir la contraseña aca,
+                    // se genera una temporal y se manda por mail
                     EnviarPasswordTemporalYVolver();
                 }
                 else
@@ -185,8 +185,8 @@ namespace CapaVista
             }
         }
 
-        // Habilita el botón "Ingresar" solo cuando todas las preguntas visibles
-        // tienen una respuesta escrita.
+        // habilita el boton ingresar solo cuando todas las preguntas que se ven
+        // tienen una respuesta escrita
         private void ingresar()
         {
             bool habilitar = true;

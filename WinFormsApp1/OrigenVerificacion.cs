@@ -1,19 +1,19 @@
 namespace CapaVista
 {
-    // Contexto desde el que se abren frmCodigo/frmPreguntas: define qué pasa
-    // después de verificar correctamente al usuario (código y/o preguntas).
+    // desde donde se abre frmcodigo o frmpreguntas, define que pasa
+    // despues de verificar bien al usuario (codigo y/o preguntas)
     public enum OrigenVerificacion
     {
-        // Recuperar cuenta desde frmLogin: al verificar, se genera y envía
-        // una contraseña temporal por correo (no se deja elegir una nueva acá).
+        // recuperar cuenta desde frmlogin: al verificar se genera y se manda
+        // una contraseña temporal por mail (aca no se deja elegir una nueva)
         RecuperarContrasena,
 
-        // Cambio de contraseña voluntario desde frmUserConfig (usuario ya logueado):
-        // al verificar, se lo deja elegir la nueva contraseña directamente.
+        // cambio de contraseña desde frmuserconfig (el usuario ya esta logueado):
+        // al verificar se lo deja elegir la contraseña nueva directo
         CambioVoluntario,
 
-        // Confirmación de 2FA durante el login estándar (frmLogin, credenciales ya
-        // correctas): al verificar el código, se entra directo a la pantalla principal.
+        // confirmar el 2fa en el login normal (frmlogin, usuario y contraseña ya
+        // correctos): al verificar el codigo entra directo a la pantalla principal
         ConfirmacionLogin
     }
 }

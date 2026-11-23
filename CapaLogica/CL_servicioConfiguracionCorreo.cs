@@ -20,8 +20,8 @@ namespace CapaLogica
             return config;
         }
 
-        // Lee el correo remitente y la contraseña de aplicacion del archivo mailsettings.json
-        // y los guarda en la base (la contraseña queda cifrada, igual que desde Configuracion)
+        // lee el correo y la contraseña de aplicacion del mailsettings.json
+        // y los guarda en la base (la contraseña queda cifrada igual que desde configuracion)
         private bool CargarDesdeArchivo()
         {
             string ruta = BuscarArchivoMailSettings();
@@ -39,7 +39,7 @@ namespace CapaLogica
                 if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(password))
                     return false;
 
-                // Google muestra la contraseña de aplicacion con espacios, pero se usa sin ellos
+                // google muestra la contraseña de aplicacion con espacios pero se usa sin espacios
                 return RotarCredenciales(from.Trim(), password.Replace(" ", ""), 90);
             }
             catch (Exception ex)
@@ -49,8 +49,8 @@ namespace CapaLogica
             }
         }
 
-        // Busca el archivo junto al ejecutable y, si no esta, en las carpetas de arriba
-        // (cuando se ejecuta desde Visual Studio, queda en la carpeta del repositorio)
+        // busca el archivo al lado del exe y si no esta en las carpetas de arriba
+        // (cuando se corre desde visual studio queda en la carpeta del repo)
         private string BuscarArchivoMailSettings()
         {
             DirectoryInfo carpeta = new DirectoryInfo(AppContext.BaseDirectory);
@@ -84,7 +84,7 @@ namespace CapaLogica
             ConfiguracionCorreo config = ObtenerConfiguracion();
 
             if (config == null)
-                return true; // todavía no se cargó ninguna credencial
+                return true; // todavia no se cargo ninguna credencial
 
             DateTime proximaRotacion = config.FechaUltimaRotacion.AddDays(config.DiasRotacion);
             return DateTime.Today >= proximaRotacion;
